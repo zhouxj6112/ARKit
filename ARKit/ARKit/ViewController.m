@@ -34,36 +34,36 @@
     // Create a new scene
     //SCNScene *scene = [SCNScene sceneNamed:@"art.scnassets/ship.scn"];
     //SCNScene *scene = [SCNScene sceneNamed:@"art.scnassets/Pony_cartoon.obj"];
-    SCNScene* scene = [SCNScene new];
+    SCNScene* scene = [SCNScene scene];
     
     // Set the scene to the view
     self.sceneView.scene = scene;
     
-    // Single tap will insert a new piece of geometry into the scene
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(insertCubeFrom:)];
-    tapGestureRecognizer.numberOfTapsRequired = 1;
-    [self.sceneView addGestureRecognizer:tapGestureRecognizer];
-    
-    // Press and hold will open a config menu for the selected geometry
-    UILongPressGestureRecognizer *materialGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(geometryConfigFrom:)];
-    materialGestureRecognizer.minimumPressDuration = 0.5;
-    [self.sceneView addGestureRecognizer:materialGestureRecognizer];
-    
-    // Press and hold with two fingers causes an explosion
-    UILongPressGestureRecognizer *explodeGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(explodeFrom:)];
-    explodeGestureRecognizer.minimumPressDuration = 1;
-    explodeGestureRecognizer.numberOfTouchesRequired = 2;
-    [self.sceneView addGestureRecognizer:explodeGestureRecognizer];
+//    // Single tap will insert a new piece of geometry into the scene
+//    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(insertCubeFrom:)];
+//    tapGestureRecognizer.numberOfTapsRequired = 1;
+//    [self.sceneView addGestureRecognizer:tapGestureRecognizer];
+//
+//    // Press and hold will open a config menu for the selected geometry
+//    UILongPressGestureRecognizer *materialGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(geometryConfigFrom:)];
+//    materialGestureRecognizer.minimumPressDuration = 0.5;
+//    [self.sceneView addGestureRecognizer:materialGestureRecognizer];
+//
+//    // Press and hold with two fingers causes an explosion
+//    UILongPressGestureRecognizer *explodeGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(explodeFrom:)];
+//    explodeGestureRecognizer.minimumPressDuration = 1;
+//    explodeGestureRecognizer.numberOfTouchesRequired = 2;
+//    [self.sceneView addGestureRecognizer:explodeGestureRecognizer];
     
     // Stop the screen from dimming while we are using the app
     [UIApplication.sharedApplication setIdleTimerDisabled:YES];
     
-    NSURL* documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
-    documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:@"art.scnassets/ship.scn"];
-    SCNSceneSource* sceneSource = [SCNSceneSource sceneSourceWithURL:documentsDirectoryURL options:nil];
-    SCNNode* boxNode =  [sceneSource entryWithIdentifier:@"16" withClass:[SCNNode class]];
-    boxNode.scale = SCNVector3Make(0.1, 0.1, 0.1);
-    [self.sceneView.scene.rootNode addChildNode:boxNode];
+    UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(self.view.frame.size.width-40, 20, 40, 40);
+    button.backgroundColor = [UIColor grayColor];
+    [button setTitle:@"+" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(chooseModel:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -90,49 +90,80 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-#pragma mark - ARSCNViewDelegate
-
-// Override to create and configure nodes for anchors added to the view's session.
-- (SCNNode *)renderer:(id<SCNSceneRenderer>)renderer nodeForAnchor:(ARAnchor *)anchor {
-    NSLog(@"nodeForAnchor:%@", anchor);
-    // Add geometry to the node...
-    SCNBox* box = [SCNBox boxWithWidth:0.1 height:0.3 length:0.1 chamferRadius:0];
-    SCNNode* boxNode = [SCNNode nodeWithGeometry:box];
-    boxNode.position = SCNVector3Make(0, 0, -0.5);
-    [self.sceneView.scene.rootNode addChildNode:boxNode];
-    
-//    SCNScene* scene = [SCNScene sceneNamed:@"art.scnassets/ship.scn"]; //@"art.scnassets/16.obj"];
-//    SCNNode* boxNode = scene.rootNode;
-//    //boxNode.scale = SCNVector3Make(0.01, 0.01, 0.01);
-//    [self.sceneView.scene.rootNode addChildNode:boxNode];
- 
-    return boxNode;
-}
+#pragma mark - SCNSceneRendererDelegate
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer updateAtTime:(NSTimeInterval)time {
-    NSLog(@"updateAtTime:%f", time);
+//    NSLog(@"updateAtTime:%f", time);
 }
 
-- (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+- (void)renderer:(id <SCNSceneRenderer>)renderer willRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time {
+    
+}
+
+- (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time {
+    
+}
+
+#pragma mark - ARSCNViewDelegate
+
+/**
+ 自定义节点的锚点
+ */
+- (nullable SCNNode *)renderer:(id <SCNSceneRenderer>)renderer nodeForAnchor:(ARAnchor *)anchor {
+    NSLog(@"nodeForAnchor:%@", anchor);
+    // Add geometry to the node...
+//    SCNBox* box = [SCNBox boxWithWidth:0.1 height:0.3 length:0.1 chamferRadius:0];
+//    SCNNode* boxNode = [SCNNode nodeWithGeometry:box];
+//    boxNode.position = SCNVector3Make(0, 0, 0);
+//    [self.sceneView.scene.rootNode addChildNode:boxNode];
+
+    SCNScene* scene = [SCNScene sceneNamed:@"art.scnassets/dragon.dae"];
+    SCNNode* boxNode = [scene.rootNode childNodeWithName:@"dragon" recursively:YES];
+    NSLog(@"%@", boxNode);
+    boxNode.scale = SCNVector3Make(0.1, 0.1, 0.1);
+    boxNode.position = SCNVector3Make(0, 1500, 0);
+    [self.sceneView.scene.rootNode addChildNode:boxNode];
+    
+    return boxNode;
+    
+//    SCNNode* modelNode = [_sceneView.scene.rootNode childNodeWithName:@"3ddd_ru_Material_28" recursively:YES];
+//    modelNode.geometry.firstMaterial.lightingModelName = SCNLightingModelBlinn;
+//    modelNode.geometry.firstMaterial.diffuse.contents = @"art.scnassets/mw_Carel.jpg";
+//    modelNode.geometry.firstMaterial.emission.contents = @"art.scnassets/lucifer.jpg";
+//    [self.sceneView.scene.rootNode addChildNode:modelNode];
+//    return modelNode;
+}
+
+/**
+ 当添加节点是会调用，我们可以通过这个代理方法得知我们添加一个虚拟物体到AR场景下的锚点（AR现实世界中的坐标）
+ */
+- (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor
+{
     NSLog(@"didAddNode:%@", node);
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
-    }
+    } // 系统默认给我们添加捕捉到的平面到3D场景
 }
 
-- (void)session:(ARSession *)session didFailWithError:(NSError *)error {
-    // Present an error message to the user
-    NSLog(@"didFailWithError: %@", error);
+/**
+ 将要刷新节点
+ */
+- (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+    NSLog(@"willUpdateNode:%@", node);
 }
 
-- (void)sessionWasInterrupted:(ARSession *)session {
-    // Inform the user that the session has been interrupted, for example, by presenting an overlay
-    
+/**
+ 已经刷新节点
+ */
+- (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+    NSLog(@"didUpdateNode:%@", node);
 }
 
-- (void)sessionInterruptionEnded:(ARSession *)session {
-    // Reset tracking and/or remove existing anchors if consistent tracking is required
-    
+/**
+ 移除节点
+ */
+- (void)renderer:(id <SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+    NSLog(@"didRemoveNode:%@", node);
 }
 
 - (void)insertCubeFrom: (UITapGestureRecognizer *)recognizer {
@@ -166,6 +197,23 @@
 //    [self.sceneView.scene.rootNode addChildNode:cube];
 }
 
+#pragma mark - ARSessionObserver
+
+- (void)session:(ARSession *)session didFailWithError:(NSError *)error {
+    // Present an error message to the user
+    NSLog(@"didFailWithError: %@", error);
+}
+
+- (void)sessionWasInterrupted:(ARSession *)session {
+    // Inform the user that the session has been interrupted, for example, by presenting an overlay
+    
+}
+
+- (void)sessionInterruptionEnded:(ARSession *)session {
+    // Reset tracking and/or remove existing anchors if consistent tracking is required
+    
+}
+
 - (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera {
     ARTrackingState trackingState = camera.trackingState;
     switch(trackingState) {
@@ -174,7 +222,7 @@
             break;
         case ARTrackingStateLimited:
         {
-            ARTrackingState reason = camera.trackingState;
+            ARTrackingStateReason reason = camera.trackingStateReason;
             if (reason == ARTrackingStateReasonExcessiveMotion) {
                 NSLog(@"Limited tracking: slow down the movement of the device");
             } else if (reason == ARTrackingStateReasonInsufficientFeatures) {
@@ -188,6 +236,46 @@
             NSLog(@"Tracking is back to normal");
             break;
     }
+}
+
+#pragma mark - IBAction
+
+- (void)chooseModel:(id)sender {
+    UITableView* tableView = (UITableView *)[self.view viewWithTag:100];
+    if (tableView == nil) {
+        tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-120, 80, 120, self.view.frame.size.height-120) style:UITableViewStylePlain];
+        tableView.dataSource = self;
+        tableView.delegate = self;
+        tableView.tag = 100;
+        [self.view addSubview:tableView];
+    } else {
+        [tableView removeFromSuperview];
+    }
+}
+
+- (void)didChooseModel {
+    UITableView* tableView = (UITableView *)[self.view viewWithTag:100];
+    [tableView removeFromSuperview];
+}
+
+#pragma mark UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 10;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString* iden = @"cell";
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:iden];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:iden];
+    }
+    cell.textLabel.text = @"桌子";
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self didChooseModel];
 }
 
 @end
