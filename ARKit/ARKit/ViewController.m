@@ -25,7 +25,7 @@
     
     // Show statistics such as fps and timing information
     self.sceneView.showsStatistics = YES;
-    self.sceneView.allowsCameraControl = YES;
+    self.sceneView.allowsCameraControl = NO;
     
     self.sceneView.debugOptions = ARSCNDebugOptionShowWorldOrigin | ARSCNDebugOptionShowFeaturePoints | SCNDebugOptionShowPhysicsShapes;
     
@@ -116,15 +116,19 @@
 //    SCNNode* boxNode = [SCNNode nodeWithGeometry:box];
 //    boxNode.position = SCNVector3Make(0, 0, 0);
 //    [self.sceneView.scene.rootNode addChildNode:boxNode];
-
-    SCNScene* scene = [SCNScene sceneNamed:@"art.scnassets/dragon.dae"];
-    SCNNode* boxNode = [scene.rootNode childNodeWithName:@"dragon" recursively:YES];
-    NSLog(@"%@", boxNode);
-    boxNode.scale = SCNVector3Make(0.1, 0.1, 0.1);
-    boxNode.position = SCNVector3Make(0, 1500, 0);
-    [self.sceneView.scene.rootNode addChildNode:boxNode];
     
-    return boxNode;
+    ARPlaneAnchor* pAnchor = (ARPlaneAnchor *)anchor;
+    
+    SCNScene *aScene = [SCNScene sceneNamed:@"art.scnassets/16.obj"];
+    SCNNode *aNode = [aScene.rootNode childNodeWithName:@"3ddd_ru_Material__28" recursively:YES];
+    aNode.position = SCNVector3Make(0, 0, 0);
+    aNode.scale = SCNVector3Make(0.0001, 0.0001, 0.0001);
+    aNode.transform = SCNMatrix4MakeRotation(M_PI_2, 0, 0, 0);
+    aNode.worldOrientation = self.sceneView.scene.rootNode.worldOrientation;
+    aNode.worldPosition = SCNVector3Make(pAnchor.center.x, pAnchor.center.y, pAnchor.center.z);
+    [self.sceneView.scene.rootNode addChildNode:aNode];
+    
+    return aNode;
     
 //    SCNNode* modelNode = [_sceneView.scene.rootNode childNodeWithName:@"3ddd_ru_Material_28" recursively:YES];
 //    modelNode.geometry.firstMaterial.lightingModelName = SCNLightingModelBlinn;
@@ -149,14 +153,14 @@
  将要刷新节点
  */
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    NSLog(@"willUpdateNode:%@", node);
+//    NSLog(@"willUpdateNode:%@", node);
 }
 
 /**
  已经刷新节点
  */
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    NSLog(@"didUpdateNode:%@", node);
+//    NSLog(@"didUpdateNode:%@", node);
 }
 
 /**
