@@ -106,37 +106,32 @@
 
 #pragma mark - ARSCNViewDelegate
 
-/**
- 自定义节点的锚点
- */
-- (nullable SCNNode *)renderer:(id <SCNSceneRenderer>)renderer nodeForAnchor:(ARAnchor *)anchor {
-    NSLog(@"nodeForAnchor:%@", anchor);
-    // Add geometry to the node...
-//    SCNBox* box = [SCNBox boxWithWidth:0.1 height:0.3 length:0.1 chamferRadius:0];
-//    SCNNode* boxNode = [SCNNode nodeWithGeometry:box];
-//    boxNode.position = SCNVector3Make(0, 0, 0);
-//    [self.sceneView.scene.rootNode addChildNode:boxNode];
-    
-    ARPlaneAnchor* pAnchor = (ARPlaneAnchor *)anchor;
-    
-    SCNScene *aScene = [SCNScene sceneNamed:@"art.scnassets/16.obj"];
-    SCNNode *aNode = [aScene.rootNode childNodeWithName:@"3ddd_ru_Material__28" recursively:YES];
-    aNode.position = SCNVector3Make(0, 0, 0);
-    aNode.scale = SCNVector3Make(0.0001, 0.0001, 0.0001);
-    aNode.transform = SCNMatrix4MakeRotation(M_PI_2, 0, 0, 0);
-    aNode.worldOrientation = self.sceneView.scene.rootNode.worldOrientation;
-    aNode.worldPosition = SCNVector3Make(pAnchor.center.x, pAnchor.center.y, pAnchor.center.z);
-    [self.sceneView.scene.rootNode addChildNode:aNode];
-    
-    return aNode;
-    
-//    SCNNode* modelNode = [_sceneView.scene.rootNode childNodeWithName:@"3ddd_ru_Material_28" recursively:YES];
-//    modelNode.geometry.firstMaterial.lightingModelName = SCNLightingModelBlinn;
-//    modelNode.geometry.firstMaterial.diffuse.contents = @"art.scnassets/mw_Carel.jpg";
-//    modelNode.geometry.firstMaterial.emission.contents = @"art.scnassets/lucifer.jpg";
-//    [self.sceneView.scene.rootNode addChildNode:modelNode];
-//    return modelNode;
-}
+///**
+// 自定义节点的锚点
+// */
+//- (nullable SCNNode *)renderer:(id <SCNSceneRenderer>)renderer nodeForAnchor:(ARAnchor *)anchor {
+//    NSLog(@"nodeForAnchor:%@", anchor);
+//    // Add geometry to the node...
+////    SCNBox* box = [SCNBox boxWithWidth:0.1 height:0.3 length:0.1 chamferRadius:0];
+////    SCNNode* boxNode = [SCNNode nodeWithGeometry:box];
+////    boxNode.position = SCNVector3Make(0, 0, 0);
+////    [self.sceneView.scene.rootNode addChildNode:boxNode];
+//
+//    ARPlaneAnchor* pAnchor = (ARPlaneAnchor *)anchor;
+//
+//    SCNScene *aScene = [SCNScene sceneNamed:@"art.scnassets/16.obj"];
+////    SCNNode *aNode = [aScene.rootNode childNodeWithName:@"3ddd_ru_Material__28" recursively:YES];
+//    SCNNode *aNode = aScene.rootNode.childNodes[0];
+//    aNode.position = SCNVector3Make(0, 0, 0);
+//    aNode.scale = SCNVector3Make(0.0001, 0.0001, 0.0001);
+//    aNode.transform = SCNMatrix4MakeRotation( 0, 0, 0, 0);
+//    aNode.rotation = SCNVector4Make(0, 1, 0, M_PI); //方向，(旋转是轴角旋转。 三个第一分量是轴，第四分量是旋转（弧度）)
+//    aNode.worldOrientation = self.sceneView.scene.rootNode.worldOrientation;
+//    aNode.worldPosition = SCNVector3Make(pAnchor.center.x, pAnchor.center.y, pAnchor.center.z);
+//    [self.sceneView.scene.rootNode addChildNode:aNode];
+//
+//    return aNode;
+//}
 
 /**
  当添加节点是会调用，我们可以通过这个代理方法得知我们添加一个虚拟物体到AR场景下的锚点（AR现实世界中的坐标）
@@ -147,13 +142,30 @@
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
     } // 系统默认给我们添加捕捉到的平面到3D场景
+    
+    ARPlaneAnchor* pAnchor = (ARPlaneAnchor *)anchor;
+    SCNPlane* plane = [SCNPlane planeWithWidth:pAnchor.extent.x height:pAnchor.extent.z];
+    SCNNode* planeNode = [SCNNode nodeWithGeometry:plane];
+    planeNode.simdPosition = SCNVector3ToFloat3(SCNVector3Make(pAnchor.center.x, 0, pAnchor.center.z));
+    planeNode.eulerAngles = SCNVector3Make(-M_PI_2, 0, 0);
+    [node addChildNode:planeNode];
 }
 
 /**
  将要刷新节点
  */
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-//    NSLog(@"willUpdateNode:%@", node);
+    NSLog(@"willUpdateNode:%@", node);
+    if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        return;
+    } // 系统默认给我们添加捕捉到的平面到3D场景
+
+    ARPlaneAnchor* pAnchor = (ARPlaneAnchor *)anchor;
+    SCNNode* planeNode = (SCNNode *)(node.childNodes.firstObject);
+    planeNode.simdPosition = SCNVector3ToFloat3(SCNVector3Make(pAnchor.center.x, 0, pAnchor.center.z));
+    SCNPlane* plane = (SCNPlane *)planeNode.geometry;
+    plane.width = pAnchor.extent.x;
+    plane.height = pAnchor.extent.z;
 }
 
 /**
