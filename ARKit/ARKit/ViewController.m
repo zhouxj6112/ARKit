@@ -25,7 +25,7 @@
     
     // Show statistics such as fps and timing information
     self.sceneView.showsStatistics = YES;
-    self.sceneView.allowsCameraControl = YES;
+    self.sceneView.allowsCameraControl = NO;
     
     self.sceneView.debugOptions = ARSCNDebugOptionShowWorldOrigin | ARSCNDebugOptionShowFeaturePoints | SCNDebugOptionShowPhysicsShapes;
     
@@ -33,8 +33,8 @@
     
     // Create a new scene
     //SCNScene *scene = [SCNScene sceneNamed:@"art.scnassets/ship.scn"];
-    //SCNScene *scene = [SCNScene sceneNamed:@"art.scnassets/Pony_cartoon.obj"];
-    SCNScene* scene = [SCNScene scene];
+    SCNScene *scene = [SCNScene sceneNamed:@"art.scnassets/Pony_cartoon.obj"];
+//    SCNScene* scene = [SCNScene scene];
     
     // Set the scene to the view
     self.sceneView.scene = scene;
@@ -75,7 +75,7 @@
     configuration.planeDetection = ARPlaneDetectionHorizontal;
 
     // Run the view's session
-    [self.sceneView.session runWithConfiguration:configuration options:ARSessionRunOptionResetTracking];
+    [self.sceneView.session runWithConfiguration:configuration options:ARSessionRunOptionResetTracking|ARSessionRunOptionRemoveExistingAnchors];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -117,21 +117,25 @@
 //    boxNode.position = SCNVector3Make(0, 0, 0);
 //    [self.sceneView.scene.rootNode addChildNode:boxNode];
 
-    SCNScene* scene = [SCNScene sceneNamed:@"art.scnassets/dragon.dae"];
-    SCNNode* boxNode = [scene.rootNode childNodeWithName:@"dragon" recursively:YES];
-    NSLog(@"%@", boxNode);
-    boxNode.scale = SCNVector3Make(0.1, 0.1, 0.1);
-    boxNode.position = SCNVector3Make(0, 1500, 0);
-    [self.sceneView.scene.rootNode addChildNode:boxNode];
+//    SCNScene* scene = [SCNScene sceneNamed:@"art.scnassets/dragon.dae"];
+//    SCNNode* boxNode = [scene.rootNode childNodeWithName:@"dragon" recursively:YES];
+//    NSLog(@"%@", boxNode);
+//    boxNode.scale = SCNVector3Make(0.1, 0.1, 0.1);
+//    ARPlaneAnchor* planeAnchor = (ARPlaneAnchor *)anchor;
+//    boxNode.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z);
+//    [self.sceneView.scene.rootNode addChildNode:boxNode];
+//    NSLog(@"%@", boxNode);
+//    return boxNode;
     
-    return boxNode;
-    
-//    SCNNode* modelNode = [_sceneView.scene.rootNode childNodeWithName:@"3ddd_ru_Material_28" recursively:YES];
-//    modelNode.geometry.firstMaterial.lightingModelName = SCNLightingModelBlinn;
-//    modelNode.geometry.firstMaterial.diffuse.contents = @"art.scnassets/mw_Carel.jpg";
-//    modelNode.geometry.firstMaterial.emission.contents = @"art.scnassets/lucifer.jpg";
-//    [self.sceneView.scene.rootNode addChildNode:modelNode];
-//    return modelNode;
+    SCNNode* modelNode = [_sceneView.scene.rootNode childNodeWithName:@"MDL_OBJ_Ground_SG" recursively:YES];
+    modelNode.geometry.firstMaterial.lightingModelName = SCNLightingModelBlinn;
+    modelNode.geometry.firstMaterial.diffuse.contents = @"art.scnassets/Body_dDo_d_orange.jpg";
+    modelNode.geometry.firstMaterial.emission.contents = @"art.scnassets/Body_dDo_d_orange.jpg";
+    ARPlaneAnchor* planeAnchor = (ARPlaneAnchor *)anchor;
+    modelNode.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z);
+    modelNode.scale = SCNVector3Make(0.01, 0.01, 0.01);
+    [self.sceneView.scene.rootNode addChildNode:modelNode];
+    return modelNode;
 }
 
 /**
@@ -149,14 +153,14 @@
  将要刷新节点
  */
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    NSLog(@"willUpdateNode:%@", node);
+//    NSLog(@"willUpdateNode:%@", node);
 }
 
 /**
  已经刷新节点
  */
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    NSLog(@"didUpdateNode:%@", node);
+//    NSLog(@"didUpdateNode:%@", node);
 }
 
 /**
