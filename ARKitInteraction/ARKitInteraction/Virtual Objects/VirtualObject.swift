@@ -108,7 +108,9 @@ extension VirtualObject {
         return fileEnumerator.flatMap { element in
             let url = element as! URL
 
-            guard url.pathExtension == "scn" else { return nil }
+            guard url.pathExtension=="scn"||url.pathExtension=="obj" else {
+                return nil
+            }
 
             return VirtualObject(url: url)
         }

@@ -18,7 +18,7 @@ class ObjectCell: UITableViewCell {
     var modelName = "" {
         didSet {
             objectTitleLabel.text = modelName.capitalized
-            objectImageView.image = UIImage(named: modelName)
+            objectImageView.image = UIImage(named: modelName) // 加载Assets里面的图片
         }
     }
 }
