@@ -13,7 +13,11 @@ class VirtualObject: SCNReferenceNode {
     
     /// The model name derived from the `referenceURL`.
     var modelName: String {
-        return referenceURL.lastPathComponent.replacingOccurrences(of: ".scn", with: "")
+        var type = ".scn"
+        if (referenceURL.lastPathComponent.hasSuffix("obj")) {
+            type = ".obj"
+        }
+        return referenceURL.lastPathComponent.replacingOccurrences(of: type, with: "")
     }
     
     /// Use average of recent virtual object distances to avoid rapid changes in object scale.
