@@ -66,6 +66,10 @@ class VirtualObject: SCNReferenceNode {
         }
     }
     
+    func setScale() {
+        //
+    }
+    
     /// - Tag: AdjustOntoPlaneAnchor
     func adjustOntoPlaneAnchor(_ anchor: ARPlaneAnchor, using node: SCNNode) {
         // Get the object's position in the plane's coordinate system.

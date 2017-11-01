@@ -24,10 +24,10 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         }
         
         virtualObjectInteraction.selectedObject = virtualObject
+        // 控制位置
         virtualObject.setPosition(focusSquarePosition, relativeTo: cameraTransform, smoothMovement: false)
-//        // 控制比例
-//        virtualObject.simdScale = float3(0.01, 0.01, 0.01)
-//        virtualObject.scale = SCNVector3Make(0.01, 0.01, 0.01)
+        // 缩放比例
+        virtualObject.setScale();
         
         updateQueue.async {
             self.sceneView.scene.rootNode.addChildNode(virtualObject)
