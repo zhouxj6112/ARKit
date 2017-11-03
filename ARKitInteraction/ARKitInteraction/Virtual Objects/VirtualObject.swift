@@ -16,6 +16,8 @@ class VirtualObject: SCNReferenceNode {
         var type = ".scn"
         if (referenceURL.lastPathComponent.hasSuffix("obj")) {
             type = ".obj"
+        } else if (referenceURL.lastPathComponent.hasSuffix("dae")) {
+            type = ".dae"
         }
         return referenceURL.lastPathComponent.replacingOccurrences(of: type, with: "")
     }
@@ -62,12 +64,17 @@ class VirtualObject: SCNReferenceNode {
             let averagedDistancePosition = simd_normalize(positionOffsetFromCamera) * averageDistance
             simdPosition = cameraWorldPosition + averagedDistancePosition
         } else {
+            
             simdPosition = cameraWorldPosition + positionOffsetFromCamera
         }
     }
     
     func setScale() {
-        //
+        let minV = self.boundingBox.min
+        let maxV = self.boundingBox.max
+        let maxDis = sqrt((maxV.x - minV.x) * (maxV.x - minV.x) + (maxV.y - minV.y) * (maxV.y - minV.y) + (maxV.z - minV.z) * (maxV.z - minV.z)) / 2
+        print("AAA: \(maxDis)");
+        simdScale = float3(1.0/maxDis, 1.0/maxDis, 1.0/maxDis);
     }
     
     /// - Tag: AdjustOntoPlaneAnchor

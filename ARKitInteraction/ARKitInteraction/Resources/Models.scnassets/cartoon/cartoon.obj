@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib Pony_cartoon.mtl
+mtllib cartoon.mtl
 v -392.755005 0.000000 480.638611
 v 419.057922 0.000000 480.638611
 v -392.755005 0.000000 -480.638611
