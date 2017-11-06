@@ -28,6 +28,7 @@ extension ViewController: ARSCNViewDelegate, ARSessionDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        print("didAdd: \(node) \(anchor)")
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
         DispatchQueue.main.async {
             self.statusViewController.cancelScheduledMessage(for: .planeEstimation)
@@ -44,6 +45,7 @@ extension ViewController: ARSCNViewDelegate, ARSessionDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        print("didUpdate: \(node) \(anchor)")
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
         updateQueue.async {
             for object in self.virtualObjectLoader.loadedObjects {

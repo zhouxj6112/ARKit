@@ -42,7 +42,7 @@ class VirtualObject: SCNReferenceNode {
         var positionOffsetFromCamera = newPosition - cameraWorldPosition
         
         // Limit the distance of the object from the camera to a maximum of 10 meters.
-        if simd_length(positionOffsetFromCamera) > 10 {
+        if (simd_length(positionOffsetFromCamera) > 10) {
             positionOffsetFromCamera = simd_normalize(positionOffsetFromCamera)
             positionOffsetFromCamera *= 10
         }
@@ -64,17 +64,32 @@ class VirtualObject: SCNReferenceNode {
             let averagedDistancePosition = simd_normalize(positionOffsetFromCamera) * averageDistance
             simdPosition = cameraWorldPosition + averagedDistancePosition
         } else {
-            
+            //
             simdPosition = cameraWorldPosition + positionOffsetFromCamera
+        }
+        
+        // 移动模型中心位置
+        print("原始位置:\(position)")
+        let minV = self.boundingBox.min
+        let maxV = self.boundingBox.max
+        print("模型: \(minV) \(maxV)")
+        if (minV.y > 0) {
+            let moveY = minV.y
+            position = SCNVector3(position.x, position.y - moveY, position.z)
+            print("移动位置:\(position)")
         }
     }
     
     func setScale() {
         let minV = self.boundingBox.min
         let maxV = self.boundingBox.max
+        print("模型: \(minV) \(maxV)")
         let maxDis = sqrt((maxV.x - minV.x) * (maxV.x - minV.x) + (maxV.y - minV.y) * (maxV.y - minV.y) + (maxV.z - minV.z) * (maxV.z - minV.z)) / 2
-        print("AAA: \(maxDis)");
-        simdScale = float3(1.0/maxDis, 1.0/maxDis, 1.0/maxDis);
+        print("模型尺寸: \(maxDis)")
+        //
+        let scale = FocusSquare.size * 1.5 / maxDis
+        print("缩放比例: \(scale),保证跟捉捕框大小")
+        simdScale = float3(scale, scale, scale)
     }
     
     /// - Tag: AdjustOntoPlaneAnchor
@@ -93,6 +108,7 @@ class VirtualObject: SCNReferenceNode {
         let minZ: Float = anchor.center.z - anchor.extent.z / 2 - anchor.extent.z * tolerance
         let maxZ: Float = anchor.center.z + anchor.extent.z / 2 + anchor.extent.z * tolerance
         
+        print("检测到平面大小 [X]:\(maxX-minX) [Z]:\(maxZ-minZ)")
         guard (minX...maxX).contains(planePosition.x) && (minZ...maxZ).contains(planePosition.z) else {
             return
         }
