@@ -28,6 +28,8 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         virtualObject.setPosition(focusSquarePosition, relativeTo: cameraTransform, smoothMovement: false)
         // 缩放比例
         virtualObject.setScale();
+        // 控制方向
+        virtualObject.setDirection();
         
         updateQueue.async {
             self.sceneView.scene.rootNode.addChildNode(virtualObject)
