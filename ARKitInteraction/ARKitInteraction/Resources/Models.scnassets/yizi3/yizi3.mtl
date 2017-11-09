@@ -1,0 +1,65 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 08.11.2017 22:50:35
+
+newmtl ch20_color1__max_
+	Ns 17.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.1260 0.1260 0.1260
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Brushed_Steel_Max
+	Ns 39.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.8730 0.8730 0.8730
+	Ke 0.0000 0.0000 0.0000
+	map_refl Map__1882_Raytrace.tga
+
+newmtl Material__2097627694
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka C:\Users\Leone\Desktop\yizi2\487\oak_01.png
+	map_Kd C:\Users\Leone\Desktop\yizi2\487\oak_01.png
+
+newmtl wire_086086086
+	Ns 32
+	d 1
+	Tr 0
+	Tf 1 1 1
+	illum 2
+	Ka 0.3373 0.3373 0.3373
+	Kd 0.3373 0.3373 0.3373
+	Ks 0.3500 0.3500 0.3500
+
+newmtl Material__2097627693
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka C:\Users\Leone\Desktop\yizi2\487\85905482.jpg
+	map_Kd C:\Users\Leone\Desktop\yizi2\487\85905482.jpg
