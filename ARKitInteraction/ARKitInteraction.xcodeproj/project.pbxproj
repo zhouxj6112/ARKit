@@ -384,10 +384,10 @@
 				DEVELOPMENT_TEAM = 8USF88UFL4;
 				INFOPLIST_FILE = "$(SRCROOT)/ARKitInteraction/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vipme.business;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vipme.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "98d30a11-540c-4b82-87d1-8a554b634cec";
-				PROVISIONING_PROFILE_SPECIFIER = com.vipme.business_push_dev;
+				PROVISIONING_PROFILE = "d3359c45-c72b-468b-9e27-75ae9e27ebf6";
+				PROVISIONING_PROFILE_SPECIFIER = "VIPME-TEST";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
@@ -404,7 +404,7 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/ARKitInteraction/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vipme.business;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vipme.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
