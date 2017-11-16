@@ -1,0 +1,6 @@
+framework module Pods_ARHome {
+  umbrella header "Pods-ARHome-umbrella.h"
+
+  export *
+  module * { export * }
+}

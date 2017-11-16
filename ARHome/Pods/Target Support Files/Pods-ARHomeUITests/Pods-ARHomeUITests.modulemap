@@ -1,0 +1,6 @@
+framework module Pods_ARHomeUITests {
+  umbrella header "Pods-ARHomeUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
