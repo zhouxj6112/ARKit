@@ -56,7 +56,7 @@ class NetworkingHelper {
                 //result closure
                 debugPrint(response)
                 let destUrl = response.destinationURL
-                let image = UIImage.init(contentsOfFile: "file://" + (destUrl?.absoluteString)!);
+                let image = UIImage.init(contentsOfFile: (destUrl?.path)!);
                 debugPrint(image)
             }
     }
