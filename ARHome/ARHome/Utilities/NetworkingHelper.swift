@@ -36,8 +36,9 @@ class NetworkingHelper {
         let fileManager = FileManager.default
         
         let destination = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory)
-        let fileName = "a84f22ed-0881-4513-beae-de4f4a6103f8.jpg" //url.MD5()
-        let filePath = NSHomeDirectory() + "/" + fileName
+        
+        let fileName = url.MD5()
+        let filePath = NSHomeDirectory() + "/Documents/" + fileName
         debugPrint(filePath)
         if fileManager.fileExists(atPath: filePath) {
             return;
