@@ -33,11 +33,13 @@ class NetworkingHelper {
     }
     
     static func download(url:String, parameters:AnyObject?, callback:@escaping ResponseBlock) -> Void {
+        let fileManager = FileManager.default
+        
         let destination = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory)
-        let fileName = url.MD5()
+        let fileName = "a84f22ed-0881-4513-beae-de4f4a6103f8.jpg" //url.MD5()
         let filePath = NSHomeDirectory() + "/" + fileName
         debugPrint(filePath)
-        if let data = FileManager.default.contents(atPath: filePath) {
+        if fileManager.fileExists(atPath: filePath) {
             return;
         }
         //
