@@ -16,31 +16,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-//        guard ARWorldTrackingConfiguration.isSupported else {
-//            fatalError("""
-//                ARKit is not available on this device. For apps that require ARKit
-//                for core functionality, use the `arkit` key in the key in the
-//                `UIRequiredDeviceCapabilities` section of the Info.plist to prevent
-//                the app from installing. (If the app can't be installed, this error
-//                can't be triggered in a production scenario.)
-//                In apps where AR is an additive feature, use `isSupported` to
-//                determine whether to show UI for launching AR experiences.
-//            """) // For details, see https://developer.apple.com/documentation/arkit
-//        }
-        
-//        NetworkingHelper.get(url: "https://app-api-global.vip.com/home/getactivityspeciallist?type=upcomingevents&currentPage=1&pageSize=10", parameters: nil) { (data:AnyObject?, error:AnyObject?) in
-//            if error == nil {
-//                let dic = data as? NSDictionary
-//                let items = dic?.object(forKey: "items") as? NSArray
-//                for item in items! {
-//                    let pLet = item as? NSDictionary
-//                    let imgUrl = pLet?.object(forKey: "imgUrl")
-//                    print(imgUrl)
-//                }
-//            }
-//        }
-        NetworkingHelper.download(url: "https://a.vpimg3.com/upload/merchandise/pdcvis/115713/2017/0824/71/a84f22ed-0881-4513-beae-de4f4a6103f8.jpg", parameters: nil) { (resp, nil) in
-            //
+        guard ARWorldTrackingConfiguration.isSupported else {
+            fatalError("""
+                ARKit is not available on this device. For apps that require ARKit
+                for core functionality, use the `arkit` key in the key in the
+                `UIRequiredDeviceCapabilities` section of the Info.plist to prevent
+                the app from installing. (If the app can't be installed, this error
+                can't be triggered in a production scenario.)
+                In apps where AR is an additive feature, use `isSupported` to
+                determine whether to show UI for launching AR experiences.
+            """) // For details, see https://developer.apple.com/documentation/arkit
         }
         
         return true

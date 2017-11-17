@@ -24,10 +24,13 @@ class NetworkingHelper {
         }
     }
     
-    static func post(url:String, parameters:AnyObject?) -> Void {
+    static func post(url:String, parameters:AnyObject?, callback:@escaping ResponseBlock) -> Void {
         Alamofire.request(url, method:.post).responseJSON { (response) in
             if let JSON = response.result.value {
                 debugPrint("JSON: \(JSON)")
+                let returnData = JSON as! NSDictionary
+                let respData = returnData.object(forKey: "data") as! NSDictionary
+                callback(respData, nil)
             }
         }
     }
@@ -36,9 +39,10 @@ class NetworkingHelper {
         let fileManager = FileManager.default
         let destFileName = url.MD5()
         
+        // 判断是否下载过了,下载过了就直接返回
         let filePath = NSHomeDirectory() + "/Documents/" + destFileName
-        debugPrint(filePath)
         if fileManager.fileExists(atPath: filePath) {
+            callback(filePath as AnyObject, nil)
             return;
         }
         //
@@ -60,9 +64,12 @@ class NetworkingHelper {
             }).responseData { ( response ) in
                 //result closure
                 debugPrint(response)
-                let destUrl = response.destinationURL
-                let image = UIImage.init(contentsOfFile: (destUrl?.path)!);
-                debugPrint(image)
+                let destPath = response.destinationURL?.path
+                if (destPath != nil) {
+                    callback(destPath as AnyObject, nil)
+                } else {
+                    callback(nil, NSError.init(domain: "", code: -1, userInfo: nil))
+                }
             }
     }
     
