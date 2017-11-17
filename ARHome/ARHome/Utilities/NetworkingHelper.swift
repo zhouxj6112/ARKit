@@ -34,15 +34,20 @@ class NetworkingHelper {
     
     static func download(url:String, parameters:AnyObject?, callback:@escaping ResponseBlock) -> Void {
         let fileManager = FileManager.default
+        let destFileName = url.MD5()
         
-        let destination = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory)
-        let fileName = "a84f22ed-0881-4513-beae-de4f4a6103f8.jpg" //url.MD5()
-        let filePath = NSHomeDirectory() + "/" + fileName
+        let filePath = NSHomeDirectory() + "/Documents/" + destFileName
         debugPrint(filePath)
         if fileManager.fileExists(atPath: filePath) {
             return;
         }
         //
+        //指定下载路径和保存文件名
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileUrl = documentsUrl.appendingPathComponent(destFileName)
+            return (fileUrl, [.removePreviousFile, .createIntermediateDirectories]) //两个参数表示如果有同名文件则会覆盖，如果路径中文件夹不存在则会自动创建
+        }
         Alamofire.download(
             url,
             method: .get,
