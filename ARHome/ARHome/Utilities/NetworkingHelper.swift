@@ -33,24 +33,14 @@ class NetworkingHelper {
     }
     
     static func download(url:String, parameters:AnyObject?, callback:@escaping ResponseBlock) -> Void {
-//        let urlRequest = URLRequest(url: URL(string:url)!)
-//
-//        let fileName: String = URL(string:url)!.lastPathComponent
-//        debugPrint(fileName)
-//        let filePath: URL = URL(string:(NSHomeDirectory() + "/" + fileName))!
-//        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
-//            return (filePath, [.createIntermediateDirectories, .removePreviousFile])
-//        }
-//
-//        Alamofire.download(urlRequest, to: destination).response { response in  // method defaults to `.get`
-//            debugPrint(response)
-//            let destUrl = response.destinationURL
-//            let image = UIImage.init(contentsOfFile: "file:" + (destUrl?.absoluteString)!);
-//            debugPrint(image)
-//        }
-        
         let destination = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory)
-        
+        let fileName = url.MD5()
+        let filePath = NSHomeDirectory() + "/" + fileName
+        debugPrint(filePath)
+        if let data = FileManager.default.contents(atPath: filePath) {
+            return;
+        }
+        //
         Alamofire.download(
             url,
             method: .get,
