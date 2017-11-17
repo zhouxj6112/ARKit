@@ -8,6 +8,7 @@
 
 import Foundation
 
-class DataModel : NSObject {
-
+struct DataModel {
+    var modelId:Int32
+    var modelName:String
 }
