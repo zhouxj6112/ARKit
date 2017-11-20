@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import SSZipArchive
 
 class NetworkingHelper {
     
@@ -37,12 +38,23 @@ class NetworkingHelper {
     
     static func download(url:String, parameters:AnyObject?, callback:@escaping ResponseBlock) -> Void {
         let fileManager = FileManager.default
+        var fileName = URL.init(string: url)?.lastPathComponent
+        if (fileName?.contains("."))! {
+            fileName = fileName?.components(separatedBy: CharacterSet.init(charactersIn: "."))[0]
+        }
         let destFileName = url.MD5()
         
         // 判断是否下载过了,下载过了就直接返回
         let filePath = NSHomeDirectory() + "/Documents/" + destFileName
         if fileManager.fileExists(atPath: filePath) {
-            callback(filePath as AnyObject, nil)
+            let downloadDestFilePath = NSHomeDirectory() + "/Documents/" + fileName! + "/" + fileName! + ".scn"
+            if (fileManager.fileExists(atPath: downloadDestFilePath)) {
+                callback(downloadDestFilePath as AnyObject, nil)
+            } else {
+                callback(nil, NSError.init(domain: "", code: -1, userInfo: nil))
+//                // 并且删除以前下载过的文件
+//                fileManager.removeItem(atPath: filePath)
+            }
             return;
         }
         //
@@ -66,7 +78,13 @@ class NetworkingHelper {
                 debugPrint(response)
                 let destPath = response.destinationURL?.path
                 if (destPath != nil) {
-                    callback(destPath as AnyObject, nil)
+                    let destFilePath = NSHomeDirectory() + "/Documents/"
+                    if SSZipArchive.unzipFile(atPath: destPath!, toDestination: destFilePath) {
+                        let downloadDestFilePath = destFilePath + "cup/cup.scn"
+                        callback(downloadDestFilePath as AnyObject, nil)
+                    } else {
+                        callback(nil, NSError.init(domain: "", code: -2, userInfo: nil))
+                    }
                 } else {
                     callback(nil, NSError.init(domain: "", code: -1, userInfo: nil))
                 }

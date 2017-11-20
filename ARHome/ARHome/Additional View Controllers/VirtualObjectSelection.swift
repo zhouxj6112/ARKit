@@ -66,8 +66,25 @@ class VirtualObjectSelectionViewController: UITableViewController {
 
         dismiss(animated: true, completion: nil)
     }
+    
+    override func tableView(_ tableView: UITableView,  heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.size.width, height: 40))
+        view.backgroundColor = UIColor.lightGray
+        let label = UILabel.init(frame: CGRect.init(x: 5, y: 0, width: 120, height: 40));
+        label.text = "椅子"
+        view.addSubview(label)
+        return view
+    }
         
     // MARK: - UITableViewDataSource
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 10;
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return virtualObjects.count

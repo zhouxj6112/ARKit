@@ -24,16 +24,45 @@ class VirtualObjectLoader {
      on a background queue once `object` has been loaded.
     */
     func loadVirtualObject(_ object: VirtualObject, loadedHandler: @escaping (VirtualObject) -> Void) {
+//        isLoading = true
+//        loadedObjects.append(object)
+//
+//        // Load the content asynchronously.
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            object.reset()
+//            object.load()
+//
+//            self.isLoading = false
+//            loadedHandler(object)
+//        }
+        
+        // 方案二
+//        isLoading = true
+//        let obj = VirtualObject.init(url: URL.init(string: "http://192.168.1.103/2017/cup/cup.scn")!)
+//        loadedObjects.append(obj!)
+//        // Load the content asynchronously.
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            obj?.reset()
+//            obj?.load()
+//            self.isLoading = false
+//            loadedHandler(obj!)
+//        }
+        
+        // 方案三
         isLoading = true
-		loadedObjects.append(object)
-		
-		// Load the content asynchronously.
-        DispatchQueue.global(qos: .userInitiated).async {
-            object.reset()
-            object.load()
-
-            self.isLoading = false
-            loadedHandler(object)
+        NetworkingHelper.download(url: "http://192.168.1.103/2017/cup.zip", parameters: nil) { (fileUrl, nil) in
+            let filePath = fileUrl! as! String
+            let object = VirtualObject.init(url: URL.init(string: "file://" + filePath)!)
+            let obj = object! as VirtualObject
+            debugPrint("本地模型: \(obj)")
+            self.loadedObjects.append(obj)
+            // Load the content asynchronously.
+            DispatchQueue.global(qos: .userInitiated).async {
+                obj.reset()
+                obj.load()
+                self.isLoading = false
+                loadedHandler(obj)
+            }
         }
 	}
     
