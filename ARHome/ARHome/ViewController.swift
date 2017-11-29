@@ -62,10 +62,12 @@ class ViewController: UIViewController {
         
         sceneView.delegate = self
         sceneView.session.delegate = self
+#if DEBUG
         sceneView.showsStatistics = true
         sceneView.allowsCameraControl = false
         sceneView.antialiasingMode = .multisampling4X
         sceneView.debugOptions = SCNDebugOptions.showBoundingBoxes
+#endif
         
         // Set up scene content.
         setupCamera()

@@ -8,35 +8,79 @@
 
 import Foundation
 import Alamofire
+import AlamofireObjectMapper
 import SSZipArchive
+import SwiftyJSON
+
+//final let req_sellerlist_url:String = "https://api.sanweiyun.com/users?"
+let req_sellerlist_url:String = "http://127.0.0.1:8080/api/getAllSellers?"
+//final let req_modellist_url:String  = "https://api.sanweiyun.com/users/3/posts?"
+let req_modellist_url:String = "http://127.0.0.1:8080/api/getModelsList?"
 
 class NetworkingHelper {
     
-    typealias ResponseBlock = (_ data:AnyObject?, _ error:AnyObject?) -> Void
+    typealias ResponseBlock = (_ data:JSON?, _ error:NSError?) -> Void
     
-    static func get(url:String, parameters:AnyObject?, callback:@escaping ResponseBlock) -> Void {
-        Alamofire.request(url, method:.get).responseJSON { (response) in
-            if let JSON = response.result.value {
-                debugPrint("JSON: \(JSON)")
-                let returnData = JSON as! NSDictionary
-                let respData = returnData.object(forKey: "data") as! NSDictionary
-                callback(respData, nil)
+    static func get(url:String, parameters:[String:Any]?, callback:@escaping ResponseBlock) -> Void {
+        //
+        Alamofire.request(url, method:.get, parameters:parameters).responseJSON { (response) in
+            let respDic = response.result.value
+            if respDic != nil {
+                let json = JSON(respDic!) // 使用SwiftJSON格式化数据
+                if json["code"] == 200 {
+                    let data = json["data"]
+                    callback(data, nil)
+                } else {
+                    let error = NSError.init(domain: "", code: 0, userInfo: nil)
+                    callback(nil, error)
+                }
+            } else {
+                let error = NSError.init(domain: "", code: -1, userInfo: nil)
+                callback(nil, error)
             }
         }
     }
     
-    static func post(url:String, parameters:AnyObject?, callback:@escaping ResponseBlock) -> Void {
-        Alamofire.request(url, method:.post).responseJSON { (response) in
-            if let JSON = response.result.value {
-                debugPrint("JSON: \(JSON)")
-                let returnData = JSON as! NSDictionary
-                let respData = returnData.object(forKey: "data") as! NSDictionary
-                callback(respData, nil)
+    static func post(url:String, parameters:[String:Any]?, callback:@escaping ResponseBlock) -> Void {
+        Alamofire.request(url, method:.post, parameters:parameters).responseJSON { (response) in
+            let response = response.result.value
+            if response != nil {
+                let json = JSON(response!) // 使用SwiftJSON格式化数据
+                if json["code"] == 200 {
+                    let data = json["data"]
+                    callback(data, nil)
+                } else {
+                    let error = NSError.init(domain: "", code: 0, userInfo: nil)
+                    callback(nil, error)
+                }
+            } else {
+                let error = NSError.init(domain: "", code: -1, userInfo: nil)
+                callback(nil, error)
             }
         }
     }
     
-    static func download(url:String, parameters:AnyObject?, callback:@escaping ResponseBlock) -> Void {
+    static func uploadData(url:String) -> Void {
+        // 上传文件
+        Alamofire.upload (
+            multipartFormData: { multipartFormData in
+                multipartFormData.append(Data.init(), withName: "file")
+            },
+            to: url,
+            encodingCompletion: { encodingResult in
+                switch encodingResult {
+                case .success(let upload, _, _):
+                    upload.responseJSON { response in
+                        debugPrint(response)
+                    }
+                case .failure(let encodingError):
+                    print(encodingError)
+                }
+            }
+        )
+    }
+    
+    static func download(url:String, parameters:[String:Any]?, callback:@escaping ResponseBlock) -> Void {
         let fileManager = FileManager.default
         var fileName = URL.init(string: url)?.lastPathComponent
         if (fileName?.contains("."))! {
@@ -49,11 +93,13 @@ class NetworkingHelper {
         if fileManager.fileExists(atPath: filePath) {
             let downloadDestFilePath = NSHomeDirectory() + "/Documents/" + fileName! + "/" + fileName! + ".scn"
             if (fileManager.fileExists(atPath: downloadDestFilePath)) {
-                callback(downloadDestFilePath as AnyObject, nil)
+                let dic = ["code":200, "msg":"succ", "data":["url":url, "file":downloadDestFilePath]] as [String : Any]
+                let result = JSON(dic)
+                callback(result, nil)
             } else {
                 callback(nil, NSError.init(domain: "", code: -1, userInfo: nil))
-//                // 并且删除以前下载过的文件
-//                fileManager.removeItem(atPath: filePath)
+                // 并且删除以前下载过的文件
+                try! fileManager.removeItem(atPath: filePath)
             }
             return;
         }
@@ -78,17 +124,22 @@ class NetworkingHelper {
                 debugPrint(response)
                 let destPath = response.destinationURL?.path
                 if (destPath != nil) {
+                    // 解压
                     let destFilePath = NSHomeDirectory() + "/Documents/"
                     if SSZipArchive.unzipFile(atPath: destPath!, toDestination: destFilePath) {
-                        let downloadDestFilePath = destFilePath + "cup/cup.scn"
-                        callback(downloadDestFilePath as AnyObject, nil)
+                        let modelName:String = fileName!
+                        // 获取模型主文件路径
+                        let downloadDestFilePath = destFilePath + modelName + "/" + modelName + ".scn"
+                        let dic = ["code":200, "msg":"succ", "data":["url":url, "file":downloadDestFilePath]] as [String : Any]
+                        let result = JSON(dic)
+                        callback(result, nil)
                     } else {
                         callback(nil, NSError.init(domain: "", code: -2, userInfo: nil))
                     }
                 } else {
                     callback(nil, NSError.init(domain: "", code: -1, userInfo: nil))
                 }
-            }
+          }
     }
     
 }

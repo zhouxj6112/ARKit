@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		17D7DD127A29D10F9DD04F38 /* Pods_ARHomeUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F298E48DA0535F31E81F3485 /* Pods_ARHomeUITests.framework */; };
 		2E7A2CEB1FC10BD000DA4920 /* ReplayKitUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7A2CEA1FC10BD000DA4920 /* ReplayKitUtil.m */; };
+		2E911FFB1FC83DDC00A05F17 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E911FFA1FC83DDC00A05F17 /* MainViewController.swift */; };
+		2E911FFD1FC83E8000A05F17 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E911FFC1FC83E8000A05F17 /* HomeViewController.swift */; };
+		2E911FFF1FC83EB500A05F17 /* ProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E911FFE1FC83EB500A05F17 /* ProductsViewController.swift */; };
+		2E9120011FC844C000A05F17 /* Image.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E9120001FC844C000A05F17 /* Image.xcassets */; };
 		2E91B0B41FC024CB0008CA70 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E91B0B31FC024CB0008CA70 /* libz.tbd */; };
 		39197BB09DE9B4C9263D0434 /* Pods_ARHome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EED04828D64D738208F7F612 /* Pods_ARHome.framework */; };
 		9FE39DEF6AE34C1E9A84DF4C /* Pods_ARHomeTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F329F9BE9596EBB997C168F0 /* Pods_ARHomeTests.framework */; };
@@ -62,6 +66,10 @@
 		1CFB1689DC82DA80D2120BF7 /* Pods-ARHomeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARHomeTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARHomeTests/Pods-ARHomeTests.release.xcconfig"; sourceTree = "<group>"; };
 		2E7A2CE91FC10BD000DA4920 /* ReplayKitUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReplayKitUtil.h; sourceTree = "<group>"; };
 		2E7A2CEA1FC10BD000DA4920 /* ReplayKitUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReplayKitUtil.m; sourceTree = "<group>"; };
+		2E911FFA1FC83DDC00A05F17 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		2E911FFC1FC83E8000A05F17 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		2E911FFE1FC83EB500A05F17 /* ProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewController.swift; sourceTree = "<group>"; };
+		2E9120001FC844C000A05F17 /* Image.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Image.xcassets; sourceTree = "<group>"; };
 		2E91B0B31FC024CB0008CA70 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		55958706134D0EE6DE761DE0 /* Pods-ARHomeUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARHomeUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARHomeUITests/Pods-ARHomeUITests.release.xcconfig"; sourceTree = "<group>"; };
 		94BACD57D32AAB675A4915A6 /* Pods-ARHomeUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARHomeUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARHomeUITests/Pods-ARHomeUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -196,6 +204,9 @@
 				E6C88A2D1FBC4F56003E4B8C /* VirtualObjectInteraction.swift */,
 				E69B4E2E1FBC0C3E00A604A0 /* AppDelegate.swift */,
 				E69B4E321FBC0C3E00A604A0 /* ViewController.swift */,
+				2E911FFA1FC83DDC00A05F17 /* MainViewController.swift */,
+				2E911FFC1FC83E8000A05F17 /* HomeViewController.swift */,
+				2E911FFE1FC83EB500A05F17 /* ProductsViewController.swift */,
 			);
 			path = ARHome;
 			sourceTree = "<group>";
@@ -267,6 +278,7 @@
 				E6C88A481FBC4FD7003E4B8C /* Main.storyboard */,
 				E6C88A291FBC4F56003E4B8C /* Assets.xcassets */,
 				E6C88A2B1FBC4F56003E4B8C /* LaunchScreen.storyboard */,
+				2E9120001FC844C000A05F17 /* Image.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -392,6 +404,7 @@
 				E6C88A4A1FBC4FD7003E4B8C /* Main.storyboard in Resources */,
 				E6C88A421FBC4F57003E4B8C /* Models.scnassets in Resources */,
 				E6C88A401FBC4F57003E4B8C /* Info.plist in Resources */,
+				2E9120011FC844C000A05F17 /* Image.xcassets in Resources */,
 				E6C88A3F1FBC4F57003E4B8C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -469,14 +482,20 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ARHome/Pods-ARHome-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/AlamofireObjectMapper/AlamofireObjectMapper.framework",
+				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireObjectMapper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -580,7 +599,9 @@
 				E6C88A451FBC4F57003E4B8C /* VirtualObjectARView.swift in Sources */,
 				E6C88A3B1FBC4F57003E4B8C /* UIImageView+Network.swift in Sources */,
 				E6C88A3D1FBC4F57003E4B8C /* FocusSquare.swift in Sources */,
+				2E911FFF1FC83EB500A05F17 /* ProductsViewController.swift in Sources */,
 				E6C88A3E1FBC4F57003E4B8C /* FocusSquareSegment.swift in Sources */,
+				2E911FFD1FC83E8000A05F17 /* HomeViewController.swift in Sources */,
 				E65DC7221FBC7FF8009D5076 /* NetworkingHelper.swift in Sources */,
 				E6C88A441FBC4F57003E4B8C /* ViewController+ObjectSelection.swift in Sources */,
 				E6C88A381FBC4F57003E4B8C /* StatusViewController.swift in Sources */,
@@ -595,6 +616,7 @@
 				E69B4E2F1FBC0C3E00A604A0 /* AppDelegate.swift in Sources */,
 				E6C88A371FBC4F57003E4B8C /* VirtualObjectLoader.swift in Sources */,
 				E6747A3D1FBD894300A01B7B /* DataModel.swift in Sources */,
+				2E911FFB1FC83DDC00A05F17 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

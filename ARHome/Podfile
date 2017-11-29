@@ -7,6 +7,8 @@ target 'ARHome' do
   
   # Pods for ARHome
   pod 'Alamofire'
+  pod 'AlamofireObjectMapper'
+  pod 'SwiftyJSON'
   pod 'SDWebImage'
   pod 'SSZipArchive'
 
