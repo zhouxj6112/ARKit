@@ -7,6 +7,7 @@ A type which loads and tracks virtual objects.
 
 import Foundation
 import ARKit
+import SwiftyJSON
 
 /**
  Loads multiple `VirtualObject`s on a background queue to be able to display the
@@ -23,22 +24,22 @@ class VirtualObjectLoader {
      Loads a `VirtualObject` on a background queue. `loadedHandler` is invoked
      on a background queue once `object` has been loaded.
     */
-    func loadVirtualObject(_ object: VirtualObject, loadedHandler: @escaping (VirtualObject) -> Void) {
-        isLoading = true
-        loadedObjects.append(object)
-
-        // Load the content asynchronously.
-        DispatchQueue.global(qos: .userInitiated).async {
-            object.reset()
-            object.load()
-
-            self.isLoading = false
-            loadedHandler(object)
-        }
+    func loadVirtualObject(_ object: VirtualObject, loadedHandler: @escaping (VirtualObject?) -> Void) {
+//        isLoading = true
+//        loadedObjects.append(object)
+//
+//        // Load the content asynchronously.
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            object.reset()
+//            object.load()
+//
+//            self.isLoading = false
+//            loadedHandler(object)
+//        }
         
         // 方案二
 //        isLoading = true
-//        let obj = VirtualObject.init(url: URL.init(string: "http://192.168.1.103/2017/cup/cup.scn")!)
+//        let obj = VirtualObject.init(url: URL.init(string: "http://10.199.196.241/1003/tree/tree.scn")!) //  必须scn文件格式
 //        loadedObjects.append(obj!)
 //        // Load the content asynchronously.
 //        DispatchQueue.global(qos: .userInitiated).async {
@@ -48,22 +49,30 @@ class VirtualObjectLoader {
 //            loadedHandler(obj!)
 //        }
         
-//        // 方案三
-//        isLoading = true
-//        NetworkingHelper.download(url: "http://192.168.1.103/2017/cup.zip", parameters: nil) { (fileUrl, nil) in
-//            let filePath = fileUrl! as! String
-//            let object = VirtualObject.init(url: URL.init(string: "file://" + filePath)!)
-//            let obj = object! as VirtualObject
-//            debugPrint("本地模型: \(obj)")
-//            self.loadedObjects.append(obj)
-//            // Load the content asynchronously.
-//            DispatchQueue.global(qos: .userInitiated).async {
-//                obj.reset()
-//                obj.load()
-//                self.isLoading = false
-//                loadedHandler(obj)
-//            }
-//        }
+        // 方案三
+        isLoading = true
+        let urlString = object.referenceURL.absoluteString // zip文件下载url
+        NetworkingHelper.download(url: urlString, parameters: nil) { (fileUrl:JSON?, error:NSError?) in
+            if error != nil {
+                self.isLoading = false
+                loadedHandler(nil)
+                return;
+            }
+            let respData = fileUrl!["data"]
+            let filePath = respData["file"]
+            let url = URL.init(string: "file://" + filePath.stringValue)
+            let object = VirtualObject.init(url: url!)
+            let obj = object! as VirtualObject
+            debugPrint("本地模型: \(obj)")
+            self.loadedObjects.append(obj)
+            // Load the content asynchronously.
+            DispatchQueue.global(qos: .userInitiated).async {
+                obj.reset()
+                obj.load()
+                self.isLoading = false
+                loadedHandler(obj)
+            }
+        }
 	}
     
     // MARK: - Removing Objects
@@ -81,4 +90,5 @@ class VirtualObjectLoader {
         loadedObjects[index].removeFromParentNode()
         loadedObjects.remove(at: index)
     }
+    
 }

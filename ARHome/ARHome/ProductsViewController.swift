@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class ProductsViewController: UIViewController {
 
@@ -31,10 +32,10 @@ class ProductsViewController: UIViewController {
         self.view.addSubview(tableView2!)
         
         // 获取所有商家列表
-        NetworkingHelper.get(url: req_sellerlist_url, parameters: nil, callback: { (data, error) in
+        NetworkingHelper.get(url: req_sellerlist_url, parameters: nil, callback: { (data:JSON?, error:NSError?) in
             if error == nil {
                 let items = data!["items"]
-                self.mSellerList = items.arrayValue as! NSArray
+                self.mSellerList = items.rawValue as! NSArray
                 self.tableView1?.reloadData()
             } else {
                 print("接口失败")
@@ -68,11 +69,23 @@ class ProductsViewController: UIViewController {
 }
 
 extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if tableView == self.tableView1 {
+            return 1
+        } else {
+            return mModelList.count
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == self.tableView1 {
             return mSellerList.count
         } else {
-            return mModelList.count
+            let sData = mModelList.object(at: section)
+            let data = sData as! Dictionary<String, Any>
+            let list = data["list"] as! NSArray
+            return list.count
         }
     }
 
@@ -94,17 +107,55 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
             if cell == nil {
                 cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: ident)
             }
-            let item:ModelListItem = mModelList[indexPath.row] as! ModelListItem
-            cell?.textLabel?.text = item.modelName
+            let sData = self.mModelList[indexPath.section]
+            let section = sData as! Dictionary<String, Any>
+            let list = section["list"] as! NSArray
+            //
+            let data = list[indexPath.row] as! Dictionary<String, Any>
+            let sName = data["modelName"] as! String
+            cell?.textLabel?.text = sName
+            let sImage = data["imageUrl"] as! String
+            cell?.imageView?.loadImageWithUrl(imageUrl: sImage)
             return cell!
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if tableView == self.tableView2 {
+            return 30
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if tableView == self.tableView2 {
+            let sData = self.mModelList.object(at: section)
+            let data = sData as! Dictionary<String, Any>
+            let tName = data["typeName"] as! String
+            let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.size.width, height: 30))
+            headerView.backgroundColor = UIColor.lightGray
+            let label = UILabel.init(frame: CGRect.init(x: 10, y: 0, width: 120, height: 30))
+            label.text = tName
+            headerView.addSubview(label)
+            return headerView
+        }
+        return nil
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == self.tableView1 {
             let data = self.mSellerList.object(at: indexPath.row) as! NSDictionary
             let sId = data.object(forKey: "sellerId") as! NSInteger
-            
+            //
+            NetworkingHelper.get(url: req_modellist_url, parameters: ["sellerId":sId], callback: { (data:JSON?, error:NSError?) in
+                if error == nil {
+                    let items = data?.rawValue as! NSArray
+                    self.mModelList = items
+                    self.tableView2?.reloadData()
+                } else {
+                    print("接口失败")
+                }
+            })
         }
     }
 }

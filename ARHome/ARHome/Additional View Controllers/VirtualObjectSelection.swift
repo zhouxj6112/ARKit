@@ -36,6 +36,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
     
     /// The collection of `VirtualObject`s to select from.
     var virtualObjects = [VirtualObject]()
+    var modelList:NSArray = []
     
     /// The rows of the currently selected `VirtualObject`s.
     var selectedVirtualObjectRows = IndexSet()
@@ -55,13 +56,17 @@ class VirtualObjectSelectionViewController: UITableViewController {
     // MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let object = virtualObjects[indexPath.row]
+//        let object = virtualObjects[indexPath.row]
+        let dic = modelList[indexPath.section] as! Dictionary<String, Any>
+        let list = dic["list"] as! NSArray
+        let data = list[indexPath.row] as! Dictionary<String, Any>
+        let object = VirtualObject.init(url: URL.init(string: data["fileUrl"] as! String)!)
         
         // Check if the current row is already selected, then deselect it.
         if selectedVirtualObjectRows.contains(indexPath.row) {
-            delegate?.virtualObjectSelectionViewController(self, didDeselectObject: object)
+            delegate?.virtualObjectSelectionViewController(self, didDeselectObject: object!)
         } else {
-            delegate?.virtualObjectSelectionViewController(self, didSelectObject: object)
+            delegate?.virtualObjectSelectionViewController(self, didSelectObject: object!)
         }
 
         dismiss(animated: true, completion: nil)
@@ -83,11 +88,13 @@ class VirtualObjectSelectionViewController: UITableViewController {
     // MARK: - UITableViewDataSource
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 10;
+        return modelList.count;
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return virtualObjects.count
+        let dic = modelList[section] as! Dictionary<String, Any>
+        let list = dic["list"] as! NSArray
+        return list.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -95,13 +102,16 @@ class VirtualObjectSelectionViewController: UITableViewController {
             fatalError("Expected `\(ObjectCell.self)` type for reuseIdentifier \(ObjectCell.reuseIdentifier). Check the configuration in Main.storyboard.")
         }
         
-        cell.modelName = virtualObjects[indexPath.row].modelName
+        let dic = modelList[indexPath.section] as! Dictionary<String, Any>
+        let list = dic["list"] as! NSArray
+        let data = list[indexPath.row] as! Dictionary<String, Any>
+        cell.modelName = data["modelName"] as! String
 
-        if selectedVirtualObjectRows.contains(indexPath.row) {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
+//        if selectedVirtualObjectRows.contains(indexPath.row) {
+//            cell.accessoryType = .checkmark
+//        } else {
+//            cell.accessoryType = .none
+//        }
 
         return cell
     }

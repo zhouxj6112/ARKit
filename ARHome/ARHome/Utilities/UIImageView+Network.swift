@@ -16,6 +16,9 @@ extension UIImageView {
         //
         self.sd_setImage(with: URL.init(string: imageUrl), placeholderImage: nil) { (image, error, cacheType, url) -> Void in
             print("下载\(imageUrl)完成")
+            if image != nil {
+                self.image = image
+            }
         }
     }
     

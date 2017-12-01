@@ -13,9 +13,9 @@ import SSZipArchive
 import SwiftyJSON
 
 //final let req_sellerlist_url:String = "https://api.sanweiyun.com/users?"
-let req_sellerlist_url:String = "http://127.0.0.1:8080/api/getAllSellers?"
+let req_sellerlist_url:String = "http://10.199.196.241:8080/api/getAllSellers?"
 //final let req_modellist_url:String  = "https://api.sanweiyun.com/users/3/posts?"
-let req_modellist_url:String = "http://127.0.0.1:8080/api/getModelsList?"
+let req_modellist_url:String = "http://10.199.196.241:8080/api/getModelsList?"
 
 class NetworkingHelper {
     
@@ -28,8 +28,8 @@ class NetworkingHelper {
             if respDic != nil {
                 let json = JSON(respDic!) // 使用SwiftJSON格式化数据
                 if json["code"] == 200 {
-                    let data = json["data"]
-                    callback(data, nil)
+                    let jData = json["data"]
+                    callback(jData, nil)
                 } else {
                     let error = NSError.init(domain: "", code: 0, userInfo: nil)
                     callback(nil, error)

@@ -143,10 +143,13 @@ extension VirtualObject {
         return fileEnumerator.flatMap { element in
             let url = element as! URL
 
-            guard url.pathExtension=="scn"||url.pathExtension=="obj" else {
+            guard url.pathExtension=="scn"||url.pathExtension=="obj"||url.pathExtension=="dae" else {
                 return nil
             }
 
+//            let urlString = url.absoluteString;
+//            let urlURL = URL.init(string: urlString)
+//            return VirtualObject(url: urlURL!)
             return VirtualObject(url: url)
         }
     }()

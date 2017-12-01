@@ -76,6 +76,7 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         
         let objectsViewController = segue.destination as! VirtualObjectSelectionViewController
         objectsViewController.virtualObjects = VirtualObject.availableObjects
+        objectsViewController.modelList = self.modelList // 额外附加
         objectsViewController.delegate = self
         
         // Set all rows of currently placed objects to selected.

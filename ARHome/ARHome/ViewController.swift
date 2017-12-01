@@ -194,4 +194,9 @@ class ViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
     
+    var modelList:NSArray = []
+    
+    func resetModelList(array:NSArray) -> Void {
+        modelList = array
+    }
 }

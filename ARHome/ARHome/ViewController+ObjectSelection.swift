@@ -40,9 +40,12 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     
     func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didSelectObject object: VirtualObject) {
         virtualObjectLoader.loadVirtualObject(object, loadedHandler: { [unowned self] loadedObject in
+            if loadedObject == nil {
+                return
+            }
             DispatchQueue.main.async {
                 self.hideObjectLoadingUI()
-                self.placeVirtualObject(loadedObject)
+                self.placeVirtualObject(loadedObject!)
             }
         })
 

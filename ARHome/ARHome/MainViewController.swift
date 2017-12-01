@@ -8,6 +8,7 @@
 
 import UIKit
 import ARKit
+import SwiftyJSON
 
 class MainViewController: UITabBarController {
 
@@ -60,9 +61,17 @@ extension MainViewController : UITabBarControllerDelegate {
         if viewController == tabBarController.viewControllers![1] {
             if ARWorldTrackingConfiguration.isSupported {
                 let stroyboard = UIStoryboard.init(name: "Main", bundle: Bundle(identifier: "Main"))
-                let vc = stroyboard.instantiateInitialViewController()
-                present(vc!, animated: true, completion: {
+                let vc = stroyboard.instantiateInitialViewController() as! ViewController
+                present(vc, animated: true, completion: {
                     //
+                    NetworkingHelper.get(url: req_modellist_url, parameters: ["sellerId":"1003"], callback: { (data:JSON?, error:NSError?) in
+                        if error == nil {
+                            let items = data?.rawValue as! NSArray
+                            vc.resetModelList(array: items)
+                        } else {
+                            print("接口失败")
+                        }
+                    })
                 })
             } else {
                 debugPrint("设置不支持AR")
