@@ -36,21 +36,25 @@ extension ViewController: UIGestureRecognizerDelegate {
     
     /// - Tag: restartExperience
     func restartExperience() {
-        guard isRestartAvailable, !virtualObjectLoader.isLoading else { return }
+//        guard isRestartAvailable, !virtualObjectLoader.isLoading else { return }
+//        isRestartAvailable = false
+//
+//        statusViewController.cancelAllScheduledMessages()
+//
+//        virtualObjectLoader.removeAllVirtualObjects()
+//        addObjectButton.setImage(#imageLiteral(resourceName: "add"), for: [])
+//        addObjectButton.setImage(#imageLiteral(resourceName: "addPressed"), for: [.highlighted])
+//
+//        resetTracking()
+//
+//        // Disable restart for a while in order to give the session time to restart.
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+//            self.isRestartAvailable = true
+//        }
+        
         isRestartAvailable = false
-
         statusViewController.cancelAllScheduledMessages()
-
-        virtualObjectLoader.removeAllVirtualObjects()
-        addObjectButton.setImage(#imageLiteral(resourceName: "add"), for: [])
-        addObjectButton.setImage(#imageLiteral(resourceName: "addPressed"), for: [.highlighted])
-
-        resetTracking()
-
-        // Disable restart for a while in order to give the session time to restart.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            self.isRestartAvailable = true
-        }
+        dismissViewController();
     }
 }
 

@@ -30,7 +30,7 @@ class MainViewController: UITabBarController {
         vc3.tabBarItem.image = UIImage.init(named: "tab_0_n")
         vc3.tabBarItem.selectedImage = UIImage.init(named: "tab_0_s")
         let nav3 = UINavigationController.init(rootViewController: vc3)
-        self.viewControllers = [nav1, vc2, nav3]
+        self.viewControllers = [nav3, vc2, nav1]
         
         self.delegate = self
     }

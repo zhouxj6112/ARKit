@@ -72,7 +72,7 @@
                                     <constraint firstAttribute="width" constant="44" id="AJj-0E-eVh"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="12"/>
-                                <state key="normal" image="restart"/>
+                                <state key="normal" image="btn_close"/>
                                 <state key="selected" image="restartPressed"/>
                                 <state key="highlighted" image="restartPressed"/>
                                 <connections>
@@ -250,7 +250,7 @@
     </scenes>
     <resources>
         <image name="add" width="48" height="48"/>
-        <image name="restart" width="20" height="23"/>
+        <image name="btn_close" width="26" height="26"/>
         <image name="restartPressed" width="20" height="23"/>
     </resources>
 </document>

@@ -138,6 +138,12 @@ class ViewController: UIViewController {
         
         statusViewController.scheduleMessage("FIND A SURFACE TO PLACE AN OBJECT", inSeconds: 7.5, messageType: .planeEstimation)
     }
+    // 关闭窗口
+    func dismissViewController() {
+        dismiss(animated: true, completion: {
+            debugPrint("")
+        })
+    }
     
     // MARK: - Focus Square
     

@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import ARKit
 
 class ProductsViewController: UIViewController {
 
@@ -127,6 +128,13 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
         return 0
     }
     
+    private func tableView(_ tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if tableView == self.tableView1 {
+            return 44
+        }
+        return 44;
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if tableView == self.tableView2 {
             let sData = self.mModelList.object(at: section)
@@ -155,6 +163,31 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
                 } else {
                     print("接口失败")
                 }
+            })
+        } else {
+            let sData = self.mModelList.object(at: indexPath.section) as! Dictionary<String, Any>
+            let list = sData["list"] as! NSArray
+            let cellData = list[indexPath.row] as! Dictionary<String, Any>
+            let modelId = cellData["modelId"] as! String // 模型id
+            let sId = modelId.components(separatedBy: "_")[0]
+            self.toAR(sId: sId)
+        }
+    }
+    
+    private func toAR(sId: String) {
+        if ARWorldTrackingConfiguration.isSupported {
+            let stroyboard = UIStoryboard.init(name: "Main", bundle: Bundle(identifier: "Main"))
+            let vc = stroyboard.instantiateInitialViewController() as! ViewController
+            present(vc, animated: true, completion: {
+                //
+                NetworkingHelper.get(url: req_modellist_url, parameters: ["sellerId":sId], callback: { (data:JSON?, error:NSError?) in
+                    if error == nil {
+                        let items = data?.rawValue as! NSArray
+                        vc.resetModelList(array: items)
+                    } else {
+                        print("接口失败")
+                    }
+                })
             })
         }
     }

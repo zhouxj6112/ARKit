@@ -68,16 +68,16 @@ class VirtualObject: SCNReferenceNode {
             simdPosition = cameraWorldPosition + positionOffsetFromCamera
         }
         
-        // 移动模型中心位置
-        print("原始位置:\(position)")
-        let minV = self.boundingBox.min
-        let maxV = self.boundingBox.max
-        print("模型: \(minV) \(maxV)")
-        if (minV.y > 0) {
-            let moveY = minV.y
-            position = SCNVector3(position.x, position.y - moveY, position.z)
-            print("移动位置:\(position)")
-        }
+//        // 移动模型中心位置
+//        print("原始位置:\(position)")
+//        let minV = self.boundingBox.min
+//        let maxV = self.boundingBox.max
+//        print("模型: \(minV) \(maxV)")
+//        if (minV.y > 0) {
+//            let moveY = minV.y
+//            position = SCNVector3(position.x, position.y - moveY, position.z)
+//            print("移动位置:\(position)")
+//        }
     }
     
     func setScale() {
