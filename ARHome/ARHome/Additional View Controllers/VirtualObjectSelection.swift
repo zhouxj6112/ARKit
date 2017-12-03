@@ -43,10 +43,31 @@ class VirtualObjectSelectionViewController: UITableViewController {
     
     weak var delegate: VirtualObjectSelectionViewControllerDelegate?
     
+    override func loadView() {
+        super.loadView()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .light))
+        
+        // 更改数据结构
+        let newModelList = NSMutableArray.init(capacity: modelList.count)
+        for obj in modelList {
+            var objDic = obj as! Dictionary<String, Any>
+            let mutableArray = NSMutableArray.init(capacity: 1)
+            let array = objDic["list"] as! NSArray
+            for dic in array {
+                var dicObj = dic as! Dictionary<String, Any>
+                dicObj["isIn"] = false // 增加辅助数据结构
+                mutableArray.add(dicObj)
+            }
+            objDic["list"] = mutableArray
+            //
+            newModelList.add(objDic)
+        }
+        modelList = newModelList
     }
     
     override func viewWillLayoutSubviews() {
@@ -58,16 +79,26 @@ class VirtualObjectSelectionViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        let object = virtualObjects[indexPath.row]
         let dic = modelList[indexPath.section] as! Dictionary<String, Any>
-        let list = dic["list"] as! NSArray
-        let data = list[indexPath.row] as! Dictionary<String, Any>
+        let list = dic["list"] as! NSMutableArray
+        var data = list[indexPath.row] as! Dictionary<String, Any>
+        // 初始化模型
         let object = VirtualObject.init(url: URL.init(string: data["fileUrl"] as! String)!)
         
+        var isIn = false
+        if data.keys.contains("isIn") && data["isIn"] as! Bool == true {
+            isIn = true
+        }
+        
         // Check if the current row is already selected, then deselect it.
-        if selectedVirtualObjectRows.contains(indexPath.row) {
+        if isIn {
             delegate?.virtualObjectSelectionViewController(self, didDeselectObject: object!)
+            data["isIn"] = false
         } else {
             delegate?.virtualObjectSelectionViewController(self, didSelectObject: object!)
+            data["isIn"] = true
         }
+        debugPrint("data: \(data)")
+        list[indexPath.row] = data
 
         dismiss(animated: true, completion: nil)
     }
@@ -106,12 +137,14 @@ class VirtualObjectSelectionViewController: UITableViewController {
         let list = dic["list"] as! NSArray
         let data = list[indexPath.row] as! Dictionary<String, Any>
         cell.modelName = data["modelName"] as! String
-
-//        if selectedVirtualObjectRows.contains(indexPath.row) {
-//            cell.accessoryType = .checkmark
-//        } else {
-//            cell.accessoryType = .none
-//        }
+        debugPrint("data: \(data)")
+        
+        // 是否被选中
+        if data.keys.contains("isIn") && data["isIn"] as! Bool == true {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }
 
         return cell
     }

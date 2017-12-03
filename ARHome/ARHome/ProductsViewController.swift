@@ -10,6 +10,23 @@ import UIKit
 import SwiftyJSON
 import ARKit
 
+class ModelTableCell : UITableViewCell {
+    public var mImageView:UIImageView?
+    public var mTitleLabel:UILabel?
+    
+    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        //
+        self.mImageView = UIImageView.init(frame: CGRect.init(x: 10, y: 2, width: 40, height: 40));
+        self.contentView.addSubview(mImageView!)
+        self.mTitleLabel = UILabel.init(frame: CGRect.init(x: 60, y: 12, width: 180, height: 20));
+        self.contentView.addSubview(mTitleLabel!)
+    }
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class ProductsViewController: UIViewController {
 
     private var tableView1:UITableView?;
@@ -31,6 +48,8 @@ class ProductsViewController: UIViewController {
         tableView2?.dataSource = self
         tableView2?.delegate = self
         self.view.addSubview(tableView2!)
+        // 注册cell
+        tableView2?.register(ObjectCell.self, forCellReuseIdentifier: ObjectCell.reuseIdentifier)
         
         // 获取所有商家列表
         NetworkingHelper.get(url: req_sellerlist_url, parameters: nil, callback: { (data:JSON?, error:NSError?) in
@@ -92,10 +111,10 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == self.tableView1 {
-            let ident:String = "cell"
-            var cell = tableView.dequeueReusableCell(withIdentifier: ident)
+            let ident1:String = "cell1"
+            var cell = tableView.dequeueReusableCell(withIdentifier: ident1)
             if cell == nil {
-                cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: ident)
+                cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: ident1)
             }
             let cellData = self.mSellerList.object(at: indexPath.row)
             let data = cellData as! Dictionary<String, Any>
@@ -103,27 +122,28 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
             cell?.textLabel?.text = sName
             return cell!
         } else {
-            let ident:String = "cell2"
-            var cell = tableView.dequeueReusableCell(withIdentifier: ident)
-            if cell == nil {
-                cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: ident)
-            }
+            let ident2:String = "cell2"
+//            var cell:ModelTableCell = tableView.dequeueReusableCell(withIdentifier: ident2) as! ModelTableCell
+//            if cell == nil {
+//                cell = ModelTableCell.init(style: UITableViewCellStyle.default, reuseIdentifier: ident2)
+//            }
+            let cell = ModelTableCell.init(style: UITableViewCellStyle.default, reuseIdentifier: ident2)
             let sData = self.mModelList[indexPath.section]
             let section = sData as! Dictionary<String, Any>
             let list = section["list"] as! NSArray
             //
             let data = list[indexPath.row] as! Dictionary<String, Any>
             let sName = data["modelName"] as! String
-            cell?.textLabel?.text = sName
+            cell.mTitleLabel?.text = sName
             let sImage = data["imageUrl"] as! String
-            cell?.imageView?.loadImageWithUrl(imageUrl: sImage)
-            return cell!
+            cell.mImageView?.loadImageWithUrl(imageUrl: sImage)
+            return cell
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if tableView == self.tableView2 {
-            return 30
+            return 40
         }
         return 0
     }
