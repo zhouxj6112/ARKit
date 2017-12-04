@@ -39,7 +39,12 @@ static ReplayKitUtil* mReplayKitUtil;
     [recorder startRecordingWithHandler:^(NSError * _Nullable error) {
         NSLog(@"error: %@", error);
     }];
+    UIViewController* vc = parentViewController;
+    while (vc.parentViewController) {
+        vc = vc.parentViewController;
+    }
     mReplayKitUtil.parentViewController = parentViewController;
+    mReplayKitUtil.isRecording = YES;
 }
 
 + (void)stopRecoder {
@@ -50,8 +55,14 @@ static ReplayKitUtil* mReplayKitUtil;
         if (error) {
             return ;
         }
+        previewViewController.previewControllerDelegate = mReplayKitUtil;
+        [mReplayKitUtil.parentViewController presentViewController:previewViewController animated:YES completion:NULL];
     }];
     mReplayKitUtil.isRecording = NO;
+}
+
++ (BOOL)isRecording {
+    return mReplayKitUtil.isRecording;
 }
 
 #pragma mark - RPScreenDelegate
@@ -62,21 +73,26 @@ static ReplayKitUtil* mReplayKitUtil;
 
 - (void)screenRecorder:(RPScreenRecorder *)screenRecorder didStopRecordingWithPreviewViewController:(nullable RPPreviewViewController *)previewViewController error:(nullable NSError *)error {
     NSLog(@"didStopRecordingWithPreviewViewController: %@", error);
-    if (error==nil && previewViewController!=nil) {
-        NSLog(@"可以预览了");
-        previewViewController.previewControllerDelegate = mReplayKitUtil;
-        [self.parentViewController presentViewController:previewViewController animated:YES completion:NULL];
-    }
 }
 
 #pragma mark - RPPreviewViewControllerDelegate
 
 - (void)previewControllerDidFinish:(RPPreviewViewController *)previewController {
-    
+    [previewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)previewController:(RPPreviewViewController *)previewController didFinishWithActivityTypes:(NSSet <NSString *> *)activityTypes {
     
+    if ([activityTypes containsObject:@"com.apple.UIKit.activity.SaveToCameraRoll"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"已经保存到系统相册");
+        });
+    }
+    if ([activityTypes containsObject:@"com.apple.UIKit.activity.CopyToPasteboard"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"已经复制到粘贴板");
+        });
+    }
 }
 
 @end

@@ -14,4 +14,6 @@
 + (void)startRecoder:(UIViewController *)parentViewController;
 + (void)stopRecoder;
 
++ (BOOL)isRecording;
+
 @end

@@ -51,12 +51,34 @@ class ProductsViewController: UIViewController {
         // 注册cell
         tableView2?.register(ObjectCell.self, forCellReuseIdentifier: ObjectCell.reuseIdentifier)
         
+        //
+        let sId = UserDefaults.standard.value(forKey: "user_default_seller") as! NSInteger
+        
         // 获取所有商家列表
         NetworkingHelper.get(url: req_sellerlist_url, parameters: nil, callback: { (data:JSON?, error:NSError?) in
             if error == nil {
                 let items = data!["items"]
                 self.mSellerList = items.rawValue as! NSArray
                 self.tableView1?.reloadData()
+                
+                for (index, value) in self.mSellerList.enumerated() {
+                    let item = value as! Dictionary<String, Any?>
+                    let sellerId = item["sellerId"] as! NSInteger
+                    if sellerId == sId {
+                        self.tableView1?.selectRow(at: IndexPath.init(row: index, section: 0), animated: false, scrollPosition: .top)
+                        break;
+                    }
+                }
+            } else {
+                print("接口失败")
+            }
+        })
+        // 默认展示个商家里面的所有模型
+        NetworkingHelper.get(url: req_modellist_url, parameters: ["sellerId":sId], callback: { (data:JSON?, error:NSError?) in
+            if error == nil {
+                let items = data?.rawValue as! NSArray
+                self.mModelList = items
+                self.tableView2?.reloadData()
             } else {
                 print("接口失败")
             }
@@ -184,6 +206,7 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
                     print("接口失败")
                 }
             })
+            UserDefaults.standard.set(sId, forKey: "user_default_seller")
         } else {
             let sData = self.mModelList.object(at: indexPath.section) as! Dictionary<String, Any>
             let list = sData["list"] as! NSArray

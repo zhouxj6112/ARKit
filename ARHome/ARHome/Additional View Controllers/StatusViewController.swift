@@ -38,6 +38,8 @@ class StatusViewController: UIViewController {
     @IBOutlet weak private var messageLabel: UILabel!
     
     @IBOutlet weak private var restartExperienceButton: UIButton!
+    
+    private var recordButton: UIButton!
 
     // MARK: - Properties
     
@@ -51,6 +53,15 @@ class StatusViewController: UIViewController {
     private var messageHideTimer: Timer?
     
     private var timers: [MessageType: Timer] = [:]
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // 添加录屏按钮
+        recordButton = UIButton.init(frame: CGRect.init(x: restartExperienceButton.frame.origin.x, y: restartExperienceButton.frame.origin.y+60, width: 40, height: 40));
+        recordButton.setImage(UIImage.init(named: "ar_start"), for: .normal)
+        recordButton.addTarget(self, action:#selector(handleRecord(_:)), for: .touchUpInside)
+        self.view.addSubview(recordButton)
+    }
     
     // MARK: - Message Handling
 	
@@ -119,6 +130,16 @@ class StatusViewController: UIViewController {
     
     @IBAction private func restartExperience(_ sender: UIButton) {
         restartExperienceHandler()
+    }
+    
+    @objc private func handleRecord(_ sender: UIButton) {
+        if ReplayKitUtil.isRecording() == false {
+            ReplayKitUtil.startRecoder(self)
+            recordButton.setImage(UIImage.init(named: "ar_stop"), for: .normal)
+        } else {
+            ReplayKitUtil.stopRecoder()
+            recordButton.setImage(UIImage.init(named: "ar_start"), for: .normal)
+        }
     }
 	
 	// MARK: - Panel Visibility

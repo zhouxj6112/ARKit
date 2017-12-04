@@ -18,7 +18,12 @@ class ObjectCell: UITableViewCell {
     var modelName = "" {
         didSet {
             objectTitleLabel.text = modelName.capitalized
-            objectImageView.image = UIImage(named: modelName) // 加载Assets里面的图片
+        }
+    }
+    
+    var modelImage = "" {
+        didSet {
+            objectImageView.loadImageWithUrl(imageUrl: modelImage.capitalized)
         }
     }
 }
@@ -137,6 +142,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
         let list = dic["list"] as! NSArray
         let data = list[indexPath.row] as! Dictionary<String, Any>
         cell.modelName = data["modelName"] as! String
+        cell.modelImage = data["imageUrl"] as! String
         debugPrint("data: \(data)")
         
         // 是否被选中
