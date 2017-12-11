@@ -13,9 +13,11 @@ import SSZipArchive
 import SwiftyJSON
 
 //final let req_sellerlist_url:String = "https://api.sanweiyun.com/users?"
-let req_sellerlist_url:String = "http://10.199.196.241:8080/api/getAllSellers?"
 //final let req_modellist_url:String  = "https://api.sanweiyun.com/users/3/posts?"
-let req_modellist_url:String = "http://10.199.196.241:8080/api/getModelsList?"
+//let req_sellerlist_url:String = "http://10.199.196.241:8080/api/getAllSellers?"
+//let req_modellist_url:String = "http://10.199.196.241:8080/api/getModelsList?"
+let req_sellerlist_url:String = "http://192.168.1.105:8080/api/getAllSellers?"
+let req_modellist_url:String = "http://192.168.1.105:8080/api/getModelsList?"
 
 class NetworkingHelper {
     

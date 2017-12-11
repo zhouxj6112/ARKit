@@ -52,7 +52,11 @@ class ProductsViewController: UIViewController {
         tableView2?.register(ObjectCell.self, forCellReuseIdentifier: ObjectCell.reuseIdentifier)
         
         //
-        let sId = UserDefaults.standard.value(forKey: "user_default_seller") as! NSInteger
+        let preId = UserDefaults.standard.value(forKey: "user_default_seller")
+        var sId:NSInteger = 0
+        if preId != nil {
+            sId = preId as! NSInteger
+        }
         
         // 获取所有商家列表
         NetworkingHelper.get(url: req_sellerlist_url, parameters: nil, callback: { (data:JSON?, error:NSError?) in
