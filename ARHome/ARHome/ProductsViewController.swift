@@ -217,13 +217,7 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
             let cellData = list[indexPath.row] as! Dictionary<String, Any>
             let modelId = cellData["modelId"] as! String // 模型id
             let sId = modelId.components(separatedBy: "_")[0]
-//            self.toAR(sId: sId)
-            
-            NetworkingHelper.download(url: "http://52.187.182.32/file/1006/yizi6.zip", parameters: nil) { (fileUrl:JSON?, error:NSError?) in
-                if error != nil {
-                    
-                }
-            }
+            self.toAR(sId: sId)
         }
     }
     
