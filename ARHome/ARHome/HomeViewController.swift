@@ -14,7 +14,7 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.navigationItem.title = "成功案例"
+        self.navigationItem.title = "分享案例"
     }
 
     override func didReceiveMemoryWarning() {

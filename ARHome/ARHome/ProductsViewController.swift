@@ -186,7 +186,7 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
             let sData = self.mModelList.object(at: section)
             let data = sData as! Dictionary<String, Any>
             let tName = data["typeName"] as! String
-            let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.size.width, height: 30))
+            let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.size.width, height: 40))
             headerView.backgroundColor = UIColor.lightGray
             let label = UILabel.init(frame: CGRect.init(x: 10, y: 0, width: 120, height: 30))
             label.text = tName
