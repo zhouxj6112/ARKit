@@ -87,7 +87,10 @@ class VirtualObjectSelectionViewController: UITableViewController {
         let list = dic["list"] as! NSMutableArray
         var data = list[indexPath.row] as! Dictionary<String, Any>
         // 初始化模型
-        let object = VirtualObject.init(url: URL.init(string: data["fileUrl"] as! String)!)
+        let fileUrl = data["fileUrl"] as! String // 注意中文问题
+        let encodedUrl = fileUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let url = URL.init(string: encodedUrl!)
+        let object = VirtualObject.init(url: url!)
         
         var isIn = false
         if data.keys.contains("isIn") && data["isIn"] as! Bool == true {

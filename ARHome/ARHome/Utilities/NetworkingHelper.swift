@@ -91,11 +91,13 @@ class NetworkingHelper {
         let destFileName = url.MD5()
         
         // 判断是否下载过了,下载过了就直接返回
-        let filePath = NSHomeDirectory() + "/Documents/" + destFileName
+        let filePath = NSHomeDirectory() + "/Documents/" + destFileName // 下载的zip原文件
         if fileManager.fileExists(atPath: filePath) {
-            let downloadDestFilePath = NSHomeDirectory() + "/Documents/" + fileName! + "/" + fileName! + ".scn"
-            if (fileManager.fileExists(atPath: downloadDestFilePath)) {
-                let dic = ["code":200, "msg":"succ", "data":["url":url, "file":downloadDestFilePath]] as [String : Any]
+            // 查找解压包里面的模型文件
+            let unzipDocPath = NSHomeDirectory() + "/Documents/" + fileName!
+            let modelFilePath = findModelFile(docUrl: unzipDocPath)
+            if (modelFilePath != nil) {
+                let dic = ["code":200, "msg":"succ", "data":["url":url, "file":modelFilePath]] as [String : Any]
                 let result = JSON(dic)
                 callback(result, nil)
             } else {
@@ -126,15 +128,22 @@ class NetworkingHelper {
                 debugPrint(response)
                 let destPath = response.destinationURL?.path
                 if (destPath != nil) {
-                    // 解压
+                    // 解压zip
                     let destFilePath = NSHomeDirectory() + "/Documents/"
                     if SSZipArchive.unzipFile(atPath: destPath!, toDestination: destFilePath) {
                         let modelName:String = fileName!
-                        // 获取模型主文件路径
-                        let downloadDestFilePath = destFilePath + modelName + "/" + modelName + ".scn"
-                        let dic = ["code":200, "msg":"succ", "data":["url":url, "file":downloadDestFilePath]] as [String : Any]
-                        let result = JSON(dic)
-                        callback(result, nil)
+                        // 查找模型主文件路径
+                        let unzipDocPath = NSHomeDirectory() + "/Documents/" + modelName
+                        let modelFilePath = findModelFile(docUrl: unzipDocPath)
+                        if (modelFilePath != nil) {
+                            // 找到模型文件路径了
+                            let dic = ["code":200, "msg":"succ", "data":["url":url, "file":modelFilePath]] as [String : Any]
+                            let result = JSON(dic)
+                            callback(result, nil)
+                        } else {
+                            // 下载的zip里面没有模型文件
+                            callback(nil, NSError.init(domain: "", code: -3, userInfo: nil))
+                        }
                     } else {
                         callback(nil, NSError.init(domain: "", code: -2, userInfo: nil))
                     }
