@@ -60,7 +60,9 @@ class VirtualObjectLoader {
             }
             let respData = fileUrl!["data"]
             let filePath = respData["file"]
-            let url = URL.init(string: "file://" + filePath.stringValue)
+            let localFilePath = "file://" + filePath.stringValue // 注意中文问题
+            let enFilePath = localFilePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+            let url = URL.init(string: enFilePath!)
             let object = VirtualObject.init(url: url!)
             let obj = object! as VirtualObject
             debugPrint("本地模型: \(obj)")

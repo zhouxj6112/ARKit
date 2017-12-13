@@ -75,3 +75,18 @@ extension String
         return data.MD5().hexedString()
     }
 }
+
+//
+func findModelFile(docUrl: String) -> String? {
+    let enDocUrl = docUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+    let localFileUrl = URL.init(string: enDocUrl!)
+    // 深度遍历，会递归遍历子文件夹（但不会递归符号链接）
+    let fileEnumerator = FileManager().enumerator(at: localFileUrl!, includingPropertiesForKeys: [])!
+    for element in fileEnumerator.allObjects {
+        let url = element as! URL
+        if url.pathExtension == "scn" {
+            return url.absoluteString
+        }
+    }
+    return nil
+}
