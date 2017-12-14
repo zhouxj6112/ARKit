@@ -37,9 +37,9 @@ class StatusViewController: UIViewController {
     
     @IBOutlet weak private var messageLabel: UILabel!
     
-    @IBOutlet weak private var restartExperienceButton: UIButton!
+    @IBOutlet weak private var closeButton: UIButton!
     
-    private var recordButton: UIButton!
+    @IBOutlet weak private var recordButton: UIButton!
 
     // MARK: - Properties
     
@@ -56,11 +56,11 @@ class StatusViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 添加录屏按钮
-        recordButton = UIButton.init(frame: CGRect.init(x: restartExperienceButton.frame.origin.x, y: restartExperienceButton.frame.origin.y+60, width: 40, height: 40));
-        recordButton.setImage(UIImage.init(named: "ar_start"), for: .normal)
-        recordButton.addTarget(self, action:#selector(handleRecord(_:)), for: .touchUpInside)
-        self.view.addSubview(recordButton)
+        //
+        closeButton.frame = CGRect.init(x: self.view.frame.size.width-40, y: 20, width: 40, height: 40);
+        recordButton.frame = CGRect.init(x: 0, y: 20, width: 40, height: 40);
+        messageLabel.frame = CGRect.init(x: 40, y: 20, width: self.view.frame.size.width-80, height: 20);
+        messageLabel.textAlignment = .center;
     }
     
     // MARK: - Message Handling
@@ -132,7 +132,7 @@ class StatusViewController: UIViewController {
         restartExperienceHandler()
     }
     
-    @objc private func handleRecord(_ sender: UIButton) {
+    @IBAction private func handleRecord(_ sender: UIButton) {
         if ReplayKitUtil.isRecording() == false {
             ReplayKitUtil.startRecoder(self)
             recordButton.setImage(UIImage.init(named: "ar_stop"), for: .normal)
@@ -145,17 +145,17 @@ class StatusViewController: UIViewController {
 	// MARK: - Panel Visibility
     
 	private func setMessageHidden(_ hide: Bool, animated: Bool) {
-        // The panel starts out hidden, so show it before animating opacity.
-        messagePanel.isHidden = false
-        
-        guard animated else {
-            messagePanel.alpha = hide ? 0 : 1
-            return
-        }
-
-        UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
-            self.messagePanel.alpha = hide ? 0 : 1
-        }, completion: nil)
+//        // The panel starts out hidden, so show it before animating opacity.
+//        messagePanel.isHidden = false
+//
+//        guard animated else {
+//            messagePanel.alpha = hide ? 0 : 1
+//            return
+//        }
+//
+//        UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
+//            self.messagePanel.alpha = hide ? 0 : 1
+//        }, completion: nil)
 	}
 }
 
