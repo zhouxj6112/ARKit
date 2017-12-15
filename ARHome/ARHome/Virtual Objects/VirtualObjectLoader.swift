@@ -60,9 +60,10 @@ class VirtualObjectLoader {
             }
             let respData = fileUrl!["data"]
             let filePath = respData["file"]
-            let localFilePath = "file://" + filePath.stringValue // 注意中文问题
+            let localFilePath = filePath.stringValue // 注意路径中包含中文的问题
             let enFilePath = localFilePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-            let url = URL.init(string: enFilePath!)
+            let en = enFilePath?.replacingOccurrences(of: "%25", with: "%") // 很是奇怪，为什么会多了25
+            let url = URL.init(string: en!)
             let object = VirtualObject.init(url: url!)
             let obj = object! as VirtualObject
             debugPrint("本地模型: \(obj)")

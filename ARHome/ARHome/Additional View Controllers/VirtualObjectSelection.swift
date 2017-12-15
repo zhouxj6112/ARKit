@@ -17,13 +17,13 @@ class ObjectCell: UITableViewCell {
         
     var modelName = "" {
         didSet {
-            objectTitleLabel.text = modelName.capitalized
+            objectTitleLabel.text = modelName
         }
     }
     
     var modelImage = "" {
         didSet {
-            objectImageView.loadImageWithUrl(imageUrl: modelImage.capitalized)
+            objectImageView.loadImageWithUrl(imageUrl: modelImage)
         }
     }
 }

@@ -34,6 +34,12 @@ class ProductsViewController: UIViewController {
     private var mSellerList:NSArray = [];
     private var mModelList:NSArray = [];
     
+    public static func navForProductsViewController() -> UINavigationController {
+        let vc = ProductsViewController()
+        let nav = UINavigationController.init(rootViewController: vc)
+        return nav
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -188,7 +194,7 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
             let tName = data["typeName"] as! String
             let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.size.width, height: 40))
             headerView.backgroundColor = UIColor.lightGray
-            let label = UILabel.init(frame: CGRect.init(x: 10, y: 0, width: 120, height: 30))
+            let label = UILabel.init(frame: CGRect.init(x: 10, y: 0, width: 120, height: 40))
             label.text = tName
             headerView.addSubview(label)
             return headerView

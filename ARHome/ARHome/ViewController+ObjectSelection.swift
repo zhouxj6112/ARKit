@@ -33,6 +33,7 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         
         updateQueue.async {
             self.sceneView.scene.rootNode.addChildNode(virtualObject)
+            debugPrint("添加之后的模型:\(virtualObject)");
         }
     }
     

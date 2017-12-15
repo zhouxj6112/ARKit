@@ -59,7 +59,8 @@ class StatusViewController: UIViewController {
         //
         closeButton.frame = CGRect.init(x: self.view.frame.size.width-40, y: 20, width: 40, height: 40);
         recordButton.frame = CGRect.init(x: 0, y: 20, width: 40, height: 40);
-        messageLabel.frame = CGRect.init(x: 40, y: 20, width: self.view.frame.size.width-80, height: 20);
+        messagePanel.frame = CGRect.init(x: 0, y: 0, width: self.view.frame.size.width, height: 20);
+        messageLabel.frame = CGRect.init(x: 0, y: 0, width: messagePanel.frame.size.width, height: messagePanel.frame.size.height);
         messageLabel.textAlignment = .center;
     }
     
@@ -145,17 +146,17 @@ class StatusViewController: UIViewController {
 	// MARK: - Panel Visibility
     
 	private func setMessageHidden(_ hide: Bool, animated: Bool) {
-//        // The panel starts out hidden, so show it before animating opacity.
-//        messagePanel.isHidden = false
-//
-//        guard animated else {
-//            messagePanel.alpha = hide ? 0 : 1
-//            return
-//        }
-//
-//        UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
-//            self.messagePanel.alpha = hide ? 0 : 1
-//        }, completion: nil)
+        // The panel starts out hidden, so show it before animating opacity.
+        messagePanel.isHidden = false
+
+        guard animated else {
+            messagePanel.alpha = hide ? 0 : 1
+            return
+        }
+
+        UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
+            self.messagePanel.alpha = hide ? 0 : 1
+        }, completion: nil)
 	}
 }
 
