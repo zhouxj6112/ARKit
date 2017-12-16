@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if window == nil {
             window = UIWindow()
             window?.backgroundColor = UIColor.white
-            window?.rootViewController = MainViewController()
+            window?.rootViewController = ProductsViewController.navForProductsViewController()
         }
         window?.makeKeyAndVisible()
         

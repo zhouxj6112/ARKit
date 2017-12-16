@@ -70,7 +70,7 @@ class VirtualObject: SCNReferenceNode {
             simdPosition = cameraWorldPosition + positionOffsetFromCamera
         }
         
-//        // 移动模型中心位置
+//        // 移动模型位置,使其底面贴近底面
 //        print("原始位置:\(position)")
 //        let minV = self.boundingBox.min
 //        let maxV = self.boundingBox.max
@@ -78,20 +78,21 @@ class VirtualObject: SCNReferenceNode {
 //        if (minV.y > 0) {
 //            let moveY = minV.y
 //            position = SCNVector3(position.x, position.y - moveY, position.z)
-//            print("移动位置:\(position)")
+//            print("模型位置高了,移动位置:\(position)")
 //        }
     }
     
     func setScale() {
-//        let minV = self.boundingBox.min
-//        let maxV = self.boundingBox.max
-//        print("模型: \(minV) \(maxV)")
-//        let maxDis = sqrt((maxV.x - minV.x) * (maxV.x - minV.x) + (maxV.y - minV.y) * (maxV.y - minV.y) + (maxV.z - minV.z) * (maxV.z - minV.z)) / 2
-//        print("模型尺寸: \(maxDis)")
-//        //
-//        let scale = FocusSquare.size * 1.5 / maxDis
-//        print("缩放比例: \(scale),保证跟捉捕框大小")
+        let minV = self.boundingBox.min
+        let maxV = self.boundingBox.max
+        print("模型: \(minV) \(maxV)")
+        let maxDis = sqrt((maxV.x - minV.x) * (maxV.x - minV.x) + (maxV.y - minV.y) * (maxV.y - minV.y) + (maxV.z - minV.z) * (maxV.z - minV.z)) / 2
+        print("模型尺寸: \(maxDis)")
+        //
+        let fScale = FocusSquare.size * 1.5 / maxDis
+        print("缩放比例: \(fScale),保证跟捉捕框大小")
 //        simdScale = float3(scale, scale, scale)
+        self.scale = SCNVector3.init(fScale, fScale, fScale)
     }
     
     func setDirection() {
