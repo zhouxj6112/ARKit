@@ -67,6 +67,7 @@ class VirtualObjectLoader {
             let obj = object! as VirtualObject
             debugPrint("本地模型: \(obj)")
             self.loadedObjects.append(obj)
+            obj.zipFileUrl = urlString
             // Load the content asynchronously.
             DispatchQueue.global(qos: .userInitiated).async {
                 obj.reset()

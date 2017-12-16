@@ -22,6 +22,8 @@ class VirtualObject: SCNReferenceNode {
         return referenceURL.lastPathComponent.replacingOccurrences(of: type, with: "")
     }
     
+    public var zipFileUrl: String = ""
+    
     /// Use average of recent virtual object distances to avoid rapid changes in object scale.
     private var recentVirtualObjectDistances = [Float]()
     

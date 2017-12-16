@@ -44,7 +44,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
     var modelList:NSArray = []
     
     /// The rows of the currently selected `VirtualObject`s.
-    var selectedVirtualObjectRows = IndexSet()
+    private var selectedVirtualObjectRows = IndexSet()
     
     weak var delegate: VirtualObjectSelectionViewControllerDelegate?
     
@@ -58,21 +58,21 @@ class VirtualObjectSelectionViewController: UITableViewController {
         tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .light))
         
         // 更改数据结构
-        let newModelList = NSMutableArray.init(capacity: modelList.count)
-        for obj in modelList {
-            var objDic = obj as! Dictionary<String, Any>
-            let mutableArray = NSMutableArray.init(capacity: 1)
-            let array = objDic["list"] as! NSArray
-            for dic in array {
-                var dicObj = dic as! Dictionary<String, Any>
-                dicObj["isIn"] = false // 增加辅助数据结构
-                mutableArray.add(dicObj)
-            }
-            objDic["list"] = mutableArray
-            //
-            newModelList.add(objDic)
-        }
-        modelList = newModelList
+//        let newModelList = NSMutableArray.init(capacity: modelList.count)
+//        for obj in modelList {
+//            var objDic = obj as! Dictionary<String, Any>
+//            let mutableArray = NSMutableArray.init(capacity: 1)
+//            let array = objDic["list"] as! NSArray
+//            for dic in array {
+//                var dicObj = dic as! Dictionary<String, Any>
+//                dicObj["isIn"] = false // 增加辅助数据结构
+//                mutableArray.add(dicObj)
+//            }
+//            objDic["list"] = mutableArray
+//            //
+//            newModelList.add(objDic)
+//        }
+//        modelList = newModelList
     }
     
     override func viewWillLayoutSubviews() {

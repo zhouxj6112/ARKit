@@ -84,9 +84,22 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         objectsViewController.delegate = self
         
         // Set all rows of currently placed objects to selected.
-        for object in virtualObjectLoader.loadedObjects {
-            guard let index = VirtualObject.availableObjects.index(of: object) else { continue }
-            objectsViewController.selectedVirtualObjectRows.insert(index)
+        for one in objectsViewController.modelList {
+            var dic = one as! Dictionary<String, Any>
+            let fileUrl = dic["fileUrl"] as! String
+            var bFind = false
+            for object in virtualObjectLoader.loadedObjects {
+                let modelFileUrl = object.zipFileUrl
+                if modelFileUrl.elementsEqual(fileUrl) {
+                    bFind = true
+                    break;
+                }
+            }
+            if bFind {
+                dic["isIn"] = true
+            } else {
+                dic["isIn"] = false
+            }
         }
     }
     
