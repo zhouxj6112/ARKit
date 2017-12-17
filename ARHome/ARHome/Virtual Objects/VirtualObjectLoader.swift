@@ -51,7 +51,7 @@ class VirtualObjectLoader {
         
         // 方案三
         isLoading = true
-        let urlString = object.referenceURL.absoluteString // zip文件下载url
+        let urlString = object.referenceURL.absoluteString // zip文件下载url(已经处理过中文的了)
         NetworkingHelper.download(url: urlString, parameters: nil) { (fileUrl:JSON?, error:NSError?) in
             if error != nil {
                 self.isLoading = false
@@ -68,7 +68,8 @@ class VirtualObjectLoader {
             let obj = object! as VirtualObject
             debugPrint("本地模型: \(obj)")
             self.loadedObjects.append(obj)
-            obj.zipFileUrl = urlString
+            let zipFileUrl = urlString.removingPercentEncoding  // 将中文编码转换回去,存储原始数据
+            obj.zipFileUrl = zipFileUrl!
             // Load the content asynchronously.
             DispatchQueue.global(qos: .userInitiated).async {
                 obj.reset()

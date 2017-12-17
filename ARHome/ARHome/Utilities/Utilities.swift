@@ -84,7 +84,7 @@ func findModelFile(docUrl: String) -> String? {
     let fileEnumerator = FileManager().enumerator(at: localFileUrl!, includingPropertiesForKeys: [])!
     for element in fileEnumerator.allObjects {
         let url = element as! URL
-        if url.pathExtension == "scn" {
+        if url.pathExtension == "scn" || url.pathExtension == "obj" || url.pathExtension == "dae" {
             return url.absoluteString
         }
     }

@@ -80,27 +80,37 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
         
         let objectsViewController = segue.destination as! VirtualObjectSelectionViewController
         objectsViewController.virtualObjects = VirtualObject.availableObjects
-        objectsViewController.modelList = self.modelList // 额外附加
         objectsViewController.delegate = self
         
+        let mutableArray = NSMutableArray.init(capacity: 1);
         // Set all rows of currently placed objects to selected.
-        for one in objectsViewController.modelList {
-            var dic = one as! Dictionary<String, Any>
-            let fileUrl = dic["fileUrl"] as! String
-            var bFind = false
-            for object in virtualObjectLoader.loadedObjects {
-                let modelFileUrl = object.zipFileUrl
-                if modelFileUrl.elementsEqual(fileUrl) {
-                    bFind = true
-                    break;
+        for obj in self.modelList {
+            var objDic = obj as! Dictionary<String, Any>
+            let array = objDic["list"] as! NSArray
+            let mutable = NSMutableArray.init(capacity: 1);
+            for dic in array {
+                var dicObj = dic as! Dictionary<String, Any>
+                let fileUrl = dicObj["fileUrl"] as! String
+                var bFind = false
+                for object in virtualObjectLoader.loadedObjects {
+                    let modelFileUrl = object.zipFileUrl
+                    if modelFileUrl.elementsEqual(fileUrl) {
+                        bFind = true
+                        break;
+                    }
                 }
+                if bFind {
+                    dicObj["isIn"] = true
+                } else {
+                    dicObj["isIn"] = false
+                }
+                mutable.add(dicObj)
             }
-            if bFind {
-                dic["isIn"] = true
-            } else {
-                dic["isIn"] = false
-            }
+            objDic["list"] = mutable;
+            mutableArray.add(objDic)
         }
+        objectsViewController.modelList = mutableArray // 额外附加
+        objectsViewController.tableView.reloadData()
     }
     
 }

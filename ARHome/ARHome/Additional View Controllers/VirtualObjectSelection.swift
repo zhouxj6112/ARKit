@@ -84,7 +84,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        let object = virtualObjects[indexPath.row]
         let dic = modelList[indexPath.section] as! Dictionary<String, Any>
-        let list = dic["list"] as! NSMutableArray
+        let list = dic["list"] as! NSArray
         var data = list[indexPath.row] as! Dictionary<String, Any>
         // 初始化模型
         let fileUrl = data["fileUrl"] as! String // 注意中文问题
@@ -106,7 +106,6 @@ class VirtualObjectSelectionViewController: UITableViewController {
             data["isIn"] = true
         }
         debugPrint("data: \(data)")
-        list[indexPath.row] = data
 
         dismiss(animated: true, completion: nil)
     }
@@ -166,5 +165,10 @@ class VirtualObjectSelectionViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.backgroundColor = .clear
+    }
+    
+    func dealloc() {
+        let weakSelf = self
+        debugPrint("\(weakSelf) dealloc");
     }
 }
