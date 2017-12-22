@@ -84,17 +84,13 @@ class NetworkingHelper {
     
     static func download(url:String, parameters:[String:Any]?, callback:@escaping ResponseBlock) -> Void {
         let fileManager = FileManager.default
-        var fileName = URL.init(string: url)?.lastPathComponent
-        if (fileName?.contains("."))! {
-            fileName = fileName?.components(separatedBy: CharacterSet.init(charactersIn: "."))[0]
-        }
         let destFileName = url.MD5()
         
         // 判断是否下载过了,下载过了就直接返回
-        let filePath = NSHomeDirectory() + "/Documents/" + destFileName // 下载的zip原文件
+        let filePath = NSHomeDirectory() + "/Documents/" + destFileName + "/" // 下载的zip解压后的文件夹
         if fileManager.fileExists(atPath: filePath) {
             // 查找解压包里面的模型文件
-            let unzipDocPath = NSHomeDirectory() + "/Documents/" + fileName!
+            let unzipDocPath = filePath
             let modelFilePath = findModelFile(docUrl: unzipDocPath)
             if (modelFilePath != nil) {
                 let dic = ["code":200, "msg":"succ", "data":["url":url, "file":modelFilePath]] as [String : Any]
@@ -111,7 +107,11 @@ class NetworkingHelper {
         //指定下载路径和保存文件名
         let destination: DownloadRequest.DownloadFileDestination = { _, _ in
             let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let fileUrl = documentsUrl.appendingPathComponent(destFileName)
+            var zipFileName = destFileName
+            if ((URL.init(string: url)?.pathExtension) != nil) {
+                zipFileName += "." + (URL.init(string: url)?.pathExtension)!;
+            }
+            let fileUrl = documentsUrl.appendingPathComponent(zipFileName)
             return (fileUrl, [.removePreviousFile, .createIntermediateDirectories]) //两个参数表示如果有同名文件则会覆盖，如果路径中文件夹不存在则会自动创建
         }
         Alamofire.download(
@@ -129,11 +129,17 @@ class NetworkingHelper {
                 let destPath = response.destinationURL?.path
                 if (destPath != nil) {
                     // 解压zip
-                    let destFilePath = NSHomeDirectory() + "/Documents/"
+                    let destFilePath = NSHomeDirectory() + "/Documents/" + url.MD5() + "/" // 再包裹一层文件夹
+                    if !fileManager.fileExists(atPath: destFilePath) {
+                        do {
+                            try fileManager.createDirectory(at: URL.init(string: "file://" + destFilePath)!, withIntermediateDirectories: true, attributes: nil)
+                        } catch {
+                            debugPrint("创建解压文件夹失败:" + error.localizedDescription)
+                        }
+                    }
                     if SSZipArchive.unzipFile(atPath: destPath!, toDestination: destFilePath) {
-                        let modelName:String = fileName!
                         // 查找模型主文件路径
-                        let unzipDocPath = NSHomeDirectory() + "/Documents/" + modelName
+                        let unzipDocPath = destFilePath
                         let modelFilePath = findModelFile(docUrl: unzipDocPath)
                         if (modelFilePath != nil) {
                             // 找到模型文件路径了

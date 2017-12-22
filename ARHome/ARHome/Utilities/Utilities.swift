@@ -82,11 +82,23 @@ func findModelFile(docUrl: String) -> String? {
     let localFileUrl = URL.init(string: enDocUrl!)
     // 深度遍历，会递归遍历子文件夹（但不会递归符号链接）
     let fileEnumerator = FileManager().enumerator(at: localFileUrl!, includingPropertiesForKeys: [])!
+    // 深度遍历,会递归遍历子文件夹,但效率比较低
     for element in fileEnumerator.allObjects {
         let url = element as! URL
         if url.pathExtension == "scn" || url.pathExtension == "obj" || url.pathExtension == "dae" {
             return url.absoluteString
         }
     }
+//    // 深度遍历，会递归遍历子文件夹 (文件名或者文件夹名可以带有特殊符号的)
+//    let enDocUrl = docUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+//    let subPaths = FileManager().subpaths(atPath: enDocUrl!)
+//    if (subPaths != nil) {
+//        for element in subPaths! {
+//            let url = URL.init(string: element)
+//            if url?.pathExtension == "scn" || url?.pathExtension == "obj" || url?.pathExtension == "dae" {
+//                return url?.absoluteString
+//            }
+//        }
+//    }
     return nil
 }
