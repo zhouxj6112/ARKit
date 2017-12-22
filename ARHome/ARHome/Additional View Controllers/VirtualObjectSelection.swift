@@ -56,23 +56,6 @@ class VirtualObjectSelectionViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .light))
-        
-        // 更改数据结构
-//        let newModelList = NSMutableArray.init(capacity: modelList.count)
-//        for obj in modelList {
-//            var objDic = obj as! Dictionary<String, Any>
-//            let mutableArray = NSMutableArray.init(capacity: 1)
-//            let array = objDic["list"] as! NSArray
-//            for dic in array {
-//                var dicObj = dic as! Dictionary<String, Any>
-//                dicObj["isIn"] = false // 增加辅助数据结构
-//                mutableArray.add(dicObj)
-//            }
-//            objDic["list"] = mutableArray
-//            //
-//            newModelList.add(objDic)
-//        }
-//        modelList = newModelList
     }
     
     override func viewWillLayoutSubviews() {
@@ -144,7 +127,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
         let list = dic["list"] as! NSArray
         let data = list[indexPath.row] as! Dictionary<String, Any>
         cell.modelName = data["modelName"] as! String
-        cell.modelImage = data["imageUrl"] as! String
+        cell.modelImage = data["compressImage"] as! String // 使用压缩图
         debugPrint("data: \(data)")
         
         // 是否被选中

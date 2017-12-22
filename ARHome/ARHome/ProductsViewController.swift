@@ -45,6 +45,7 @@ class ProductsViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         self.navigationItem.title = "所有家具"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "user_setting"), style: .plain, target: self, action: #selector(toSetting))
         
         tableView1 = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: 120, height: self.view.frame.size.height), style: UITableViewStyle.plain)
         tableView1?.dataSource = self
@@ -151,6 +152,8 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
             let cellData = self.mSellerList.object(at: indexPath.row)
             let data = cellData as! Dictionary<String, Any>
             let sName = data["sellerName"] as! String
+            cell?.textLabel?.numberOfLines = 0
+            cell?.textLabel?.textAlignment = .center
             cell?.textLabel?.text = sName
             return cell!
         } else {
@@ -167,7 +170,7 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
             let data = list[indexPath.row] as! Dictionary<String, Any>
             let sName = data["modelName"] as! String
             cell.mTitleLabel?.text = sName
-            let sImage = data["imageUrl"] as! String
+            let sImage = data["compressImage"] as! String
             cell.mImageView?.loadImageWithUrl(imageUrl: sImage)
             return cell
         }
@@ -180,11 +183,11 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
         return 0
     }
     
-    private func tableView(_ tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableView == self.tableView1 {
-            return 44
+            return 60
         }
-        return 44;
+        return 44
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -243,5 +246,10 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
                 })
             })
         }
+    }
+    
+    @objc private func toSetting() {
+        let vc = SettingViewController();
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

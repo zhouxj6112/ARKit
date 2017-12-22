@@ -13,9 +13,11 @@ import SDWebImage
 extension UIImageView {
 
     func loadImageWithUrl(imageUrl: String) {
-        //
-        self.sd_setImage(with: URL.init(string: imageUrl), placeholderImage: nil) { (image, error, cacheType, url) -> Void in
-            print("下载\(imageUrl)完成")
+        // 过滤url里面的中文
+        let encodedUrl = imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let iUrl = URL.init(string: encodedUrl!)
+        self.sd_setImage(with: iUrl!, placeholderImage: nil) { (image, error, cacheType, url) -> Void in
+            debugPrint("下载\(imageUrl)结果 Error:\(String(describing: error?.localizedDescription))")
             if image != nil {
                 self.image = image
             }
