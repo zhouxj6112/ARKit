@@ -69,30 +69,33 @@ class VirtualObject: SCNReferenceNode {
             //
             simdPosition = cameraWorldPosition + positionOffsetFromCamera
         }
-        
-//        // 移动模型位置,使其底面贴近底面
-//        print("原始位置:\(position)")
-//        let minV = self.boundingBox.min
-//        let maxV = self.boundingBox.max
-//        print("模型: \(minV) \(maxV)")
-//        if (minV.y > 0) {
-//            let moveY = minV.y
-//            position = SCNVector3(position.x, position.y - moveY, position.z)
-//            print("模型位置高了,移动位置:\(position)")
-//        }
     }
     
-    func setScale() {
+    func alignCenter() {
         let minV = self.boundingBox.min
         let maxV = self.boundingBox.max
-        print("模型: \(minV) \(maxV)")
+        print("模型包围盒: minV:\(minV) maxV:\(maxV)")
         let maxDis = sqrt((maxV.x - minV.x) * (maxV.x - minV.x) + (maxV.y - minV.y) * (maxV.y - minV.y) + (maxV.z - minV.z) * (maxV.z - minV.z)) / 2
         print("模型尺寸: \(maxDis)")
         //
         let fScale = FocusSquare.size * 1.5 / maxDis
         print("缩放比例: \(fScale),保证跟捉捕框大小")
-//        simdScale = float3(scale, scale, scale)
-        self.scale = SCNVector3.init(fScale, fScale, fScale)
+        simdScale = float3(fScale, fScale, fScale)
+        //
+//        let fScale: Float = 0.001 // 模型尺寸在500-1000之间,所以缩放比例固定1/1000
+//        print("缩放比例: \(fScale),保证跟捉捕框大小")
+//        simdScale = float3(fScale, fScale, fScale)
+        
+        // 缩放后,移动模型位置,使其底面贴近底面,并且中心点在包围盒底部中心位置
+        print("原始位置:\(position)")
+        if (minV.y > 0 || minV.x+maxV.x != 0 || minV.z+maxV.z != 0) {
+            let moveX = abs((maxV.x+minV.x)/2) * fScale
+            let moveY = minV.y * fScale // 这个非常关键
+            let moveZ = abs((maxV.z+minV.z)/2) * fScale
+            debugPrint("moveX:\(moveX), moveY:\(moveY), moveZ:\(moveZ)")
+            position = SCNVector3(position.x - moveX, position.y - moveY, position.z + moveZ)
+            print("模型位置不在底部中心点上,移动位置:\(position)")
+        }
     }
     
     func setDirection() {
@@ -115,7 +118,7 @@ class VirtualObject: SCNReferenceNode {
         let minZ: Float = anchor.center.z - anchor.extent.z / 2 - anchor.extent.z * tolerance
         let maxZ: Float = anchor.center.z + anchor.extent.z / 2 + anchor.extent.z * tolerance
         
-        print("检测到平面大小 [X]:\(maxX-minX) [Z]:\(maxZ-minZ)")
+//        print("检测到平面大小 [X]:\(maxX-minX) [Z]:\(maxZ-minZ)")
         guard (minX...maxX).contains(planePosition.x) && (minZ...maxZ).contains(planePosition.z) else {
             return
         }

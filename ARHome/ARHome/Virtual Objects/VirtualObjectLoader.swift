@@ -14,10 +14,13 @@ import SwiftyJSON
  objects quickly once they are needed.
 */
 class VirtualObjectLoader {
+    
 	private(set) var loadedObjects = [VirtualObject]()
     
     private(set) var isLoading = false
 	
+    private var isRelease = false
+    
 	// MARK: - Loading object
 
     /**
@@ -53,6 +56,9 @@ class VirtualObjectLoader {
         isLoading = true
         let urlString = object.referenceURL.absoluteString // zip文件下载url(已经处理过中文的了)
         NetworkingHelper.download(url: urlString, parameters: nil) { (fileUrl:JSON?, error:NSError?) in
+            if self.isRelease {
+                return;
+            }
             if error != nil {
                 self.isLoading = false
                 loadedHandler(nil)
@@ -94,6 +100,15 @@ class VirtualObjectLoader {
         
         loadedObjects[index].removeFromParentNode()
         loadedObjects.remove(at: index)
+    }
+    
+    func release() {
+        isRelease = true
+    }
+    
+    // 析构函数
+    deinit {
+        debugPrint("VirtualObjectLoader释放")
     }
     
 }

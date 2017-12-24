@@ -88,7 +88,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
             delegate?.virtualObjectSelectionViewController(self, didSelectObject: object!)
             data["isIn"] = true
         }
-        debugPrint("data: \(data)")
+//        debugPrint("data: \(data)")
 
         dismiss(animated: true, completion: nil)
     }
@@ -128,7 +128,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
         let data = list[indexPath.row] as! Dictionary<String, Any>
         cell.modelName = data["modelName"] as! String
         cell.modelImage = data["compressImage"] as! String // 使用压缩图
-        debugPrint("data: \(data)")
+//        debugPrint("data: \(data)")
         
         // 是否被选中
         if data.keys.contains("isIn") && data["isIn"] as! Bool == true {
@@ -150,8 +150,4 @@ class VirtualObjectSelectionViewController: UITableViewController {
         cell?.backgroundColor = .clear
     }
     
-    func dealloc() {
-        let weakSelf = self
-        debugPrint("\(weakSelf) dealloc");
-    }
 }

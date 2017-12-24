@@ -26,8 +26,8 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         virtualObjectInteraction.selectedObject = virtualObject
         // 控制位置
         virtualObject.setPosition(focusSquarePosition, relativeTo: cameraTransform, smoothMovement: false)
-        // 缩放比例
-        virtualObject.setScale();
+        // 对齐底部中心点
+        virtualObject.alignCenter();
         // 控制方向
         virtualObject.setDirection();
         

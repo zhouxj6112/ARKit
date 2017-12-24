@@ -205,4 +205,10 @@ class ViewController: UIViewController {
     func resetModelList(array:NSArray) -> Void {
         modelList = array
     }
+    
+    deinit {
+        virtualObjectLoader.release();
+        debugPrint("ViewController释放");
+    }
+    
 }
