@@ -14,7 +14,7 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		eqi7hdYO+lIeVeDr7yPinTw/Fh0=
+		kCX+d3KoFsbvunpkM4EXSM5pvac=
 		</data>
 		<key>Base.lproj/Main.storyboardc/BV1-FR-VrT-view-RLh-bf-1c3.nib</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>Frameworks/Alamofire.framework/Alamofire</key>
 		<data>
-		oQ7vDNRBXE4vzYTHaGescct5b20=
+		uic2Y5lgTgsfEdqFEECYlrhh1s4=
 		</data>
 		<key>Frameworks/Alamofire.framework/Info.plist</key>
 		<data>
@@ -58,7 +58,7 @@
 		</data>
 		<key>Frameworks/AlamofireObjectMapper.framework/AlamofireObjectMapper</key>
 		<data>
-		etfAUv76/hM5DoSdm0LWBlI4NuQ=
+		jYQl/d/zIlm/o5dUleeCz0LuKuc=
 		</data>
 		<key>Frameworks/AlamofireObjectMapper.framework/Info.plist</key>
 		<data>
@@ -74,7 +74,7 @@
 		</data>
 		<key>Frameworks/ObjectMapper.framework/ObjectMapper</key>
 		<data>
-		f1Ql3iL5L+yyiBgBApliJxixm8A=
+		9ijoUj4f+AF4524/EqJr2xTdIR4=
 		</data>
 		<key>Frameworks/ObjectMapper.framework/_CodeSignature/CodeResources</key>
 		<data>
@@ -86,7 +86,7 @@
 		</data>
 		<key>Frameworks/SDWebImage.framework/SDWebImage</key>
 		<data>
-		DcOUh5RAEAbkDtEx81H+kNxCzhM=
+		I6xU6oWYYLryz1KUN1COSyM6wYo=
 		</data>
 		<key>Frameworks/SDWebImage.framework/_CodeSignature/CodeResources</key>
 		<data>
@@ -98,7 +98,7 @@
 		</data>
 		<key>Frameworks/SSZipArchive.framework/SSZipArchive</key>
 		<data>
-		tasimfv8FW6/8+AC3mpNbRyS4MA=
+		ONePiFSKd08tDTD0+ZjgzvC8xpg=
 		</data>
 		<key>Frameworks/SSZipArchive.framework/_CodeSignature/CodeResources</key>
 		<data>
@@ -110,7 +110,7 @@
 		</data>
 		<key>Frameworks/SwiftyJSON.framework/SwiftyJSON</key>
 		<data>
-		4wClPEJ0sSzKlYfS941FdujmLKM=
+		UmjLcF0jxNbupnKTg/wgJIZep2U=
 		</data>
 		<key>Frameworks/SwiftyJSON.framework/_CodeSignature/CodeResources</key>
 		<data>
@@ -305,11 +305,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			eqi7hdYO+lIeVeDr7yPinTw/Fh0=
+			kCX+d3KoFsbvunpkM4EXSM5pvac=
 			</data>
 			<key>hash2</key>
 			<data>
-			uwzaSrl6WwnNyqCFnZ9QqnOtFNmNAP+cMwQnz7zlquI=
+			8vDU480za/VAS5ZCGPgjmY9YC+Lwpf013Z8nox2Vayg=
 			</data>
 		</dict>
 		<key>Base.lproj/Main.storyboardc/BV1-FR-VrT-view-RLh-bf-1c3.nib</key>
@@ -393,11 +393,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			oQ7vDNRBXE4vzYTHaGescct5b20=
+			uic2Y5lgTgsfEdqFEECYlrhh1s4=
 			</data>
 			<key>hash2</key>
 			<data>
-			eRA+mZzRwFajlHP4GH8VqenqoNvbNnBwLPaK/10+H6Q=
+			Cz3dxIuRVoeb/ZZaKgeU0CcQf3JQX6t8x+Uhm7lmaqc=
 			</data>
 		</dict>
 		<key>Frameworks/Alamofire.framework/Info.plist</key>
@@ -426,11 +426,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			etfAUv76/hM5DoSdm0LWBlI4NuQ=
+			jYQl/d/zIlm/o5dUleeCz0LuKuc=
 			</data>
 			<key>hash2</key>
 			<data>
-			Xn+J1nHpZZXJWgSvS/V9PXl3GnlZL6VO4rhV2N+KUc8=
+			Mzab4xZMsVV3Ufy1pmN8Ox/PmM+C17amqKW6HvD1Pj8=
 			</data>
 		</dict>
 		<key>Frameworks/AlamofireObjectMapper.framework/Info.plist</key>
@@ -470,11 +470,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			f1Ql3iL5L+yyiBgBApliJxixm8A=
+			9ijoUj4f+AF4524/EqJr2xTdIR4=
 			</data>
 			<key>hash2</key>
 			<data>
-			xFJwVcxJYtA8XXepSB3ZACyFOvh8bkYvaRBVZQHazkA=
+			7gsPzGnIrdRo3pTNNdd5b4DKkwnPsJBXyLwvkbIZRp0=
 			</data>
 		</dict>
 		<key>Frameworks/ObjectMapper.framework/_CodeSignature/CodeResources</key>
@@ -503,11 +503,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			DcOUh5RAEAbkDtEx81H+kNxCzhM=
+			I6xU6oWYYLryz1KUN1COSyM6wYo=
 			</data>
 			<key>hash2</key>
 			<data>
-			w8v7qAZn2/WgDAL4Ih1ecZDVgoDWH9OYMWEZw8FVW/s=
+			jSCD5NTXNY85DaeE1WuXVPO59KYyF0TZGs+ntD2UKvs=
 			</data>
 		</dict>
 		<key>Frameworks/SDWebImage.framework/_CodeSignature/CodeResources</key>
@@ -536,11 +536,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			tasimfv8FW6/8+AC3mpNbRyS4MA=
+			ONePiFSKd08tDTD0+ZjgzvC8xpg=
 			</data>
 			<key>hash2</key>
 			<data>
-			bkCAp7DtakuWtf+rZxtdSlin6H5zZlOjTy0R6g4E0mo=
+			zlzZQ2Ar2XzLWHIJJe8J/R7yc23S4Yt8ThCeBL2ji+8=
 			</data>
 		</dict>
 		<key>Frameworks/SSZipArchive.framework/_CodeSignature/CodeResources</key>
@@ -569,11 +569,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			4wClPEJ0sSzKlYfS941FdujmLKM=
+			UmjLcF0jxNbupnKTg/wgJIZep2U=
 			</data>
 			<key>hash2</key>
 			<data>
-			4KjiHtiUUkmM+JWIq6q6ZCAFlFbkg0KiVpBUoOD+r2E=
+			sEwpBhMdnRvwUSrPNU5sXIDtHs39GzvwB0hMZIbjMxs=
 			</data>
 		</dict>
 		<key>Frameworks/SwiftyJSON.framework/_CodeSignature/CodeResources</key>
