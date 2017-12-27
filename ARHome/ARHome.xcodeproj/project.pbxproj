@@ -23,6 +23,7 @@
 		E69B4E331FBC0C3E00A604A0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69B4E321FBC0C3E00A604A0 /* ViewController.swift */; };
 		E69B4E461FBC0C3F00A604A0 /* ARHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69B4E451FBC0C3F00A604A0 /* ARHomeTests.swift */; };
 		E69B4E511FBC0C3F00A604A0 /* ARHomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69B4E501FBC0C3F00A604A0 /* ARHomeUITests.swift */; };
+		E6AB614B1FF3C6C20032F5A6 /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AB614A1FF3C6C20032F5A6 /* Plane.swift */; };
 		E6C88A341FBC4F57003E4B8C /* ViewController+ARSCNViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C88A191FBC4F55003E4B8C /* ViewController+ARSCNViewDelegate.swift */; };
 		E6C88A351FBC4F57003E4B8C /* ViewController+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C88A1A1FBC4F56003E4B8C /* ViewController+Actions.swift */; };
 		E6C88A361FBC4F57003E4B8C /* VirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C88A1C1FBC4F56003E4B8C /* VirtualObject.swift */; };
@@ -90,6 +91,7 @@
 		E69B4E4C1FBC0C3F00A604A0 /* ARHomeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ARHomeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E69B4E501FBC0C3F00A604A0 /* ARHomeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARHomeUITests.swift; sourceTree = "<group>"; };
 		E69B4E521FBC0C3F00A604A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E6AB614A1FF3C6C20032F5A6 /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
 		E6C88A191FBC4F55003E4B8C /* ViewController+ARSCNViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+ARSCNViewDelegate.swift"; sourceTree = "<group>"; };
 		E6C88A1A1FBC4F56003E4B8C /* ViewController+Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+Actions.swift"; sourceTree = "<group>"; };
 		E6C88A1C1FBC4F56003E4B8C /* VirtualObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObject.swift; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 		E6C88A251FBC4F56003E4B8C /* Focus Square */ = {
 			isa = PBXGroup;
 			children = (
+				E6AB614A1FF3C6C20032F5A6 /* Plane.swift */,
 				E6C88A261FBC4F56003E4B8C /* FocusSquare.swift */,
 				E6C88A271FBC4F56003E4B8C /* FocusSquareSegment.swift */,
 			);
@@ -622,6 +625,7 @@
 				E69B4E2F1FBC0C3E00A604A0 /* AppDelegate.swift in Sources */,
 				E6C88A371FBC4F57003E4B8C /* VirtualObjectLoader.swift in Sources */,
 				E6747A3D1FBD894300A01B7B /* DataModel.swift in Sources */,
+				E6AB614B1FF3C6C20032F5A6 /* Plane.swift in Sources */,
 				2E911FFB1FC83DDC00A05F17 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

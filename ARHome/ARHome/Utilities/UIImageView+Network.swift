@@ -17,9 +17,11 @@ extension UIImageView {
         let encodedUrl = imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let iUrl = URL.init(string: encodedUrl!)
         self.sd_setImage(with: iUrl!, placeholderImage: nil) { (image, error, cacheType, url) -> Void in
-            debugPrint("下载\(imageUrl)结果 Error:\(String(describing: error?.localizedDescription))")
             if image != nil {
                 self.image = image
+            }
+            if error != nil {
+                debugPrint("下载\(imageUrl)结果 Error:\(String(describing: error?.localizedDescription))")
             }
         }
     }

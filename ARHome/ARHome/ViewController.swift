@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     // MARK: - UI Elements
     
     var focusSquare = FocusSquare()
+    var planes = [UUID:Plane]()    // 字典，存储场景中当前渲染的所有平面 (有可能检测到多个平面)
     
     /// The view controller that displays the status and "restart experience" UI.
     lazy var statusViewController: StatusViewController = {
@@ -66,7 +67,8 @@ class ViewController: UIViewController {
         sceneView.showsStatistics = true
         sceneView.allowsCameraControl = false
         sceneView.antialiasingMode = .multisampling4X
-        sceneView.debugOptions = SCNDebugOptions.showBoundingBoxes
+//        sceneView.debugOptions = SCNDebugOptions.showBoundingBoxes
+        sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
 #endif
         
         // Set up scene content.
