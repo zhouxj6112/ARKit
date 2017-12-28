@@ -19,7 +19,7 @@ class VirtualObjectLoader {
     
     private(set) var isLoading = false
 	
-    private var isRelease = false
+    private(set) var isRelease = false
     
 	// MARK: - Loading object
 

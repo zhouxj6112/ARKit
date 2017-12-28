@@ -68,7 +68,7 @@ class ViewController: UIViewController {
         sceneView.allowsCameraControl = false
         sceneView.antialiasingMode = .multisampling4X
 //        sceneView.debugOptions = SCNDebugOptions.showBoundingBoxes
-        sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
+//        sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
 #endif
         
         // Set up scene content.

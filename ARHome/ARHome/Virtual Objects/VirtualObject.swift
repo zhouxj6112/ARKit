@@ -71,7 +71,7 @@ class VirtualObject: SCNReferenceNode {
         }
     }
     
-    func alignCenter() {
+    func alignBottomCenter() {
         let minV = self.boundingBox.min
         let maxV = self.boundingBox.max
         print("模型包围盒: minV:\(minV) maxV:\(maxV)")
@@ -127,6 +127,7 @@ class VirtualObject: SCNReferenceNode {
         let verticalAllowance: Float = 0.05
         let epsilon: Float = 0.001 // Do not update if the difference is less than 1 mm.
         let distanceToPlane = abs(planePosition.y)
+        
         if distanceToPlane > epsilon && distanceToPlane < verticalAllowance {
             SCNTransaction.begin()
             SCNTransaction.animationDuration = CFTimeInterval(distanceToPlane * 500) // Move 2 mm per second.
