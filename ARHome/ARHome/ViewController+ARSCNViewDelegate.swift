@@ -104,10 +104,7 @@ extension ViewController: ARSCNViewDelegate, ARSessionDelegate {
     
     func sessionWasInterrupted(_ session: ARSession) {
         blurView.isHidden = false
-        statusViewController.showMessage("""
-        SESSION INTERRUPTED
-        The session will be reset after the interruption has ended.
-        """, autoHide: false)
+        statusViewController.showMessage("SESSION INTERRUPTED \n The session will be reset after the interruption has ended.", autoHide: false)
     }
     
     func sessionInterruptionEnded(_ session: ARSession) {

@@ -63,13 +63,13 @@ class ViewController: UIViewController {
         
         sceneView.delegate = self
         sceneView.session.delegate = self
-#if DEBUG
-        sceneView.showsStatistics = true
-        sceneView.allowsCameraControl = false
-        sceneView.antialiasingMode = .multisampling4X
-//        sceneView.debugOptions = SCNDebugOptions.showBoundingBoxes
+//#if DEBUG
+//        sceneView.showsStatistics = true
+//        sceneView.allowsCameraControl = false
+//        sceneView.antialiasingMode = .multisampling4X
+////        sceneView.debugOptions = SCNDebugOptions.showBoundingBoxes
 //        sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
-#endif
+//#endif
         
         // Set up scene content.
         setupCamera()
@@ -143,7 +143,7 @@ class ViewController: UIViewController {
     // 关闭窗口
     func dismissViewController() {
         dismiss(animated: true, completion: {
-            debugPrint("")
+            debugPrint("关闭AR视图ViewController完成")
         })
     }
     

@@ -22,6 +22,7 @@ class VirtualObject: SCNReferenceNode {
         return referenceURL.lastPathComponent.replacingOccurrences(of: type, with: "")
     }
     
+    /// 下载的zip文件路径url
     public var zipFileUrl: String = ""
     
     /// Use average of recent virtual object distances to avoid rapid changes in object scale.

@@ -15,6 +15,7 @@ import SwiftyJSON
 */
 class VirtualObjectLoader {
     
+    /// 已经加载过的模型数组
 	private(set) var loadedObjects = [VirtualObject]()
     
     private(set) var isLoading = false
@@ -27,20 +28,9 @@ class VirtualObjectLoader {
      Loads a `VirtualObject` on a background queue. `loadedHandler` is invoked
      on a background queue once `object` has been loaded.
     */
-    func loadVirtualObject(_ object: VirtualObject, loadedHandler: @escaping (VirtualObject?) -> Void) {
-//        isLoading = true
-//        loadedObjects.append(object)
-//
-//        // Load the content asynchronously.
-//        DispatchQueue.global(qos: .userInitiated).async {
-//            object.reset()
-//            object.load()
-//
-//            self.isLoading = false
-//            loadedHandler(object)
-//        }
+    func loadVirtualObject(_ objectFileUrl: URL, loadedHandler: @escaping (VirtualObject?) -> Void) {
         
-        // 方案二
+        // 方案一
 //        isLoading = true
 //        let obj = VirtualObject.init(url: URL.init(string: "http://10.199.196.241/1003/tree/tree.scn")!) //  必须scn文件格式
 //        loadedObjects.append(obj!)
@@ -52,9 +42,9 @@ class VirtualObjectLoader {
 //            loadedHandler(obj!)
 //        }
         
-        // 方案三
+        // 方案二
         isLoading = true
-        let urlString = object.referenceURL.absoluteString // zip文件下载url(已经处理过中文的了)
+        let urlString = objectFileUrl.absoluteString // zip文件下载url(已经处理过中文的了)
         NetworkingHelper.download(url: urlString, parameters: nil) { (fileUrl:JSON?, error:NSError?) in
             if self.isRelease {
                 return;

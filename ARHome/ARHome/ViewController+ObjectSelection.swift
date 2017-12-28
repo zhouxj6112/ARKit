@@ -39,8 +39,9 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     
     // MARK: - VirtualObjectSelectionViewControllerDelegate
     
-    func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didSelectObject object: VirtualObject) {
-        virtualObjectLoader.loadVirtualObject(object, loadedHandler: { [unowned self] loadedObject in
+    func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didSelectObjectUrl object: URL) {
+        let objectFileUrl = object
+        virtualObjectLoader.loadVirtualObject(objectFileUrl, loadedHandler: { [unowned self] loadedObject in
             DispatchQueue.main.async {
                 self.hideObjectLoadingUI()
                 if (loadedObject != nil) {
@@ -54,12 +55,12 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         displayObjectLoadingUI()
     }
     
-    func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didDeselectObject object: VirtualObject) {
+    func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didDeselectObjectUrl object: URL) {
 //        guard let objectIndex = virtualObjectLoader.loadedObjects.index(of: object) else {
 //            fatalError("Programmer error: Failed to lookup virtual object in scene.")
 //        }
 //        virtualObjectLoader.removeVirtualObject(at: objectIndex)
-        let fileUrl = object.referenceURL.absoluteString.removingPercentEncoding
+        let fileUrl = object.absoluteString.removingPercentEncoding
         var index = 0
         for obj in virtualObjectLoader.loadedObjects {
             if (obj.zipFileUrl.elementsEqual(fileUrl!)) {

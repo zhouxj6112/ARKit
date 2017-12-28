@@ -388,6 +388,11 @@ class FocusSquare: SCNNode {
 
         return node
     }()
+    
+    // 析构函数
+    deinit {
+        debugPrint("FocusSquare释放")
+    }
 }
 
 // MARK: - Animations and Actions

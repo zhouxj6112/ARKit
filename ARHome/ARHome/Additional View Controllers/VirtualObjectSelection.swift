@@ -32,8 +32,8 @@ class ObjectCell: UITableViewCell {
 
 /// A protocol for reporting which objects have been selected.
 protocol VirtualObjectSelectionViewControllerDelegate: class {
-    func virtualObjectSelectionViewController(_ selectionViewController: VirtualObjectSelectionViewController, didSelectObject: VirtualObject)
-    func virtualObjectSelectionViewController(_ selectionViewController: VirtualObjectSelectionViewController, didDeselectObject: VirtualObject)
+    func virtualObjectSelectionViewController(_ selectionViewController: VirtualObjectSelectionViewController, didSelectObjectUrl: URL)
+    func virtualObjectSelectionViewController(_ selectionViewController: VirtualObjectSelectionViewController, didDeselectObjectUrl: URL)
 }
 
 /// A custom table view controller to allow users to select `VirtualObject`s for placement in the scene.
@@ -73,7 +73,6 @@ class VirtualObjectSelectionViewController: UITableViewController {
         let fileUrl = data["fileUrl"] as! String // 注意中文问题
         let encodedUrl = fileUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let url = URL.init(string: encodedUrl!)
-        let object = VirtualObject.init(url: url!)
         
         var isIn = false
         if data.keys.contains("isIn") && data["isIn"] as! Bool == true {
@@ -82,10 +81,10 @@ class VirtualObjectSelectionViewController: UITableViewController {
         
         // Check if the current row is already selected, then deselect it.
         if isIn {
-            delegate?.virtualObjectSelectionViewController(self, didDeselectObject: object!)
+            delegate?.virtualObjectSelectionViewController(self, didDeselectObjectUrl: url!)
             data["isIn"] = false
         } else {
-            delegate?.virtualObjectSelectionViewController(self, didSelectObject: object!)
+            delegate?.virtualObjectSelectionViewController(self, didSelectObjectUrl: url!)
             data["isIn"] = true
         }
 //        debugPrint("data: \(data)")
