@@ -11,6 +11,7 @@ target 'ARHome' do
   pod 'SwiftyJSON'
   pod 'SDWebImage'
   pod 'SSZipArchive'
+  pod 'AFNetworking'
 
   target 'ARHomeTests' do
     inherit! :search_paths

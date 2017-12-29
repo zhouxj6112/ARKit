@@ -16,6 +16,7 @@
 		2E91B0B41FC024CB0008CA70 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E91B0B31FC024CB0008CA70 /* libz.tbd */; };
 		39197BB09DE9B4C9263D0434 /* Pods_ARHome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EED04828D64D738208F7F612 /* Pods_ARHome.framework */; };
 		9FE39DEF6AE34C1E9A84DF4C /* Pods_ARHomeTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F329F9BE9596EBB997C168F0 /* Pods_ARHomeTests.framework */; };
+		E639BAF71FF64FF1004589D4 /* BridgingHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E639BAF61FF64FF1004589D4 /* BridgingHeader.swift */; };
 		E654AFE01FECFA4A0083E1E3 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E654AFDF1FECFA4A0083E1E3 /* SettingViewController.m */; };
 		E65DC7221FBC7FF8009D5076 /* NetworkingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65DC7211FBC7FF8009D5076 /* NetworkingHelper.swift */; };
 		E6747A3D1FBD894300A01B7B /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6747A3C1FBD894300A01B7B /* DataModel.swift */; };
@@ -77,6 +78,7 @@
 		94BACD57D32AAB675A4915A6 /* Pods-ARHomeUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARHomeUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARHomeUITests/Pods-ARHomeUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		9BB9D8A533BDF2210018EE65 /* Pods-ARHomeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARHomeTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARHomeTests/Pods-ARHomeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B54A5BFF528A376D9874BBBC /* Pods-ARHome.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARHome.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARHome/Pods-ARHome.release.xcconfig"; sourceTree = "<group>"; };
+		E639BAF61FF64FF1004589D4 /* BridgingHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgingHeader.swift; sourceTree = "<group>"; };
 		E654AFDE1FECFA4A0083E1E3 /* SettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		E654AFDF1FECFA4A0083E1E3 /* SettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		E65DC7211FBC7FF8009D5076 /* NetworkingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingHelper.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				E6C88A291FBC4F56003E4B8C /* Assets.xcassets */,
 				E6C88A2B1FBC4F56003E4B8C /* LaunchScreen.storyboard */,
 				2E9120001FC844C000A05F17 /* Image.xcassets */,
+				E639BAF61FF64FF1004589D4 /* BridgingHeader.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ARHome/Pods-ARHome-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireObjectMapper/AlamofireObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
@@ -498,6 +502,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
@@ -606,6 +611,7 @@
 				E6C88A461FBC4F57003E4B8C /* ThresholdPanGesture.swift in Sources */,
 				E6C88A451FBC4F57003E4B8C /* VirtualObjectARView.swift in Sources */,
 				E6C88A3B1FBC4F57003E4B8C /* UIImageView+Network.swift in Sources */,
+				E639BAF71FF64FF1004589D4 /* BridgingHeader.swift in Sources */,
 				E6C88A3D1FBC4F57003E4B8C /* FocusSquare.swift in Sources */,
 				2E911FFF1FC83EB500A05F17 /* ProductsViewController.swift in Sources */,
 				E6C88A3E1FBC4F57003E4B8C /* FocusSquareSegment.swift in Sources */,

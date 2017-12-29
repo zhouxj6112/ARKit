@@ -8,6 +8,9 @@
 
 #import "ReplayKitUtil.h"
 #import <ReplayKit/ReplayKit.h>
+#import <AFNetworking/AFNetworking.h>
+#import <AssetsLibrary/ALAssetsLibrary.h>
+#import <Photos/Photos.h>
 
 @interface ReplayKitUtil () <RPScreenRecorderDelegate, RPPreviewViewControllerDelegate>
 @property (nonatomic, assign) BOOL isRecording;
@@ -82,10 +85,24 @@ static ReplayKitUtil* mReplayKitUtil;
 }
 
 - (void)previewController:(RPPreviewViewController *)previewController didFinishWithActivityTypes:(NSSet <NSString *> *)activityTypes {
-    
     if ([activityTypes containsObject:@"com.apple.UIKit.activity.SaveToCameraRoll"]) {
+        NSURL* preUrl = [previewController valueForKey:@"movieURL"];
+        __block NSData* movData = [NSData dataWithContentsOfURL:preUrl];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"已经保存到系统相册");
+            NSLog(@"已经保存到系统相册,并且在后台上传到我们服务器");
+            
+            NSString* postUrl = @"http://192.168.1.103:8080/admin/api/shareExample?";
+            AFHTTPSessionManager* manager = [AFHTTPSessionManager manager];
+            [manager POST:postUrl parameters:@{@"userToken":@"123"} constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                [formData appendPartWithFileData:movData name:@"shareMovie" fileName:@"movie.mov" mimeType:@"move"];
+            } progress:^(NSProgress * _Nonnull uploadProgress) {
+                //
+            } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                //
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                //
+            }];
         });
     }
     if ([activityTypes containsObject:@"com.apple.UIKit.activity.CopyToPasteboard"]) {
