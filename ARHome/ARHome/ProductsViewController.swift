@@ -46,6 +46,7 @@ class ProductsViewController: UIViewController {
         // Do any additional setup after loading the view.
         self.navigationItem.title = "所有家具"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "user_setting"), style: .plain, target: self, action: #selector(toSetting))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "example"), style: .plain, target: self, action: #selector(toExamples))
         
         tableView1 = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: 120, height: self.view.frame.size.height), style: UITableViewStyle.plain)
         tableView1?.dataSource = self
@@ -245,11 +246,22 @@ extension ProductsViewController : UITableViewDataSource, UITableViewDelegate {
                     }
                 })
             })
+        } else {
+//            if ReplayKitUtil.isRecording() {
+//                ReplayKitUtil.stopRecoder();
+//            } else {
+//                ReplayKitUtil.startRecoder(self);
+//            }
         }
     }
     
     @objc private func toSetting() {
         let vc = SettingViewController();
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func toExamples() {
+        let vc = HomeViewController();
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

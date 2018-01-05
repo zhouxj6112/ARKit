@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         
         // Override point for customization after application launch.
+        ReplayKitUtil.startUploadTask();
         
         return true
     }

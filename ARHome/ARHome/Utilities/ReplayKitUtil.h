@@ -13,7 +13,9 @@
 
 + (void)startRecoder:(UIViewController *)parentViewController;
 + (void)stopRecoder;
-
 + (BOOL)isRecording;
+
+///
++ (void)startUploadTask;
 
 @end
