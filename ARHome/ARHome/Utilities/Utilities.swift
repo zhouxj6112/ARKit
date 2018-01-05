@@ -85,7 +85,7 @@ func findModelFile(docUrl: String) -> String? {
     // 深度遍历,会递归遍历子文件夹,但效率比较低
     for element in fileEnumerator.allObjects {
         let url = element as! URL
-        if url.pathExtension == "scn" || url.pathExtension == "obj" || url.pathExtension == "dae" {
+        if url.pathExtension == "scn" || url.pathExtension == "obj" || url.pathExtension == "dae" || url.pathExtension == "DAE" {
             return url.absoluteString
         }
     }

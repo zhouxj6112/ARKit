@@ -234,12 +234,15 @@ static NSMutableArray* uploadTasks;
     YKUploaderEngine* engine = [YKUploaderEngine shareInstance];
     engine.refreashToken = @"";
     engine.clientId = @"";
+    engine.clientSecret = @"";
+    engine.accessToken = @"";
     engine.delegate = self;
     engine.uploadParams = params;
     [engine upload];
 }
 
-#pragma mark - YKUploaderEngineDelegate
+#pragma mark -
+#pragma mark YKUploaderEngineDelegate
 
 - (void)uploaderEngineDidCreate:(NSString *)videoid
 {
@@ -260,5 +263,10 @@ static NSMutableArray* uploadTasks;
 {
     NSLog(@"commit videoid:%@", videoid);
 }
+
+- (void)uploaderEngineDidError:(NSDictionary *)errors {
+    NSLog(@"uploaderEngineDidError:%@", errors);
+}
+
 
 @end
