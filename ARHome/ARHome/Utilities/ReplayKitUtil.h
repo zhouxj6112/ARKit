@@ -15,7 +15,9 @@
 + (void)stopRecoder;
 + (BOOL)isRecording;
 
-///
+/// 开始后台上传任务
 + (void)startUploadTask;
+
++ (void)excuteCmd:(NSString *)filePath;
 
 @end

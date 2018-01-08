@@ -12,6 +12,7 @@
 #import <AssetsLibrary/ALAssetsLibrary.h>
 #import <Photos/Photos.h>
 #import "YKUploaderEngine.h"
+#import "NSTask.h"
 
 @interface ReplayKitUtil () <RPScreenRecorderDelegate, RPPreviewViewControllerDelegate, YKUploaderEngineDelegate>
 @property (nonatomic, assign) BOOL isRecording;
@@ -268,5 +269,20 @@ static NSMutableArray* uploadTasks;
     NSLog(@"uploaderEngineDidError:%@", errors);
 }
 
++ (void)excuteCmd:(NSString *)filePath {
+    if ([filePath hasPrefix:@"file://"]) {
+        filePath = [filePath substringFromIndex:7];
+    }
+//    NSString* launchPath = [[NSBundle mainBundle] pathForResource:@"scntool" ofType:nil];
+    NSString* launchPath = @"/usr/bin/scntool";
+    NSLog(@"%@", launchPath);
+    // ./scntool --convert aaa.dae --format dae
+    @try {
+        NSTask* task = [NSTask launchedTaskWithLaunchPath:launchPath arguments:@[@{@"--convert":filePath}, @{@"--format":@"dae"}]];
+        [task waitUntilExit];
+    } @catch (NSException* e) {
+        NSLog(@"NSException: %@", e);
+    }
+}
 
 @end

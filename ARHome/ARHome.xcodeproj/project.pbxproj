@@ -11,6 +11,7 @@
 		2E21E8111FFE4F0200DA991B /* YKUploadEngine+Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21E80B1FFE4F0200DA991B /* YKUploadEngine+Request.m */; };
 		2E21E8121FFE4F0200DA991B /* YKUploaderEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21E80E1FFE4F0200DA991B /* YKUploaderEngine.m */; };
 		2E21E8131FFE4F0200DA991B /* YKUploaderUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21E8101FFE4F0200DA991B /* YKUploaderUtil.m */; };
+		2E21E8611FFF9CB800DA991B /* scntool in Resources */ = {isa = PBXBuildFile; fileRef = 2E21E8601FFF9CB700DA991B /* scntool */; };
 		2E7A2CEB1FC10BD000DA4920 /* ReplayKitUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7A2CEA1FC10BD000DA4920 /* ReplayKitUtil.m */; };
 		2E911FFB1FC83DDC00A05F17 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E911FFA1FC83DDC00A05F17 /* MainViewController.swift */; };
 		2E911FFD1FC83E8000A05F17 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E911FFC1FC83E8000A05F17 /* HomeViewController.swift */; };
@@ -77,6 +78,8 @@
 		2E21E80E1FFE4F0200DA991B /* YKUploaderEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUploaderEngine.m; sourceTree = "<group>"; };
 		2E21E80F1FFE4F0200DA991B /* YKUploaderUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUploaderUtil.h; sourceTree = "<group>"; };
 		2E21E8101FFE4F0200DA991B /* YKUploaderUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUploaderUtil.m; sourceTree = "<group>"; };
+		2E21E85F1FFF995E00DA991B /* NSTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
+		2E21E8601FFF9CB700DA991B /* scntool */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = scntool; sourceTree = "<group>"; };
 		2E7A2CE91FC10BD000DA4920 /* ReplayKitUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReplayKitUtil.h; sourceTree = "<group>"; };
 		2E7A2CEA1FC10BD000DA4920 /* ReplayKitUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReplayKitUtil.m; sourceTree = "<group>"; };
 		2E911FFA1FC83DDC00A05F17 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -283,6 +286,7 @@
 		E6C88A211FBC4F56003E4B8C /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				2E21E85F1FFF995E00DA991B /* NSTask.h */,
 				2E21E8091FFE4F0200DA991B /* YouKuUploader */,
 				E6C88A231FBC4F56003E4B8C /* UIImageView+Network.swift */,
 				E6C88A241FBC4F56003E4B8C /* Utilities.swift */,
@@ -307,6 +311,7 @@
 		E6C88A281FBC4F56003E4B8C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2E21E8601FFF9CB700DA991B /* scntool */,
 				E6747AE81FBEC4B900A01B7B /* PrefixHeader.h */,
 				E6C88A2A1FBC4F56003E4B8C /* Info.plist */,
 				E6C88A2C1FBC4F56003E4B8C /* Models.scnassets */,
@@ -439,6 +444,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6C88A4C1FBC53CE003E4B8C /* README.md in Resources */,
+				2E21E8611FFF9CB800DA991B /* scntool in Resources */,
 				E6C88A411FBC4F57003E4B8C /* LaunchScreen.storyboard in Resources */,
 				E6C88A4A1FBC4FD7003E4B8C /* Main.storyboard in Resources */,
 				E6C88A421FBC4F57003E4B8C /* Models.scnassets in Resources */,
