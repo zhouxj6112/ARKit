@@ -18,7 +18,8 @@ import SwiftyJSON
 //let req_modellist_url:String = "http://10.199.196.241:8080/api/getModelsList?"
 let req_sellerlist_url:String = "http://52.187.182.32/admin/api/getAllSellers?"
 let req_modellist_url:String = "http://52.187.182.32/admin/api/getModelsList?"
-let req_examplelist_url:String = "http://192.168.1.102:8080/api/examples?"
+let req_examplelist_url:String = "http://52.187.182.32/admin/api/examples?"
+let post_example_url:String = "http://52.187.182.32/admin/api/shareExample?"
 
 class NetworkingHelper {
     

@@ -181,15 +181,23 @@ static NSMutableArray* uploadTasks;
                     NSFileManager* fileManager = [NSFileManager defaultManager];
                     NSString* tmpFilePath = NSTemporaryDirectory();
                     NSArray* array = [fileManager contentsOfDirectoryAtPath:tmpFilePath error:nil];
-                    if (array.count == 0) {
+                    int index = -1;
+                    for (int i=0; i<array.count; i++) {
+                        NSString* str = array[i];
+                        if ([str.pathExtension isEqualToString:@"mov"]) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index <0 || index > array.count-1) {
                         NSLog(@"没有文件要上传,需要等待...");
                         [NSThread sleepForTimeInterval:10.0];
                         continue;
                     }
-                    NSString* movieFilePath = [NSString stringWithFormat:@"%@/%@", NSTemporaryDirectory(), array.lastObject];
-                    NSString* postUrl = @"http://192.168.1.102:8080/api/shareExample?";
+                    NSString* movieFilePath = [NSString stringWithFormat:@"%@/%@", NSTemporaryDirectory(), array[index]]; // tmp文件夹里面有可能有其它干扰文件
+                    NSString* postUrl = @"http://52.187.182.32/admin/api/shareExample?"; //@"http://192.168.1.102:8080/api/shareExample?";
                     AFHTTPSessionManager* manager = [AFHTTPSessionManager manager];
-                    NSURLSessionDataTask* task = [manager POST:postUrl parameters:@{@"userToken":@"123"} constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                    NSURLSessionDataTask* task = [manager POST:postUrl parameters:@{@"userToken":@"1234"} constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
                         NSData* movData = [NSData dataWithContentsOfFile:movieFilePath];
                         [formData appendPartWithFileData:movData name:@"shareMovie" fileName:@"movie.mov" mimeType:@"movie"];
                     } progress:^(NSProgress * _Nonnull uploadProgress) {

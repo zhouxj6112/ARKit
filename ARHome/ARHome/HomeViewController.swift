@@ -73,6 +73,22 @@ extension HomeViewController : UITableViewDataSource, UITableViewDelegate {
         playerLayer.frame = CGRect.init(x: 0, y: 0, width: tableView.frame.size.width, height: 240);
         playerLayer.videoGravity = .resizeAspect
         cell?.contentView.layer.addSublayer(playerLayer);
+        var label = cell?.viewWithTag(100);
+        if label == nil {
+            label = UILabel.init(frame: CGRect.init(x: 0, y: 250, width: self.view.frame.size.width, height: 40));
+            (label as! UILabel).textAlignment = .center;
+            label?.tag = 100;
+            cell?.addSubview(label!);
+        }
+        let l = label as! UILabel
+        let createTime = dic["createTime"] as! NSDictionary;
+        let timeNumber = createTime["time"] as! NSNumber
+        let date = Date.init(timeIntervalSince1970: TimeInterval(timeNumber.int64Value/1000));
+        let dateFormatter = DateFormatter.init();
+        dateFormatter.locale = Locale(identifier: "zh_CN")
+        dateFormatter.setLocalizedDateFormatFromTemplate("yyyy-MM-dd HH:mm:ss")
+        let dateString = dateFormatter.string(from: date);
+        l.text = String.init(format: "时间: %@", dateString);
         return cell!
     }
     
