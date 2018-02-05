@@ -7,6 +7,7 @@ Methods on the main view controller for handling virtual object loading and move
 
 import UIKit
 import SceneKit
+import AudioToolbox
 
 extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     /**
@@ -46,6 +47,8 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                 self.hideObjectLoadingUI()
                 if (loadedObject != nil) {
                     self.placeVirtualObject(loadedObject!)
+                    // 调用手机振动
+                    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                 } else {
                     self.statusViewController.showMessage("加载模型失败,请联系程序猿", autoHide: true)
                 }
