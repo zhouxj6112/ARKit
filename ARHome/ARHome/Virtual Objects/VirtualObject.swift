@@ -103,21 +103,6 @@ class VirtualObject: SCNReferenceNode {
 
     }
     
-    func touchChoose() {
-//        position = SCNVector3(position.x, position.y + 0.3, position.z)
-        // 显示底座
-        let planeGeometry = SCNPlane(width: 1.0, height: 1.0)
-        let material = SCNMaterial()
-        let img = UIImage(named: "fabric")
-        material.diffuse.contents = img
-        material.lightingModel = .physicallyBased
-        planeGeometry.materials = [material]
-        let planeNode = SCNNode(geometry: planeGeometry)
-        planeNode.position = SCNVector3Make(self.position.x, 0, self.position.z)
-        planeNode.transform = SCNMatrix4MakeRotation(Float(-.pi / 2.0), 1.0, 0.0, 0.0)
-        self.parent?.addChildNode(planeNode)
-    }
-    
     /// - Tag: AdjustOntoPlaneAnchor
     func adjustOntoPlaneAnchor(_ anchor: ARPlaneAnchor, using node: SCNNode) {
         // Get the object's position in the plane's coordinate system.

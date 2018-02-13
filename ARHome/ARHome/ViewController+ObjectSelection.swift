@@ -35,16 +35,31 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         updateQueue.async {
             self.sceneView.scene.rootNode.addChildNode(virtualObject)
             debugPrint("添加之后的模型:\(virtualObject)");
-            // 默认选中状态
-            virtualObject.touchChoose();
+ 
+//            // 给模型加个底座阴影效果平面
+//            let minV = virtualObject.boundingBox.min
+//            let maxV = virtualObject.boundingBox.max
+//            let planeGeometry = SCNPlane(width: CGFloat(maxV.x-minV.x), height: CGFloat(maxV.y-minV.y))
+//            let material = SCNMaterial()
+//            let img = UIImage(named: "fabric")
+//            material.diffuse.contents = img
+//            material.lightingModel = .physicallyBased
+//            planeGeometry.materials = [material]
+//            let planeNode = SCNNode(geometry: planeGeometry)
+////            planeNode.position = SCNVector3Make(virtualObject.position.x, 10, virtualObject.position.z)
+////            planeNode.simdWorldPosition = float3(virtualObject.simdWorldPosition.x, virtualObject.simdWorldPosition.y, virtualObject.simdWorldPosition.z)
+//            planeNode.simdPosition = float3(virtualObject.simdPosition.x, virtualObject.simdPosition.y, virtualObject.simdPosition.z)
+////            planeNode.transform = SCNMatrix4MakeRotation(Float(-.pi / 2.0), 1.0, 0.0, 0.0)
+//            self.sceneView.scene.rootNode.addChildNode(planeNode)
         }
     }
     
     // MARK: - VirtualObjectSelectionViewControllerDelegate
     
     func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didSelectObjectUrl object: URL) {
+        // 加载模型
         let objectFileUrl = object
-        virtualObjectLoader.loadVirtualObject(objectFileUrl, loadedHandler: { [unowned self] loadedObject in
+        virtualObjectLoader.loadVirtualObject(objectFileUrl, loadedHandler: { [unowned self] loadedObject, shadowObject in
             DispatchQueue.main.async {
                 self.hideObjectLoadingUI()
                 if (loadedObject != nil) {
@@ -53,6 +68,10 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                 } else {
                     self.statusViewController.showMessage("加载模型失败,请联系程序猿", autoHide: true)
+                }
+                // 放置阴影模型在底部
+                if shadowObject != nil {
+                    self.placeVirtualObject(shadowObject!)
                 }
             }
         })
@@ -70,7 +89,8 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         for obj in virtualObjectLoader.loadedObjects {
             if (obj.zipFileUrl.elementsEqual(fileUrl!)) {
                 virtualObjectLoader.removeVirtualObject(at: index)
-                break
+//                break
+                // 不能break, 还要删除阴影模型
             }
             index += 1
         }

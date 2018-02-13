@@ -33,10 +33,10 @@ extension ViewController: ARSCNViewDelegate, ARSessionDelegate {
         // 检测到水平面就返回
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
         print("检测到新的水平面[\(planeAnchor.identifier)]中心点:\(planeAnchor.center),平面大小:\(planeAnchor.extent)")
-//        // 将平面虚拟化展示出来
-//        let plane = Plane(withAnchor: planeAnchor)
-//        planes[anchor.identifier] = plane
-//        node.addChildNode(plane)
+        // 将平面虚拟化展示出来
+        let plane = Plane(withAnchor: planeAnchor)
+        planes[anchor.identifier] = plane
+        node.addChildNode(plane)
         
         DispatchQueue.main.async {
             self.statusViewController.cancelScheduledMessage(for: .planeEstimation)

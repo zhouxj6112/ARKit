@@ -28,7 +28,7 @@ class VirtualObjectLoader {
      Loads a `VirtualObject` on a background queue. `loadedHandler` is invoked
      on a background queue once `object` has been loaded.
     */
-    func loadVirtualObject(_ objectFileUrl: URL, loadedHandler: @escaping (VirtualObject?) -> Void) {
+    func loadVirtualObject(_ objectFileUrl: URL, loadedHandler: @escaping (VirtualObject?, VirtualObject?) -> Void) {
         
         // 方案一
 //        isLoading = true
@@ -51,7 +51,7 @@ class VirtualObjectLoader {
             }
             if error != nil {
                 self.isLoading = false
-                loadedHandler(nil)
+                loadedHandler(nil, nil)
                 return;
             }
             let respData = fileUrl!["data"]
@@ -66,12 +66,27 @@ class VirtualObjectLoader {
             self.loadedObjects.append(obj)
             let zipFileUrl = urlString.removingPercentEncoding  // 将中文编码转换回去,存储原始数据
             obj.zipFileUrl = zipFileUrl!
+            // 加载阴影模型
+            var shadowObj = VirtualObject()
+            let shadowPath = respData["shadow"]
+            if shadowPath.count > 0 {
+                let localFilePath = shadowPath.stringValue // 注意路径中包含中文的问题
+                let enFilePath = localFilePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+                let en = enFilePath?.replacingOccurrences(of: "%25", with: "%") // 很是奇怪，为什么会多了25
+                let url = URL.init(string: en!)
+                let object = VirtualObject.init(url: url!)
+                let obj = object! as VirtualObject
+                debugPrint("阴影模型: \(obj)")
+                self.loadedObjects.append(obj)
+                obj.zipFileUrl = zipFileUrl! // 保持跟主模型文件一致
+                shadowObj = obj
+            }
             // Load the content asynchronously.
             DispatchQueue.global(qos: .userInitiated).async {
                 obj.reset()
                 obj.load()
                 self.isLoading = false
-                loadedHandler(obj)
+                loadedHandler(obj, shadowObj)
             }
         }
 	}

@@ -93,9 +93,19 @@ class NetworkingHelper {
         if fileManager.fileExists(atPath: filePath) {
             // 查找解压包里面的模型文件
             let unzipDocPath = filePath
-            let modelFilePath = findModelFile(docUrl: unzipDocPath)
-            if (modelFilePath != nil) {
-                let dic = ["code":200, "msg":"succ", "data":["url":url, "file":modelFilePath]] as [String : Any]
+            let modelsFilePath = findModelFile(docUrl: unzipDocPath)
+            var modelFilePath = "" // 模型文件路径
+            var shadowFilePath = "" // 模型底部阴影文件路径
+            for path in modelsFilePath! {
+                if (path.contains("shadow")) {
+                    shadowFilePath = path
+                } else {
+                    modelFilePath = path
+                }
+            }
+//            let modelFilePath = findModelFile(docUrl: unzipDocPath)
+            if (modelFilePath.count > 0) {
+                let dic = ["code":200, "msg":"succ", "data":["url":url, "file":modelFilePath, "shadow":shadowFilePath]] as [String : Any]
                 let result = JSON(dic)
                 callback(result, nil)
             } else {
@@ -142,10 +152,20 @@ class NetworkingHelper {
                     if SSZipArchive.unzipFile(atPath: destPath!, toDestination: destFilePath) {
                         // 查找模型主文件路径
                         let unzipDocPath = destFilePath
-                        let modelFilePath = findModelFile(docUrl: unzipDocPath)
-                        if (modelFilePath != nil) {
+//                        let modelFilePath = findModelFile(docUrl: unzipDocPath)
+                        let modelsFilePath = findModelFile(docUrl: unzipDocPath)
+                        var modelFilePath = "" // 模型文件路径
+                        var shadowFilePath = "" // 模型底部阴影文件路径
+                        for path in modelsFilePath! {
+                            if (path.contains("shadow")) {
+                                shadowFilePath = path
+                            } else {
+                                modelFilePath = path
+                            }
+                        }
+                        if (modelFilePath.count > 0) {
                             // 找到模型文件路径了
-                            let dic = ["code":200, "msg":"succ", "data":["url":url, "file":modelFilePath]] as [String : Any]
+                            let dic = ["code":200, "msg":"succ", "data":["url":url, "file":modelFilePath, "shadow":shadowFilePath]] as [String : Any]
                             let result = JSON(dic)
                             callback(result, nil)
                         } else {
