@@ -50,6 +50,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
     
     override func loadView() {
         super.loadView()
+        debugPrint("\(self.view.frame)")
     }
     
     override func viewDidLoad() {
@@ -59,7 +60,8 @@ class VirtualObjectSelectionViewController: UITableViewController {
     }
     
     override func viewWillLayoutSubviews() {
-        preferredContentSize = CGSize(width: 250, height: tableView.contentSize.height)
+        //
+        preferredContentSize = CGSize(width: 375, height: tableView.contentSize.height)
     }
     
     // MARK: - UITableViewDelegate

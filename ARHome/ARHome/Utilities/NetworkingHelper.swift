@@ -20,6 +20,7 @@ let req_sellerlist_url:String = "http://52.187.182.32/admin/api/getAllSellers?"
 let req_modellist_url:String = "http://52.187.182.32/admin/api/getModelsList?"
 let req_examplelist_url:String = "http://52.187.182.32/admin/api/examples?"
 let post_example_url:String = "http://52.187.182.32/admin/api/shareExample?"
+let all_brands_url:String = "http://52.187.182.32/admin/api/allBrands?"
 
 class NetworkingHelper {
     

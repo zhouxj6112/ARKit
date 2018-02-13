@@ -78,7 +78,9 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
               let segueIdentifer = SegueIdentifier(rawValue: identifier),
               segueIdentifer == .showObjects else { return }
         
-        let objectsViewController = segue.destination as! VirtualObjectSelectionViewController
+//        let objectsViewController = segue.destination as! VirtualObjectSelectionViewController
+        let nav = segue.destination as! UINavigationController
+        let objectsViewController = nav.viewControllers.first as! VirtualObjectSelectionViewController
         objectsViewController.virtualObjects = VirtualObject.availableObjects
         objectsViewController.delegate = self
         
