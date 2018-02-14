@@ -72,6 +72,8 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
             popoverController.delegate = self
             popoverController.sourceView = button
             popoverController.sourceRect = button.bounds
+//            popoverController.backgroundColor = UIColor.white
+//            popoverController.popoverBackgroundViewClass = CustomPopoverBackgroundClass.self
         }
         
         guard let identifier = segue.identifier,
@@ -79,7 +81,7 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
               segueIdentifer == .showObjects else { return }
         
 //        let objectsViewController = segue.destination as! VirtualObjectSelectionViewController
-        let nav = segue.destination as! UINavigationController
+        let nav = segue.destination as! UINavigationController // pop出来的是个nav
         let objectsViewController = nav.viewControllers.first as! VirtualObjectSelectionViewController
         objectsViewController.virtualObjects = VirtualObject.availableObjects
         objectsViewController.delegate = self

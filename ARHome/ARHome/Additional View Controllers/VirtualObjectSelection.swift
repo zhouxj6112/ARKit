@@ -26,6 +26,15 @@ class ObjectCell: UITableViewCell {
             objectImageView.loadImageWithUrl(imageUrl: modelImage)
         }
     }
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
+        self.backgroundColor = UIColor.white
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 }
 
 // MARK: - VirtualObjectSelectionViewControllerDelegate
@@ -61,7 +70,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
     
     override func viewWillLayoutSubviews() {
         //
-        preferredContentSize = CGSize(width: 375, height: tableView.contentSize.height)
+        preferredContentSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-180)
     }
     
     // MARK: - UITableViewDelegate
@@ -91,7 +100,9 @@ class VirtualObjectSelectionViewController: UITableViewController {
         }
 //        debugPrint("data: \(data)")
 
-        dismiss(animated: true, completion: nil)
+//        dismiss(animated: true, completion: nil)
+        let vc = SelectionHomeViewController.init(nibName: nil, bundle: nil)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     override func tableView(_ tableView: UITableView,  heightForHeaderInSection section: Int) -> CGFloat {

@@ -24,6 +24,7 @@
 		E654AFE01FECFA4A0083E1E3 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E654AFDF1FECFA4A0083E1E3 /* SettingViewController.m */; };
 		E65DC7221FBC7FF8009D5076 /* NetworkingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65DC7211FBC7FF8009D5076 /* NetworkingHelper.swift */; };
 		E66DA6AB2032E35F00B5C62F /* SelectionHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA6AA2032E35F00B5C62F /* SelectionHomeViewController.swift */; };
+		E66DA6AD2033E6AA00B5C62F /* CustomPopoverBackgroundClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA6AC2033E6AA00B5C62F /* CustomPopoverBackgroundClass.swift */; };
 		E6747A3D1FBD894300A01B7B /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6747A3C1FBD894300A01B7B /* DataModel.swift */; };
 		E69B4E2F1FBC0C3E00A604A0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69B4E2E1FBC0C3E00A604A0 /* AppDelegate.swift */; };
 		E69B4E331FBC0C3E00A604A0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69B4E321FBC0C3E00A604A0 /* ViewController.swift */; };
@@ -97,6 +98,7 @@
 		E654AFDF1FECFA4A0083E1E3 /* SettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		E65DC7211FBC7FF8009D5076 /* NetworkingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingHelper.swift; sourceTree = "<group>"; };
 		E66DA6AA2032E35F00B5C62F /* SelectionHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionHomeViewController.swift; sourceTree = "<group>"; };
+		E66DA6AC2033E6AA00B5C62F /* CustomPopoverBackgroundClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPopoverBackgroundClass.swift; sourceTree = "<group>"; };
 		E6747A3C1FBD894300A01B7B /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		E6747AE81FBEC4B900A01B7B /* PrefixHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.h; sourceTree = "<group>"; };
 		E69B4E2B1FBC0C3E00A604A0 /* ARHome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARHome.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -282,6 +284,7 @@
 				E6C88A1F1FBC4F56003E4B8C /* StatusViewController.swift */,
 				E6C88A201FBC4F56003E4B8C /* VirtualObjectSelection.swift */,
 				E66DA6AA2032E35F00B5C62F /* SelectionHomeViewController.swift */,
+				E66DA6AC2033E6AA00B5C62F /* CustomPopoverBackgroundClass.swift */,
 			);
 			path = "Additional View Controllers";
 			sourceTree = "<group>";
@@ -670,6 +673,7 @@
 				E6C88A351FBC4F57003E4B8C /* ViewController+Actions.swift in Sources */,
 				2E21E8111FFE4F0200DA991B /* YKUploadEngine+Request.m in Sources */,
 				E69B4E2F1FBC0C3E00A604A0 /* AppDelegate.swift in Sources */,
+				E66DA6AD2033E6AA00B5C62F /* CustomPopoverBackgroundClass.swift in Sources */,
 				E6C88A371FBC4F57003E4B8C /* VirtualObjectLoader.swift in Sources */,
 				E6747A3D1FBD894300A01B7B /* DataModel.swift in Sources */,
 				E6AB614B1FF3C6C20032F5A6 /* Plane.swift in Sources */,
