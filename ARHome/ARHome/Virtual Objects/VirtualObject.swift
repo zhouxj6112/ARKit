@@ -24,6 +24,8 @@ class VirtualObject: SCNReferenceNode {
     
     /// 下载的zip文件路径url
     public var zipFileUrl: String = ""
+    /// 是否是阴影模型 (是的话,不能单独操作的,必须跟随主模型)
+    public var isShadowObj: Bool = false
     
     /// Use average of recent virtual object distances to avoid rapid changes in object scale.
     private var recentVirtualObjectDistances = [Float]()

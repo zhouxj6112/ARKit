@@ -69,23 +69,29 @@ class VirtualObjectLoader {
             // 加载阴影模型
             var shadowObj = VirtualObject()
             let shadowPath = respData["shadow"]
-            if shadowPath.count > 0 {
-                let localFilePath = shadowPath.stringValue // 注意路径中包含中文的问题
-                let enFilePath = localFilePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+            let sLocalFilePath = shadowPath.stringValue // 注意路径中包含中文的问题
+            if sLocalFilePath.count > 0 {
+                let enFilePath = sLocalFilePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                 let en = enFilePath?.replacingOccurrences(of: "%25", with: "%") // 很是奇怪，为什么会多了25
-                let url = URL.init(string: en!)
-                let object = VirtualObject.init(url: url!)
-                let obj = object! as VirtualObject
-                debugPrint("阴影模型: \(obj)")
-                self.loadedObjects.append(obj)
-                obj.zipFileUrl = zipFileUrl! // 保持跟主模型文件一致
-                shadowObj = obj
+                let sUrl = URL.init(string: en!)
+                let sObject = VirtualObject.init(url: sUrl!)
+                let sObj = sObject! as VirtualObject
+                debugPrint("阴影模型: \(sObj)")
+                self.loadedObjects.append(sObj)
+                sObj.zipFileUrl = zipFileUrl! // 保持跟主模型文件一致
+                shadowObj = sObj
             }
             // Load the content asynchronously.
             DispatchQueue.global(qos: .userInitiated).async {
                 obj.reset()
                 obj.load()
+                obj.isShadowObj = false
                 self.isLoading = false
+                //
+                shadowObj.reset()
+                shadowObj.load()
+                shadowObj.isShadowObj = true
+                ///
                 loadedHandler(obj, shadowObj)
             }
         }

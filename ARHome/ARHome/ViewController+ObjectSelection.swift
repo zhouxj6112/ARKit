@@ -72,6 +72,8 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                 // 放置阴影模型在底部
                 if shadowObject != nil {
                     self.placeVirtualObject(shadowObject!)
+                    // 把主体模型向上偏移一些
+                    loadedObject?.simdPosition.y += 0.1;
                 }
             }
         })

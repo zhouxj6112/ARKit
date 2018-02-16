@@ -100,9 +100,9 @@ class VirtualObjectSelectionViewController: UITableViewController {
         }
 //        debugPrint("data: \(data)")
 
-//        dismiss(animated: true, completion: nil)
-        let vc = SelectionHomeViewController.init(nibName: nil, bundle: nil)
-        self.navigationController?.pushViewController(vc, animated: true)
+        dismiss(animated: true, completion: nil)
+//        let vc = SelectionHomeViewController.init(nibName: nil, bundle: nil)
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     override func tableView(_ tableView: UITableView,  heightForHeaderInSection section: Int) -> CGFloat {

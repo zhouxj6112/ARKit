@@ -169,6 +169,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
 
 /// Extends `UIGestureRecognizer` to provide the center point resulting from multiple touches.
 extension UIGestureRecognizer {
+    
     func center(in view: UIView) -> CGPoint {
         let first = CGRect(origin: location(ofTouch: 0, in: view), size: .zero)
 
