@@ -24,7 +24,6 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
             return
         }
         
-        virtualObjectInteraction.selectedObject = virtualObject
         // 控制位置
         virtualObject.setPosition(focusSquarePosition, relativeTo: cameraTransform, smoothMovement: false)
 //        // 对齐底部中心点
@@ -35,22 +34,6 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         updateQueue.async {
             self.sceneView.scene.rootNode.addChildNode(virtualObject)
             debugPrint("添加之后的模型:\(virtualObject)");
- 
-//            // 给模型加个底座阴影效果平面
-//            let minV = virtualObject.boundingBox.min
-//            let maxV = virtualObject.boundingBox.max
-//            let planeGeometry = SCNPlane(width: CGFloat(maxV.x-minV.x), height: CGFloat(maxV.y-minV.y))
-//            let material = SCNMaterial()
-//            let img = UIImage(named: "fabric")
-//            material.diffuse.contents = img
-//            material.lightingModel = .physicallyBased
-//            planeGeometry.materials = [material]
-//            let planeNode = SCNNode(geometry: planeGeometry)
-////            planeNode.position = SCNVector3Make(virtualObject.position.x, 10, virtualObject.position.z)
-////            planeNode.simdWorldPosition = float3(virtualObject.simdWorldPosition.x, virtualObject.simdWorldPosition.y, virtualObject.simdWorldPosition.z)
-//            planeNode.simdPosition = float3(virtualObject.simdPosition.x, virtualObject.simdPosition.y, virtualObject.simdPosition.z)
-////            planeNode.transform = SCNMatrix4MakeRotation(Float(-.pi / 2.0), 1.0, 0.0, 0.0)
-//            self.sceneView.scene.rootNode.addChildNode(planeNode)
         }
     }
     
@@ -64,20 +47,17 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                 self.hideObjectLoadingUI()
                 if (loadedObject != nil) {
                     self.placeVirtualObject(loadedObject!)
-                    // 调用手机振动
-                    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+                    // 放置阴影模型在底部
+                    if shadowObject != nil {
+                        self.placeVirtualObject(shadowObject!) // 跟主模型的中心重合
+                    }
+                    /// 展示选中效果
+                    self.virtualObjectInteraction.resetSelectedObject(object: loadedObject)
                 } else {
                     self.statusViewController.showMessage("加载模型失败,请联系程序猿", autoHide: true)
                 }
-                // 放置阴影模型在底部
-                if shadowObject != nil {
-                    self.placeVirtualObject(shadowObject!)
-                    // 把主体模型向上偏移一些
-                    loadedObject?.simdPosition.y += 0.1;
-                }
             }
         })
-
         displayObjectLoadingUI()
     }
     
@@ -91,8 +71,14 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         for obj in virtualObjectLoader.loadedObjects {
             if (obj.zipFileUrl.elementsEqual(fileUrl!)) {
                 virtualObjectLoader.removeVirtualObject(at: index)
-//                break
-                // 不能break, 还要删除阴影模型
+            }
+            index += 1
+        }
+        // 还要删除阴影模型
+        index = 0
+        for obj in virtualObjectLoader.loadedObjects {
+            if (obj.zipFileUrl.elementsEqual(fileUrl!)) {
+                virtualObjectLoader.removeVirtualObject(at: index)
             }
             index += 1
         }

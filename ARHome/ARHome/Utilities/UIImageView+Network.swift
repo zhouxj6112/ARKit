@@ -27,3 +27,16 @@ extension UIImageView {
     }
     
 }
+
+extension UIButton {
+    
+    func setImageWithUrl(imageUrl: String, forState:UIControlState) {
+        //
+        SDWebImageManager.shared().loadImage(with: URL.init(string: imageUrl), options: .retryFailed, progress: nil) { (image, data, error, _, _, _) in
+            if image != nil {
+                self.setImage(image, for: forState)
+            }
+        }
+    }
+    
+}

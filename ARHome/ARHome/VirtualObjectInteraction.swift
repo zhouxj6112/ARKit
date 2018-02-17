@@ -21,7 +21,8 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
      The object that has been most recently intereacted with.
      The `selectedObject` can be moved at any time with the tap gesture.
      */
-    var selectedObject: VirtualObject?
+    private var selectedObject: VirtualObject?
+    private var preSelectedObject: VirtualObject?
     
     /// The object that is tracked for use by the pan and rotation gestures.
     private var trackedObject: VirtualObject? {
@@ -45,11 +46,27 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         rotationGesture.delegate = self
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap(_:)))
+        tapGesture.delegate = self
         
         // Add gestures to the `sceneView`.
         sceneView.addGestureRecognizer(panGesture)
         sceneView.addGestureRecognizer(rotationGesture)
         sceneView.addGestureRecognizer(tapGesture)
+    }
+    
+    public func resetSelectedObject(object: VirtualObject?) {
+        if object != nil {
+            if self.selectedObject != nil {
+                self.selectedObject?.simdPosition.y -= 0.1
+                // 调用手机振动
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            }
+            object?.simdPosition.y += 0.1
+            self.selectedObject = object
+        } else {
+            //
+            self.selectedObject = nil
+        }
     }
     
     // MARK: - Gesture Actions
@@ -60,7 +77,9 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         case .began:
             // Check for interaction with a new object.
             if let object = objectInteracting(with: gesture, in: sceneView) {
-                trackedObject = object
+                if object == selectedObject { // 只有被选中的模型才能进行移动 (先要点击选中,再滑动)
+                    trackedObject = object
+                }
             }
             
         case .changed where gesture.isThresholdExceeded:
@@ -97,10 +116,16 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
     @objc
     func updateObjectToCurrentTrackingPosition() {
         guard let object = trackedObject, let position = currentTrackingPosition else { return }
+        
         translate(object, basedOn: position, infinitePlane: translateAssumingInfinitePlane)
+        // 查找主模型对应的阴影模型,跟随主模型一起移动
+        if object.shadowObject != nil {
+            let shadow = object.shadowObject
+            shadow?.simdPosition = float3(object.simdPosition.x, object.simdPosition.y - 0.1, object.simdPosition.z)
+        }
     }
 
-    /// - Tag: didRotate
+    /// - Tag: didRotate 旋转模型 (多指操作)
     @objc
     func didRotate(_ gesture: UIRotationGestureRecognizer) {
         guard gesture.state == .changed else { return }
@@ -122,13 +147,41 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         
         if let tappedObject = sceneView.virtualObject(at: touchLocation) {
             // Select a new object.
-            selectedObject = tappedObject
+            if tappedObject == selectedObject {
+                // 已经选中的要置为非选中
+                selectedObject?.simdPosition.y -= 0.1
+                selectedObject = nil
+                // 调用手机振动
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            } else {
+                // 选中一个模型 (其它模型就要为非选中状态)
+                if tappedObject.isShadowObj == false { // 排除阴影模型
+                    if preSelectedObject != nil {
+                        // 将前一个复位
+                        preSelectedObject?.simdPosition.y -= 0.1
+                        preSelectedObject = nil
+                        // 调用手机振动
+                        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+                    }
+                    selectedObject = tappedObject
+                    // 选中状态
+                    if (tappedObject.simdPosition.y == tappedObject.shadowObject?.simdPosition.y) {
+                        selectedObject?.simdPosition.y += 0.1
+                    }
+                }
+            }
         } else if let object = selectedObject {
             // Teleport the object to whereever the user touched the screen.
             translate(object, basedOn: touchLocation, infinitePlane: false)
+            // 查找主模型对应的阴影模型,跟随主模型一起移动
+            if object.shadowObject != nil {
+                let shadow = object.shadowObject
+                shadow?.simdPosition = float3(object.simdPosition.x, object.simdPosition.y - 0.1, object.simdPosition.z)
+            }
         }
     }
     
+    ///
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         // Allow objects to be translated and rotated at the same time.
         return true

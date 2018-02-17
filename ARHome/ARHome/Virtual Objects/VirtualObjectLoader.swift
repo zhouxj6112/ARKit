@@ -80,6 +80,10 @@ class VirtualObjectLoader {
                 self.loadedObjects.append(sObj)
                 sObj.zipFileUrl = zipFileUrl! // 保持跟主模型文件一致
                 shadowObj = sObj
+                //
+                obj.shadowObject = shadowObj
+            } else {
+                obj.shadowObject = nil
             }
             // Load the content asynchronously.
             DispatchQueue.global(qos: .userInitiated).async {
