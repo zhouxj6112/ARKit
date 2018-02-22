@@ -18,7 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if window == nil {
             window = UIWindow()
             window?.backgroundColor = UIColor.white
-            window?.rootViewController = ProductsViewController.navForProductsViewController()
+            let stroyboard = UIStoryboard.init(name: "Main", bundle: Bundle(identifier: "Main"))
+            let vc = stroyboard.instantiateInitialViewController() as! ViewController
+            window?.rootViewController = vc
         }
         window?.makeKeyAndVisible()
         

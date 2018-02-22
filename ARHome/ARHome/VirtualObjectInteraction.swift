@@ -136,7 +136,13 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
           To make rotation also work correctly when looking from below the object one would have to
           flip the sign of the angle depending on whether the object is above or below the camera...
          */
-        trackedObject?.eulerAngles.y -= Float(gesture.rotation)
+        if trackedObject?.isShadowObj == false {
+            trackedObject?.eulerAngles.y -= Float(gesture.rotation)
+            let shadowObj = trackedObject?.shadowObject
+            if shadowObj != nil {
+                shadowObj?.eulerAngles.y = (trackedObject?.eulerAngles.y)!
+            }
+        }
         
         gesture.rotation = 0
     }
@@ -169,14 +175,6 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
                         selectedObject?.simdPosition.y += 0.1
                     }
                 }
-            }
-        } else if let object = selectedObject {
-            // Teleport the object to whereever the user touched the screen.
-            translate(object, basedOn: touchLocation, infinitePlane: false)
-            // 查找主模型对应的阴影模型,跟随主模型一起移动
-            if object.shadowObject != nil {
-                let shadow = object.shadowObject
-                shadow?.simdPosition = float3(object.simdPosition.x, object.simdPosition.y - 0.1, object.simdPosition.z)
             }
         }
     }

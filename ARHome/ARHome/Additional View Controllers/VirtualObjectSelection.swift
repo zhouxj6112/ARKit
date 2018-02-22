@@ -41,8 +41,8 @@ class ObjectCell: UITableViewCell {
 
 /// A protocol for reporting which objects have been selected.
 protocol VirtualObjectSelectionViewControllerDelegate: class {
-    func virtualObjectSelectionViewController(_ selectionViewController: VirtualObjectSelectionViewController, didSelectObjectUrl: URL)
-    func virtualObjectSelectionViewController(_ selectionViewController: VirtualObjectSelectionViewController, didDeselectObjectUrl: URL)
+    func virtualObjectSelectionViewController(_ selectionViewController: UIViewController, didSelectObjectUrl: URL)
+    func virtualObjectSelectionViewController(_ selectionViewController: UIViewController, didDeselectObjectUrl: URL)
 }
 
 /// A custom table view controller to allow users to select `VirtualObject`s for placement in the scene.

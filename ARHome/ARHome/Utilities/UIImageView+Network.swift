@@ -31,12 +31,21 @@ extension UIImageView {
 extension UIButton {
     
     func setImageWithUrl(imageUrl: String, forState:UIControlState) {
-        //
-        SDWebImageManager.shared().loadImage(with: URL.init(string: imageUrl), options: .retryFailed, progress: nil) { (image, data, error, _, _, _) in
-            if image != nil {
-                self.setImage(image, for: forState)
-            }
+//        SDWebImageManager.shared().loadImage(with: URL.init(string: imageUrl), options: .retryFailed, progress: nil) { (image, data, error, _, _, _) in
+//            if image != nil {
+//                self.setImage(image, for: forState)
+//            }
+//        }
+        let edge = self.imageEdgeInsets
+        let rect = CGRect.init(x: edge.left, y: edge.top, width: self.frame.size.width-edge.left-edge.right, height: self.frame.size.height-edge.top-edge.bottom)
+        var imageView = self.viewWithTag(100)
+        if imageView == nil {
+            imageView = UIImageView.init(frame: rect)
+            imageView?.isUserInteractionEnabled = false
+            imageView?.tag = 100
+            self.addSubview(imageView!)
         }
+        (imageView as! UIImageView).loadImageWithUrl(imageUrl: imageUrl)
     }
     
 }

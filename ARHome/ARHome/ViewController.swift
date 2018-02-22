@@ -57,6 +57,9 @@ class ViewController: UIViewController {
     }
     
     // MARK: - View Controller Life Cycle
+    override func loadView() {
+        super.loadView()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -145,6 +148,14 @@ class ViewController: UIViewController {
         dismiss(animated: true, completion: {
             debugPrint("关闭AR视图ViewController完成")
         })
+    }
+    // 弹出设置界面
+    func toSettingViewController() {
+        let vc = SettingViewController();
+        let popover = UIPopoverPresentationController.init(presentedViewController: vc, presenting: self)
+        self.present(popover, animated: true) {
+            //
+        }
     }
     
     // MARK: - Focus Square

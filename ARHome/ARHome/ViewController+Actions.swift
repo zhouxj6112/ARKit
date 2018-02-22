@@ -54,7 +54,8 @@ extension ViewController: UIGestureRecognizerDelegate {
         
         isRestartAvailable = false
         statusViewController.cancelAllScheduledMessages()
-        dismissViewController();
+//        dismissViewController();
+        toSettingViewController();
     }
 }
 
@@ -81,40 +82,44 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
               segueIdentifer == .showObjects else { return }
         
 //        let objectsViewController = segue.destination as! VirtualObjectSelectionViewController
-        let nav = segue.destination as! UINavigationController // pop出来的是个nav
-        let objectsViewController = nav.viewControllers.first as! VirtualObjectSelectionViewController
-        objectsViewController.virtualObjects = VirtualObject.availableObjects
-        objectsViewController.delegate = self
+//        let nav = segue.destination as! UINavigationController // pop出来的是个nav
+//        let objectsViewController = nav.viewControllers.first as! VirtualObjectSelectionViewController
+//        objectsViewController.virtualObjects = VirtualObject.availableObjects
+//        objectsViewController.delegate = self
+//
+//        let mutableArray = NSMutableArray.init(capacity: 1);
+//        // Set all rows of currently placed objects to selected.
+//        for obj in self.modelList {
+//            var objDic = obj as! Dictionary<String, Any>
+//            let array = objDic["list"] as! NSArray
+//            let mutable = NSMutableArray.init(capacity: 1);
+//            for dic in array {
+//                var dicObj = dic as! Dictionary<String, Any>
+//                let fileUrl = dicObj["fileUrl"] as! String
+//                var bFind = false
+//                for object in virtualObjectLoader.loadedObjects {
+//                    let modelFileUrl = object.zipFileUrl
+//                    if modelFileUrl.elementsEqual(fileUrl) {
+//                        bFind = true
+//                        break;
+//                    }
+//                }
+//                if bFind {
+//                    dicObj["isIn"] = true
+//                } else {
+//                    dicObj["isIn"] = false
+//                }
+//                mutable.add(dicObj)
+//            }
+//            objDic["list"] = mutable;
+//            mutableArray.add(objDic)
+//        }
+//        objectsViewController.modelList = mutableArray // 额外附加
+//        objectsViewController.tableView.reloadData()
         
-        let mutableArray = NSMutableArray.init(capacity: 1);
-        // Set all rows of currently placed objects to selected.
-        for obj in self.modelList {
-            var objDic = obj as! Dictionary<String, Any>
-            let array = objDic["list"] as! NSArray
-            let mutable = NSMutableArray.init(capacity: 1);
-            for dic in array {
-                var dicObj = dic as! Dictionary<String, Any>
-                let fileUrl = dicObj["fileUrl"] as! String
-                var bFind = false
-                for object in virtualObjectLoader.loadedObjects {
-                    let modelFileUrl = object.zipFileUrl
-                    if modelFileUrl.elementsEqual(fileUrl) {
-                        bFind = true
-                        break;
-                    }
-                }
-                if bFind {
-                    dicObj["isIn"] = true
-                } else {
-                    dicObj["isIn"] = false
-                }
-                mutable.add(dicObj)
-            }
-            objDic["list"] = mutable;
-            mutableArray.add(objDic)
-        }
-        objectsViewController.modelList = mutableArray // 额外附加
-        objectsViewController.tableView.reloadData()
+        let nav = segue.destination as! UINavigationController // pop出来的是个nav
+        let vc = nav.viewControllers.first as! SelectionHomeViewController
+        vc.selectionDelegate = self
     }
     
 }

@@ -39,7 +39,7 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     
     // MARK: - VirtualObjectSelectionViewControllerDelegate
     
-    func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didSelectObjectUrl object: URL) {
+    func virtualObjectSelectionViewController(_: UIViewController, didSelectObjectUrl object: URL) {
         // 加载模型
         let objectFileUrl = object
         virtualObjectLoader.loadVirtualObject(objectFileUrl, loadedHandler: { [unowned self] loadedObject, shadowObject in
@@ -61,7 +61,7 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         displayObjectLoadingUI()
     }
     
-    func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didDeselectObjectUrl object: URL) {
+    func virtualObjectSelectionViewController(_: UIViewController, didDeselectObjectUrl object: URL) {
 //        guard let objectIndex = virtualObjectLoader.loadedObjects.index(of: object) else {
 //            fatalError("Programmer error: Failed to lookup virtual object in scene.")
 //        }
