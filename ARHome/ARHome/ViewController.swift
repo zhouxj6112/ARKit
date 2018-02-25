@@ -98,6 +98,9 @@ class ViewController: UIViewController {
         // Set the delegate to ensure this gesture is only used when there are no virtual objects in the scene.
         tapGesture.delegate = self
         sceneView.addGestureRecognizer(tapGesture)
+        
+        // 监听通知
+        NotificationCenter.default.addObserver(self, selector: #selector(self.resetTracking), name: NSNotification.Name(rawValue: "kNotificationResetAR"), object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -112,8 +115,9 @@ class ViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+        //
         session.pause()
+        debugPrint("AR进入暂停状态")
     }
     
     // MARK: - Scene content setup
@@ -136,7 +140,7 @@ class ViewController: UIViewController {
     // MARK: - Session management
     
     /// Creates a new AR configuration to run on the `session`.
-    func resetTracking() {
+    @objc func resetTracking() {
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
         session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
@@ -152,8 +156,14 @@ class ViewController: UIViewController {
     // 弹出设置界面
     func toSettingViewController() {
         let vc = SettingViewController();
-        let popover = UIPopoverPresentationController.init(presentedViewController: vc, presenting: self)
-        self.present(popover, animated: true) {
+        vc.preferredContentSize = CGSize.init(width: self.view.frame.size.width, height: self.view.frame.size.height-180)
+        vc.modalPresentationStyle = .popover
+        let popover = vc.popoverPresentationController
+        popover?.sourceView = self.statusViewController.view
+        popover?.sourceRect = CGRect.init(x: 10, y: 10, width: 120, height: 300)
+        popover?.permittedArrowDirections = .any
+        popover?.delegate = self
+        present(vc, animated: true) {
             //
         }
     }
@@ -206,14 +216,14 @@ class ViewController: UIViewController {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let restartAction = UIAlertAction(title: "Restart Session", style: .default) { _ in
             alertController.dismiss(animated: true, completion: nil)
-            self.blurView.isHidden = true
-            self.resetTracking()
+//            self.blurView.isHidden = true
+//            self.resetTracking()
         }
         alertController.addAction(restartAction)
         present(alertController, animated: true, completion: nil)
     }
     
-    var modelList:NSArray = []
+    public var modelList:NSArray = []
     
     func resetModelList(array:NSArray) -> Void {
         modelList = array

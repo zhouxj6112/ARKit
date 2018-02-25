@@ -15,5 +15,6 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import "ReplayKitUtil.h"
 #import "SettingViewController.h"
+//#import "BatchDownloadViewController.h"
 
 #endif /* PrefixHeader_pch */
