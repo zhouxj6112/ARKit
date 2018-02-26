@@ -28,7 +28,7 @@
     // Do any additional setup after loading the view.
     self.navigationItem.title = @"批量下载";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(closeIt:)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"开始下载" style:UIBarButtonItemStyleDone target:self action:@selector(startDownload:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"开始" style:UIBarButtonItemStyleDone target:self action:@selector(startDownload:)];
     
     UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
     tableView.dataSource = self;
@@ -85,6 +85,10 @@
 }
 
 - (void)closeIt:(id)sender {
+    for (int i=0; i<_sessionManager.downloadTasks.count; i++) {
+        NSURLSessionDownloadTask* task = [_sessionManager.downloadTasks objectAtIndex:i];
+        [task cancel];
+    }
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -132,10 +136,11 @@
     NSString* documentsDirectory = [paths firstObject];
     NSString* zipFilePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
     
-    NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:zipFileUrl]];
+    NSString* enZipFileUrl = [zipFileUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:enZipFileUrl]];
     NSURLSessionDownloadTask* task = [_sessionManager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
         //NSLog(@"下载进度:%@", downloadProgress);
-        [dic setObject:[NSString stringWithFormat:@"%.0f%%", downloadProgress.fractionCompleted*100] forKey:@"progress"];
+        [dic setObject:[NSString stringWithFormat:@"%.2f%%", downloadProgress.fractionCompleted*100] forKey:@"progress"];
         // 更新table界面
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
@@ -152,9 +157,11 @@
                 NSError* error = nil;
                 [SSZipArchive unzipFileAtPath:zipFilePath toDestination:toFilePath overwrite:YES password:nil error:nil delegate:self];
                 if (error) {
-                    NSLog(@"%@", error);
+                    NSLog(@"解压失败:%@", error);
                 }
             }
+        } else {
+            NSLog(@"下载error: %@", error);
         }
         NSLog(@"还剩%lu个下载任务", (unsigned long)_sessionManager.downloadTasks.count);
     }];
@@ -170,6 +177,9 @@
     // Pass the selected object to the new view controller.
 }
 */
+- (void)dealloc {
+    NSLog(@"BatchDownloadViewController dealloc");
+}
 
 #pragma mark -
 #pragma mark UITableViewDataSource
