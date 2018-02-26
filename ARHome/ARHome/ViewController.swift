@@ -100,7 +100,7 @@ class ViewController: UIViewController {
         sceneView.addGestureRecognizer(tapGesture)
         
         // 监听通知
-        NotificationCenter.default.addObserver(self, selector: #selector(self.resetTracking), name: NSNotification.Name(rawValue: "kNotificationResetAR"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.resetAR), name: NSNotification.Name(rawValue: "kNotificationResetAR"), object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -166,6 +166,10 @@ class ViewController: UIViewController {
         present(vc, animated: true) {
             //
         }
+    }
+    @objc func resetAR() {
+        virtualObjectLoader.removeAllVirtualObjects();
+        self.resetTracking();
     }
     
     // MARK: - Focus Square
