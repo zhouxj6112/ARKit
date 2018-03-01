@@ -41,6 +41,9 @@
 @end
 
 @interface BatchDownloadViewController () <UITableViewDataSource, UITableViewDelegate, SSZipArchiveDelegate>
+{
+    NSInteger _curSellerIndex;
+}
 @property (nonatomic, retain) UITableView* sTableView;
 @property (nonatomic, retain) NSArray* sListData;
 @property (nonatomic, retain) UITableView* tableView;
@@ -95,6 +98,8 @@ static int DOWNLOAD_SYNC_NUM = 3;
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@", error);
     }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshTable:) name:@"kNotificationRefresh" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -172,9 +177,7 @@ static int DOWNLOAD_SYNC_NUM = 3;
         //NSLog(@"下载进度:%@", downloadProgress);
         [dic setObject:[NSString stringWithFormat:@"%.2f%%", downloadProgress.fractionCompleted*100] forKey:@"progress"];
         // 更新table界面
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationRefresh" object:nil];
     } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
         return [NSURL URLWithString:zipFilePath]; // 下载路径
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
@@ -194,9 +197,7 @@ static int DOWNLOAD_SYNC_NUM = 3;
             NSLog(@"下载error: %@", error);
             [dic setObject:@"下载失败" forKey:@"progress"];
             // 更新table界面
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-            });
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationRefresh" object:nil];
         }
         NSLog(@"还剩%lu个下载任务", (unsigned long)_sessionManager.downloadTasks.count);
         [_downloadArray removeObject:task];
@@ -232,6 +233,12 @@ static int DOWNLOAD_SYNC_NUM = 3;
 */
 - (void)dealloc {
     NSLog(@"BatchDownloadViewController dealloc");
+}
+
+- (void)refreshTable:(id)sender {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
 }
 
 #pragma mark -
@@ -305,11 +312,16 @@ static int DOWNLOAD_SYNC_NUM = 3;
     if (tableView == _sTableView) {
         if (_sessionManager.downloadTasks.count > 0) {
             UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"警告" message:@"下载过程中不允许切换下载" preferredStyle:UIAlertControllerStyleAlert];
+            [controller addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                //
+            }]];
             [self presentViewController:controller animated:YES completion:NULL];
+            [_sTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:_curSellerIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
             return ;
         }
         NSDictionary* dic = self.sListData[indexPath.row];
         [self changeSeller:dic[@"sellerId"]];
+        _curSellerIndex = indexPath.row;
     }
 }
 
