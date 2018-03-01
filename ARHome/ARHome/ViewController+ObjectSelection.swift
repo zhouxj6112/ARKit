@@ -8,6 +8,7 @@ Methods on the main view controller for handling virtual object loading and move
 import UIKit
 import SceneKit
 import AudioToolbox
+import CoreData
 
 extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     /**
@@ -53,6 +54,8 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     }
                     /// 展示选中效果
                     self.virtualObjectInteraction.resetSelectedObject(object: loadedObject)
+                    // 保存到浏览历史里面
+                    self.saveToHistory(remoteFileUrl: (loadedObject?.zipFileUrl)!, localObjectUrl: (loadedObject?.referenceURL.absoluteString)!, localShadowUrl: (shadowObject?.referenceURL.absoluteString)!)
                 } else {
                     self.statusViewController.showMessage("加载模型失败,请联系程序猿", autoHide: true)
                 }
@@ -106,4 +109,22 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         addObjectButton.isEnabled = true
         isRestartAvailable = true
     }
+    
+    func saveToHistory(remoteFileUrl:String, localObjectUrl:String, localShadowUrl:String) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedObectContext = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "BrowserEntity", in: managedObectContext)
+        
+        let object = NSManagedObject(entity: entity!, insertInto: managedObectContext)
+        object.setValue("1", forKey: "modelId")
+        object.setValue(remoteFileUrl, forKey: "zipFileUrl")
+        object.setValue(localObjectUrl, forKey: "localUrl")
+        object.setValue(localShadowUrl, forKey: "localShadowUrl")
+        do {
+            try managedObectContext.save()
+        } catch  {
+            fatalError("无法保存")
+        }
+    }
+    
 }

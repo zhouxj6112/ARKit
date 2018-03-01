@@ -11,15 +11,47 @@
 #import <SSZipArchive/SSZipArchive.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 
+@interface BatchDownloadTableCell : UITableViewCell
+@property (nonatomic, retain) UIImageView* bImageView;
+@property (nonatomic, retain) UILabel* bLabel;
+@property (nonatomic, retain) UILabel* pLabel;
+@end
+
+@implementation BatchDownloadTableCell
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        _bImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 2, 40, 40)];
+        [self.contentView addSubview:_bImageView];
+        _bLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 2, 120, 40)];
+        _bLabel.font = [UIFont systemFontOfSize:14];
+        _bLabel.textAlignment = NSTextAlignmentLeft;
+        [self.contentView addSubview:_bLabel];
+        _pLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.width-120, 2, 110, 40)];
+        _pLabel.textAlignment = NSTextAlignmentRight;
+        _pLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        _pLabel.textColor = [UIColor redColor];
+        _pLabel.font = [UIFont systemFontOfSize:12];
+        [self.contentView addSubview:_pLabel];
+    }
+    return self;
+}
+@end
+
 @interface BatchDownloadViewController () <UITableViewDataSource, UITableViewDelegate, SSZipArchiveDelegate>
 @property (nonatomic, retain) UITableView* sTableView;
 @property (nonatomic, retain) NSArray* sListData;
 @property (nonatomic, retain) UITableView* tableView;
 @property (nonatomic, retain) NSMutableArray* listData;
 @property (nonatomic, retain) AFHTTPSessionManager* sessionManager;
+@property (nonatomic, retain) NSMutableArray* downloadArray;
 @end
 
 @implementation BatchDownloadViewController
+
+static int DOWNLOAD_SYNC_NUM = 3;
 
 - (void)loadView {
     [super loadView];
@@ -38,13 +70,15 @@
     _sTableView.delegate = self;
     [self.view addSubview:_sTableView];
     
-    UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(100, 0, self.view.frame.size.width-100, self.view.frame.size.height) style:UITableViewStyleGrouped];
+    UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(100, 0, self.view.frame.size.width-100, self.view.frame.size.height) style:UITableViewStylePlain];
     tableView.dataSource = self;
     tableView.delegate = self;
     [self.view addSubview:tableView];
     self.tableView = tableView;
     
+    _downloadArray = [NSMutableArray arrayWithCapacity:30];
     _sessionManager = [AFHTTPSessionManager manager];
+    _sessionManager.requestSerializer.timeoutInterval = 24*60*60;
     _sessionManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", nil];
     [_sessionManager GET:@"http://52.187.182.32/admin/api/getAllSellers?" parameters:nil progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"%@", responseObject);
@@ -133,8 +167,8 @@
     NSString* zipFilePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
     
     NSString* enZipFileUrl = [zipFileUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:enZipFileUrl]];
-    NSURLSessionDownloadTask* task = [_sessionManager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:enZipFileUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60*60];
+    __block NSURLSessionDownloadTask* task = [_sessionManager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
         //NSLog(@"下载进度:%@", downloadProgress);
         [dic setObject:[NSString stringWithFormat:@"%.2f%%", downloadProgress.fractionCompleted*100] forKey:@"progress"];
         // 更新table界面
@@ -165,11 +199,26 @@
             });
         }
         NSLog(@"还剩%lu个下载任务", (unsigned long)_sessionManager.downloadTasks.count);
-        if (_sessionManager.downloadTasks.count == 0) {
+        [_downloadArray removeObject:task];
+        //
+        if (_downloadArray == 0) {
             self.navigationItem.rightBarButtonItem.title = @"开始";
+        } else {
+            // 注意,找到剩下队列中第一个需要resume的对象
+            for (NSURLSessionTask* sTask in _downloadArray) {
+                if (sTask.state == NSURLSessionTaskStateSuspended) {
+                    [sTask resume];
+                    break;
+                }
+            }
         }
     }];
     [task resume];
+    [_downloadArray addObject:task];
+    
+    if (_downloadArray.count > DOWNLOAD_SYNC_NUM) {
+        [task suspend]; // 挂起
+    }
 }
 
 /*
@@ -204,13 +253,13 @@
     return list.count;
 }
 
-- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (tableView == _sTableView) {
-        return nil;
-    }
-    NSDictionary* dic = self.listData[section];
-    return dic[@"typeName"];
-}
+//- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+//    if (tableView == _sTableView) {
+//        return nil;
+//    }
+//    NSDictionary* dic = self.listData[section];
+//    return dic[@"typeName"];
+//}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _sTableView) {
@@ -227,28 +276,17 @@
     }
     
     static NSString* cellIden = @"cellIden";
-    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellIden];
+    BatchDownloadTableCell* cell = (BatchDownloadTableCell *)[tableView dequeueReusableCellWithIdentifier:cellIden];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIden];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell = [[BatchDownloadTableCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIden];
     }
     {
         NSDictionary* dict = self.listData[indexPath.section];
         NSArray* list = dict[@"list"];
         NSDictionary* dic = list[indexPath.row];
-        cell.imageView.contentMode = UIViewContentModeScaleToFill;
-        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:dic[@"compressImage"]]];
-        cell.textLabel.text = dic[@"modelName"];
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
-        UILabel* label = (UILabel *)cell.accessoryView;
-        if (label == nil) {
-            label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
-            label.font = [UIFont systemFontOfSize:12];
-            label.textColor = [UIColor redColor];
-            label.textAlignment = NSTextAlignmentRight;
-            cell.accessoryView = label;
-        }
-        label.text = dic[@"progress"];
+        [cell.bImageView sd_setImageWithURL:[NSURL URLWithString:dic[@"compressImage"]]];
+        cell.bLabel.text = dic[@"modelName"];
+        cell.pLabel.text = dic[@"progress"];
     }
     return cell;
 }
@@ -315,6 +353,31 @@
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@", error);
     }];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (tableView == _sTableView) {
+        return 0;
+    }
+    return 40;
+}
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (tableView == _sTableView) {
+        return nil;
+    }
+    UIView* headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 40)];
+    headerView.backgroundColor = [UIColor whiteColor];
+    UILabel* label =[headerView viewWithTag:10];
+    if (label == nil) {
+        label = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.frame.size.width, 40)];
+        label.font = [UIFont boldSystemFontOfSize:14];
+        label.tag = 10;
+        [headerView addSubview:label];
+    }
+    NSDictionary* dic = self.listData[section];
+    label.text = dic[@"typeName"];
+    return headerView;
 }
 
 #pragma mark -

@@ -22,6 +22,10 @@ class VirtualObject: SCNReferenceNode {
         return referenceURL.lastPathComponent.replacingOccurrences(of: type, with: "")
     }
     
+    /// 模型的标识
+    public var remoteID:String = ""
+    public var remoteName:String = ""
+    
     /// 下载的zip文件路径url
     public var zipFileUrl: String = ""
     /// 是否是阴影模型 (是的话,不能单独操作的,必须跟随主模型)

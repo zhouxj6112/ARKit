@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import CoreData
 
 class SelectionHomeViewController: UIViewController {
 
@@ -82,6 +83,23 @@ class SelectionHomeViewController: UIViewController {
             //
             self.displayAllCategory(startY + 10)
         })
+        
+        // 读取操作历史
+        self.fetchHistory()
+    }
+    
+    func fetchHistory() {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedObectContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "BrowserEntity")
+        do {
+            let fetchedResults = try managedObectContext.fetch(fetchRequest) as? [NSManagedObject]
+            if let results = fetchedResults {
+                debugPrint("\(results)")
+            }
+        } catch  {
+            fatalError("获取失败")
+        }
     }
     
     override func viewWillLayoutSubviews() {
