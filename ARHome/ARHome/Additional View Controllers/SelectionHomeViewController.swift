@@ -15,6 +15,9 @@ class SelectionHomeViewController: UIViewController {
     private var scrollView:UIScrollView!
     private var brandList:NSArray?
     private var categoryList:NSArray?
+    private var historyList:[NSManagedObject]?
+    
+    private static var popNav:UINavigationController?
     
     public weak var selectionDelegate: VirtualObjectSelectionViewControllerDelegate?
     
@@ -83,19 +86,52 @@ class SelectionHomeViewController: UIViewController {
             //
             self.displayAllCategory(startY + 10)
         })
-        
-        // 读取操作历史
-        self.fetchHistory()
     }
     
-    func fetchHistory() {
+    func fetchHistory(_ startY:CGFloat) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedObectContext = appDelegate.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "BrowserEntity")
+        fetchRequest.sortDescriptors = [NSSortDescriptor.init(key: "updateTime", ascending: false)];
         do {
             let fetchedResults = try managedObectContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResults {
+            if let results:[NSManagedObject] = fetchedResults {
                 debugPrint("\(results)")
+                if results.count == 0 {
+                    return;
+                }
+                historyList = results
+                
+                let view = UIView.init(frame: CGRect.init(x: 0, y: startY+20, width: self.view.frame.size.width, height: 170));
+                let title = UILabel.init(frame: CGRect.init(x: 12, y: 0, width: 120, height: 20))
+                title.text = "浏览历史";
+                title.font = UIFont.boldSystemFont(ofSize: 14)
+                view.addSubview(title)
+                let scrollView = UIScrollView.init(frame: CGRect.init(x: 12, y: 30, width: view.frame.size.width-24, height: 100));
+                view.addSubview(scrollView)
+                self.scrollView.addSubview(view)
+                self.scrollView.contentSize = CGSize.init(width: self.scrollView.contentSize.width, height: self.scrollView.contentSize.height+170)
+                
+                var i:Int = 0
+                for result in results {
+                    let _:String = result.value(forKey: "modelId") as! String
+                    //
+                    let modelName:String = result.value(forKey: "modelName") as! String
+                    let snapshot:String = result.value(forKey: "snapshot") as! String
+                    let button = UIButton.init(type: .custom)
+                    button.frame = CGRect.init(x: i*100, y: 0, width: 80, height: 100)
+                    button.imageEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: 20, right: 0)
+                    button.titleEdgeInsets = UIEdgeInsets.init(top: 80, left: -10, bottom: 0, right: -10)
+                    button.setTitle(modelName, for: .normal)
+                    button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+                    button.setTitleColor(UIColor.black, for: .normal)
+                    button.setImageWithUrl(imageUrl: snapshot, forState: .normal)
+                    button.addTarget(self, action: #selector(self.selectObject(_:)), for: .touchUpInside)
+                    button.tag = 1000+i
+                    scrollView.addSubview(button)
+                    i = i+1
+                }
+                scrollView.contentSize = CGSize.init(width: CGFloat(i*100-20), height: scrollView.frame.size.height)
             }
         } catch  {
             fatalError("获取失败")
@@ -156,6 +192,9 @@ class SelectionHomeViewController: UIViewController {
                     startY += 40 + 10
                 }
                 self.scrollView.contentSize = CGSize.init(width: self.scrollView.frame.size.width, height: startY)
+                
+                // 读取操作历史,展示在下面
+                self.fetchHistory(startY)
             }
         })
     }
@@ -180,6 +219,23 @@ class SelectionHomeViewController: UIViewController {
         vc.viewTitle = one["typeName"] as! String
         vc.selectionDelegate = self.selectionDelegate
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc
+    func selectObject(_ sender:UIButton) {
+        let item:NSManagedObject = self.historyList![sender.tag-1000];
+        let fileUrl = item.value(forKey: "zipFileUrl") as! String
+        let encodedUrl = fileUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let url = URL.init(string: encodedUrl!)
+        let modelId = item.value(forKey: "modelId") as! String
+        self.navigationController?.dismiss(animated: true) {
+            self.selectionDelegate?.virtualObjectSelectionViewController(self, didSelectObjectUrl: url!, didSelectObjectID: modelId)
+        }
+    }
+    
+    // 析构函数
+    deinit {
+        debugPrint("SelectionHomeViewController释放")
     }
     
 }

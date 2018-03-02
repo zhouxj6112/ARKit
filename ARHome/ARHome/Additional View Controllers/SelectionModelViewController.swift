@@ -114,10 +114,17 @@ class SelectionModelViewController: UIViewController {
             let modelUrl = one["fileUrl"] as! String
             let encodedUrl = modelUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
             let url = URL.init(string: encodedUrl!)
-            self.selectionDelegate?.virtualObjectSelectionViewController(self, didSelectObjectUrl: url!)
+            let modelId = one["modelId"] as! String
+            self.selectionDelegate?.virtualObjectSelectionViewController(self, didSelectObjectUrl: url!, didSelectObjectID:modelId)
         }
         self.navigationController?.dismiss(animated: true) {
             debugPrint("选择模型导航关闭")
         }
     }
+    
+    // 析构函数
+    deinit {
+        debugPrint("SelectionModelViewController释放")
+    }
+    
 }

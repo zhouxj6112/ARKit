@@ -32,6 +32,9 @@ class ViewController: UIViewController {
         return childViewControllers.lazy.flatMap({ $0 as? StatusViewController }).first!
     }()
     
+    // 底部弹出的选择模型viewcontroller
+    public var popNav:UINavigationController?
+    
     // MARK: - ARKit Configuration Properties
     
     /// A type which manages gesture manipulation of virtual content in the scene.

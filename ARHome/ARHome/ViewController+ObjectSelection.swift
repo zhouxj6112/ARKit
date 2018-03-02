@@ -9,6 +9,7 @@ import UIKit
 import SceneKit
 import AudioToolbox
 import CoreData
+import SwiftyJSON
 
 extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     /**
@@ -40,13 +41,16 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     
     // MARK: - VirtualObjectSelectionViewControllerDelegate
     
-    func virtualObjectSelectionViewController(_: UIViewController, didSelectObjectUrl object: URL) {
+    func virtualObjectSelectionViewController(_: UIViewController, didSelectObjectUrl object: URL, didSelectObjectID: String) {
         // 加载模型
         let objectFileUrl = object
         virtualObjectLoader.loadVirtualObject(objectFileUrl, loadedHandler: { [unowned self] loadedObject, shadowObject in
             DispatchQueue.main.async {
                 self.hideObjectLoadingUI()
+                //
                 if (loadedObject != nil) {
+                    loadedObject?.signID = didSelectObjectID;
+                    
                     self.placeVirtualObject(loadedObject!)
                     // 放置阴影模型在底部
                     if shadowObject != nil {
@@ -55,7 +59,11 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     /// 展示选中效果
                     self.virtualObjectInteraction.resetSelectedObject(object: loadedObject)
                     // 保存到浏览历史里面
-                    self.saveToHistory(remoteFileUrl: (loadedObject?.zipFileUrl)!, localObjectUrl: (loadedObject?.referenceURL.absoluteString)!, localShadowUrl: (shadowObject?.referenceURL.absoluteString)!)
+                    var localShadowUrl:String = ""
+                    if (shadowObject != nil && (shadowObject?.isMember(of: SCNReferenceNode.self)) == true) {
+                        localShadowUrl = (shadowObject?.referenceURL.absoluteString)!
+                    }
+                    self.saveToHistory(didSelectObjectID, remoteFileUrl: (loadedObject?.zipFileUrl)!, localObjectUrl: (loadedObject?.referenceURL.absoluteString)!, localShadowUrl: localShadowUrl)
                 } else {
                     self.statusViewController.showMessage("加载模型失败,请联系程序猿", autoHide: true)
                 }
@@ -64,7 +72,7 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         displayObjectLoadingUI()
     }
     
-    func virtualObjectSelectionViewController(_: UIViewController, didDeselectObjectUrl object: URL) {
+    func virtualObjectSelectionViewController(_: UIViewController, didDeselectObjectUrl object: URL, didDeselectObjectID: String) {
 //        guard let objectIndex = virtualObjectLoader.loadedObjects.index(of: object) else {
 //            fatalError("Programmer error: Failed to lookup virtual object in scene.")
 //        }
@@ -110,20 +118,54 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         isRestartAvailable = true
     }
     
-    func saveToHistory(remoteFileUrl:String, localObjectUrl:String, localShadowUrl:String) {
+    func saveToHistory(_ modelID:String, remoteFileUrl:String, localObjectUrl:String, localShadowUrl:String) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedObectContext = appDelegate.persistentContainer.viewContext
-        let entity = NSEntityDescription.entity(forEntityName: "BrowserEntity", in: managedObectContext)
-        
-        let object = NSManagedObject(entity: entity!, insertInto: managedObectContext)
-        object.setValue("1", forKey: "modelId")
-        object.setValue(remoteFileUrl, forKey: "zipFileUrl")
-        object.setValue(localObjectUrl, forKey: "localUrl")
-        object.setValue(localShadowUrl, forKey: "localShadowUrl")
+        //
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "BrowserEntity")
+        fetchRequest.predicate = NSPredicate.init(format: "modelId == %@", modelID)
         do {
-            try managedObectContext.save()
+            let fetchedResults = try managedObectContext.fetch(fetchRequest) as? [NSManagedObject]
+            if let results:[NSManagedObject] = fetchedResults {
+                debugPrint("\(results)")
+                if results.count > 0 {
+                    let managedObject = results[0]
+                    // 更新时间
+                    managedObject.setValue(NSDate.init(), forKey: "updateTime")
+                    do {
+                        try managedObectContext.save()
+                    } catch  {
+                        fatalError("无法保存")
+                    }
+                    return;
+                }
+            }
         } catch  {
-            fatalError("无法保存")
+            fatalError("获取失败")
+        }
+        
+        NetworkingHelper.get(url: all_modelinfo_url, parameters: ["modelIds":modelID]) { (data:JSON?, error:NSError?) in
+            if error == nil {
+                let items = data?.rawValue as! NSArray
+                if items.count == 1 {
+                    let item = items[0] as! Dictionary<String, Any>
+                    //
+                    let entity = NSEntityDescription.entity(forEntityName: "BrowserEntity", in: managedObectContext)
+                    let object = NSManagedObject(entity: entity!, insertInto: managedObectContext)
+                    object.setValue(modelID, forKey: "modelId")
+                    object.setValue(item["modelName"], forKey: "modelName")
+                    object.setValue(remoteFileUrl, forKey: "zipFileUrl")
+                    object.setValue(item["compressImage"], forKey: "snapshot")
+                    object.setValue(localObjectUrl, forKey: "localUrl")
+                    object.setValue(localShadowUrl, forKey: "localShadowUrl")
+                    object.setValue(NSDate.init(), forKey: "updateTime")
+                    do {
+                        try managedObectContext.save()
+                    } catch  {
+                        fatalError("无法保存")
+                    }
+                }
+            }
         }
     }
     

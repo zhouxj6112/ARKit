@@ -23,8 +23,8 @@ class VirtualObject: SCNReferenceNode {
     }
     
     /// 模型的标识
-    public var remoteID:String = ""
-    public var remoteName:String = ""
+    public var signID:String = ""
+    public var signName:String = ""
     
     /// 下载的zip文件路径url
     public var zipFileUrl: String = ""
