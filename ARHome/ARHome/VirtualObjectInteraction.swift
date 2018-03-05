@@ -57,12 +57,14 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
     public func resetSelectedObject(object: VirtualObject?) {
         if object != nil {
             if self.selectedObject != nil {
+                self.selectedObject?.stopShakeInSelection()
                 self.selectedObject?.simdPosition.y -= 0.1
                 // 调用手机振动
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
             }
             object?.simdPosition.y += 0.1
             self.selectedObject = object
+            self.selectedObject?.shakeInSelection()
         } else {
             //
             self.selectedObject = nil
@@ -79,6 +81,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
             if let object = objectInteracting(with: gesture, in: sceneView) {
                 if object == selectedObject { // 只有被选中的模型才能进行移动 (先要点击选中,再滑动)
                     trackedObject = object
+                    object.stopShakeInSelection()
                 }
             }
             
@@ -100,6 +103,9 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         default:
             // Clear the current position tracking.
             currentTrackingPosition = nil
+            if (trackedObject != nil) {
+                trackedObject?.shakeInSelection()
+            }
             trackedObject = nil
         }
     }
@@ -154,6 +160,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         if let tappedObject = sceneView.virtualObject(at: touchLocation) {
             // Select a new object.
             if tappedObject == selectedObject {
+                selectedObject?.stopShakeInSelection()
                 // 已经选中的要置为非选中
                 selectedObject?.simdPosition.y -= 0.1
                 selectedObject = nil
@@ -161,19 +168,22 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
             } else {
                 // 选中一个模型 (其它模型就要为非选中状态)
-                if tappedObject.isShadowObj == false { // 排除阴影模型
-                    if preSelectedObject != nil {
-                        // 将前一个复位
-                        preSelectedObject?.simdPosition.y -= 0.1
-                        preSelectedObject = nil
-                        // 调用手机振动
-                        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-                    }
-                    selectedObject = tappedObject
-                    // 选中状态
-                    if (tappedObject.simdPosition.y == tappedObject.shadowObject?.simdPosition.y) {
-                        selectedObject?.simdPosition.y += 0.1
-                    }
+                if tappedObject.isShadowObj == true { // 排除阴影模型
+                    return;
+                }
+                if selectedObject != nil { // 将前一个选中的恢复
+                    selectedObject?.stopShakeInSelection()
+                    // 已经选中的要置为非选中
+                    selectedObject?.simdPosition.y -= 0.1
+                    selectedObject = nil
+                    // 调用手机振动
+                    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+                }
+                selectedObject = tappedObject
+                // 选中状态
+                if (tappedObject.simdPosition.y == tappedObject.shadowObject?.simdPosition.y) {
+                    selectedObject?.simdPosition.y += 0.1
+                    selectedObject?.shakeInSelection()
                 }
             }
         }
@@ -209,7 +219,6 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
             let (position, _, isOnPlane) = sceneView.worldPosition(fromScreenPosition: screenPos,
                                                                    objectPosition: object.simdPosition,
                                                                    infinitePlane: infinitePlane) else { return }
-        
         /*
          Plane hit test results are generally smooth. If we did *not* hit a plane,
          smooth the movement to prevent large jumps.

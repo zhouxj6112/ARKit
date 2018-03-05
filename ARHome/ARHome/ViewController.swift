@@ -171,6 +171,8 @@ class ViewController: UIViewController {
         }
     }
     @objc func resetAR() {
+        statusViewController.showMessage("重置成功", autoHide: true)
+        //
         virtualObjectLoader.removeAllVirtualObjects();
         self.resetTracking();
     }

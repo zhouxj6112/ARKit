@@ -173,23 +173,43 @@ static int DOWNLOAD_SYNC_NUM = 3;
     
     NSString* enZipFileUrl = [zipFileUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:enZipFileUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60*60];
+    // 设置真正的断点续传(支持APP重启后的续传)
+    NSString* downloadPath = [NSString stringWithFormat:@"%@.zip", zipFilePath];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:downloadPath]) {
+        unsigned long long downloadedBytes = [self fileSizeForPath:downloadPath];
+        NSMutableURLRequest* mutableURLRequest = [request mutableCopy];
+        NSString *requestRange = [NSString stringWithFormat:@"bytes=%llu-", downloadedBytes];
+        [mutableURLRequest setValue:requestRange forHTTPHeaderField:@"Range"];
+        [[NSURLCache sharedURLCache] removeCachedResponseForRequest:mutableURLRequest]; // 不使用缓存，避免断点续传出现问题
+        //
+        request = mutableURLRequest;
+    }
     __block NSURLSessionDownloadTask* task = [_sessionManager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
         //NSLog(@"下载进度:%@", downloadProgress);
         [dic setObject:[NSString stringWithFormat:@"%.2f%%", downloadProgress.fractionCompleted*100] forKey:@"progress"];
         // 更新table界面
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationRefresh" object:nil];
     } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-        return [NSURL URLWithString:zipFilePath]; // 下载路径
+//        // 使用建议的路径
+//        NSString* path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+//        path = [path stringByAppendingPathComponent:response.suggestedFilename];
+//        return [NSURL fileURLWithPath:path]; // 转化为文件路径
+        NSString* localZipFilePath = [NSString stringWithFormat:@"%@.zip", zipFilePath];
+        return [NSURL fileURLWithPath:localZipFilePath]; // 下载路径
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         if (error == nil) {
-            NSLog(@"下载完成: %@", zipFileUrl);
+            NSLog(@"下载完成: %@", filePath);
             // 下载完成,解压到当前文件
             NSString* toFilePath = [NSString stringWithFormat:@"%@/", zipFilePath];
+            // 创建同名文件夹
             BOOL bRet = [[NSFileManager defaultManager] createDirectoryAtPath:toFilePath withIntermediateDirectories:YES attributes:nil error:nil];
             if (bRet) {
                 NSError* error = nil;
-                [SSZipArchive unzipFileAtPath:zipFilePath toDestination:toFilePath overwrite:YES password:nil error:nil delegate:self];
-                if (error) {
+                NSString* unzipFilePath = [filePath.absoluteString substringFromIndex:7];
+                bRet = [SSZipArchive unzipFileAtPath:unzipFilePath toDestination:toFilePath overwrite:YES password:nil error:&error delegate:self];
+                if (bRet) {
+                    NSLog(@"并且解压成功");
+                } else {
                     NSLog(@"解压失败:%@", error);
                 }
             }
@@ -202,7 +222,7 @@ static int DOWNLOAD_SYNC_NUM = 3;
         NSLog(@"还剩%lu个下载任务", (unsigned long)_sessionManager.downloadTasks.count);
         [_downloadArray removeObject:task];
         //
-        if (_downloadArray == 0) {
+        if (_downloadArray.count == 0) {
             self.navigationItem.rightBarButtonItem.title = @"开始";
         } else {
             // 注意,找到剩下队列中第一个需要resume的对象
@@ -220,6 +240,20 @@ static int DOWNLOAD_SYNC_NUM = 3;
     if (_downloadArray.count > DOWNLOAD_SYNC_NUM) {
         [task suspend]; // 挂起
     }
+}
+
+//获取已下载的文件大小
+- (unsigned long long)fileSizeForPath:(NSString *)path {
+    signed long long fileSize = 0;
+    NSFileManager *fileManager = [NSFileManager new]; // default is not thread safe
+    if ([fileManager fileExistsAtPath:path]) {
+        NSError *error = nil;
+        NSDictionary *fileDict = [fileManager attributesOfItemAtPath:path error:&error];
+        if (!error && fileDict) {
+            fileSize = [fileDict fileSize];
+        }
+    }
+    return fileSize;
 }
 
 /*

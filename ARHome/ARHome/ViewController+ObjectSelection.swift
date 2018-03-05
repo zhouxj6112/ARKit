@@ -56,8 +56,9 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     if shadowObject != nil {
                         self.placeVirtualObject(shadowObject!) // 跟主模型的中心重合
                     }
-                    /// 展示选中效果
+                    // 展示选中效果
                     self.virtualObjectInteraction.resetSelectedObject(object: loadedObject)
+                    
                     // 保存到浏览历史里面
                     var localShadowUrl:String = ""
                     if (shadowObject != nil && (shadowObject?.isMember(of: SCNReferenceNode.self)) == true) {

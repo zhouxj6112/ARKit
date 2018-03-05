@@ -110,6 +110,38 @@ class VirtualObject: SCNReferenceNode {
 
     }
     
+
+    private var beforShakePosition: SCNVector3?
+    
+    public func shakeInSelection() {
+        debugPrint("simdPos:\(self.simdPosition); pos:\(self.position)")
+        let pos = self.position
+        self.beforShakePosition = pos; // 先记录动画前的位置,等动画完成后要恢复原位
+        let topPos = SCNVector3.init(pos.x, pos.y+0.05, pos.z)
+        let botPos = SCNVector3.init(pos.x, pos.y-0.05, pos.z)
+        self.repeatShake(topPos, botPos: botPos)
+    }
+    private func repeatShake(_ topPos:SCNVector3, botPos:SCNVector3) {
+        var toPos = topPos
+        if abs(self.simdPosition.y - topPos.y) <= 0.05 {
+            toPos = botPos
+        }
+        toPos.x = self.position.x
+        toPos.z = self.position.z
+        let action = SCNAction.move(to: toPos, duration: 1.0)
+        self.runAction(action, forKey:"shake", completionHandler: {
+            self.repeatShake(topPos, botPos: botPos)
+        })
+    }
+    
+    /// 停止抖动,并且位置要复位
+    public func stopShakeInSelection() {
+        //
+        self.removeAction(forKey: "shake")
+        debugPrint("simdPos:\(self.simdPosition); pos:\(self.position)")
+        self.position = self.beforShakePosition!;
+    }
+    
     /// - Tag: AdjustOntoPlaneAnchor
     func adjustOntoPlaneAnchor(_ anchor: ARPlaneAnchor, using node: SCNNode) {
         // Get the object's position in the plane's coordinate system.

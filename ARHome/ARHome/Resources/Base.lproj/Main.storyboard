@@ -240,10 +240,10 @@
             </objects>
             <point key="canvasLocation" x="816" y="438"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Static Navigation View Controller-->
         <scene sceneID="qCX-7X-kEm">
             <objects>
-                <navigationController navigationBarHidden="YES" id="87b-HL-Xr1" sceneMemberID="viewController">
+                <navigationController navigationBarHidden="YES" id="87b-HL-Xr1" customClass="StaticNavigationViewController" sceneMemberID="viewController">
                     <size key="freeformSize" width="250" height="250"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Trv-1x-qIW">
                         <autoresizingMask key="autoresizingMask"/>
