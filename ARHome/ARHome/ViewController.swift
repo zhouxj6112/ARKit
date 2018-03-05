@@ -174,6 +174,7 @@ class ViewController: UIViewController {
         statusViewController.showMessage("重置成功", autoHide: true)
         //
         virtualObjectLoader.removeAllVirtualObjects();
+        virtualObjectLoader.selectionModel.removeFromParentNode();
         self.resetTracking();
     }
     

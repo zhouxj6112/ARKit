@@ -22,6 +22,17 @@ class VirtualObjectLoader {
 	
     private(set) var isRelease = false
     
+    /// 模型选中后底部选中标示
+    public var selectionModel:VirtualObject {
+        let modelURL = Bundle.main.url(forResource: "Models.scnassets/selection/selection.scn", withExtension: nil)!
+        let obj = VirtualObject(url: modelURL)!
+        DispatchQueue.global(qos: .userInitiated).async {
+            obj.reset()
+            obj.load()
+        }
+        return obj
+    }
+    
 	// MARK: - Loading object
 
     /**
@@ -29,7 +40,6 @@ class VirtualObjectLoader {
      on a background queue once `object` has been loaded.
     */
     func loadVirtualObject(_ objectFileUrl: URL, loadedHandler: @escaping (VirtualObject?, VirtualObject?) -> Void) {
-        
         // 方案一
 //        isLoading = true
 //        let obj = VirtualObject.init(url: URL.init(string: "http://10.199.196.241/1003/tree/tree.scn")!) //  必须scn文件格式

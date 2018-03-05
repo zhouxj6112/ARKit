@@ -58,6 +58,8 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     }
                     // 展示选中效果
                     self.virtualObjectInteraction.resetSelectedObject(object: loadedObject)
+                    // 防止底部选中圆圈
+                    self.placeVirtualObject(self.virtualObjectLoader.selectionModel)
                     
                     // 保存到浏览历史里面
                     var localShadowUrl:String = ""
