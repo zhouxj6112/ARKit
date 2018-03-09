@@ -23,6 +23,8 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
      */
     private var selectedObject: VirtualObject?
     private var preSelectedObject: VirtualObject?
+    //
+    public var viewController: ViewController?
     
     /// The object that is tracked for use by the pan and rotation gestures.
     private var trackedObject: VirtualObject? {
@@ -124,11 +126,13 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         guard let object = trackedObject, let position = currentTrackingPosition else { return }
         
         translate(object, basedOn: position, infinitePlane: translateAssumingInfinitePlane)
+        
         // 查找主模型对应的阴影模型,跟随主模型一起移动
         if object.shadowObject != nil {
             let shadow = object.shadowObject
             shadow?.simdPosition = float3(object.simdPosition.x, object.simdPosition.y - 0.1, object.simdPosition.z)
         }
+        self.viewController?.virtualObjectLoader.selectionModel.simdPosition = float3(object.simdPosition.x, object.simdPosition.y - 0.1, object.simdPosition.z)
     }
 
     /// - Tag: didRotate 旋转模型 (多指操作)
@@ -148,6 +152,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
             if shadowObj != nil {
                 shadowObj?.eulerAngles.y = (trackedObject?.eulerAngles.y)!
             }
+            self.viewController?.virtualObjectLoader.selectionModel.eulerAngles.y = (trackedObject?.eulerAngles.y)!
         }
         
         gesture.rotation = 0
@@ -161,6 +166,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
             // Select a new object.
             if tappedObject == selectedObject {
                 selectedObject?.stopShakeInSelection()
+                self.viewController?.virtualObjectLoader.removeSelectionObject()
                 // 已经选中的要置为非选中
                 selectedObject?.simdPosition.y -= 0.1
                 selectedObject = nil
@@ -173,6 +179,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
                 }
                 if selectedObject != nil { // 将前一个选中的恢复
                     selectedObject?.stopShakeInSelection()
+                    self.viewController?.virtualObjectLoader.removeSelectionObject()
                     // 已经选中的要置为非选中
                     selectedObject?.simdPosition.y -= 0.1
                     selectedObject = nil
@@ -184,6 +191,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
                 if (tappedObject.simdPosition.y == tappedObject.shadowObject?.simdPosition.y) {
                     selectedObject?.simdPosition.y += 0.1
                     selectedObject?.shakeInSelection()
+                    self.viewController?.virtualObjectLoader.resetSelectionObject(selectedObject)
                 }
             }
         }

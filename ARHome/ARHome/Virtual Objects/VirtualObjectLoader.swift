@@ -23,15 +23,18 @@ class VirtualObjectLoader {
     private(set) var isRelease = false
     
     /// 模型选中后底部选中标示
-    public var selectionModel:VirtualObject {
+    public lazy var selectionModel:VirtualObject = {
         let modelURL = Bundle.main.url(forResource: "Models.scnassets/selection/selection.scn", withExtension: nil)!
         let obj = VirtualObject(url: modelURL)!
         DispatchQueue.global(qos: .userInitiated).async {
             obj.reset()
             obj.load()
         }
+        if !loadedObjects.contains(obj) {
+            loadedObjects.insert(obj, at: 0)
+        }
         return obj
-    }
+    }()
     
 	// MARK: - Loading object
 
@@ -40,19 +43,7 @@ class VirtualObjectLoader {
      on a background queue once `object` has been loaded.
     */
     func loadVirtualObject(_ objectFileUrl: URL, loadedHandler: @escaping (VirtualObject?, VirtualObject?) -> Void) {
-        // 方案一
-//        isLoading = true
-//        let obj = VirtualObject.init(url: URL.init(string: "http://10.199.196.241/1003/tree/tree.scn")!) //  必须scn文件格式
-//        loadedObjects.append(obj!)
-//        // Load the content asynchronously.
-//        DispatchQueue.global(qos: .userInitiated).async {
-//            obj?.reset()
-//            obj?.load()
-//            self.isLoading = false
-//            loadedHandler(obj!)
-//        }
-        
-        // 方案二
+        // 方案
         isLoading = true
         let urlString = objectFileUrl.absoluteString // zip文件下载url(已经处理过中文的了)
         NetworkingHelper.download(url: urlString, parameters: nil) { (fileUrl:JSON?, error:NSError?) in
@@ -116,6 +107,11 @@ class VirtualObjectLoader {
     func removeAllVirtualObjects() {
         // Reverse the indicies so we don't trample over indicies as objects are removed.
         for index in loadedObjects.indices.reversed() {
+            if index == 0 { // selectionModel不能删除了
+                let obj = loadedObjects[index]
+                obj.isHidden = true
+                continue;
+            }
             removeVirtualObject(at: index)
         }
     }
@@ -125,6 +121,17 @@ class VirtualObjectLoader {
         
         loadedObjects[index].removeFromParentNode()
         loadedObjects.remove(at: index)
+    }
+    
+    /// 移除选中效果的底部圆圈
+    public func removeSelectionObject() {
+        self.selectionModel.isHidden = true
+    }
+    
+    public func resetSelectionObject(_ object:VirtualObject?) {
+        debugPrint("selectionModel: \(selectionModel)")
+        self.selectionModel.isHidden = false
+        self.selectionModel.simdPosition = (object?.shadowObject?.simdPosition)!
     }
     
     func release() {

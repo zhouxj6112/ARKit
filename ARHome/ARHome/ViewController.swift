@@ -38,7 +38,11 @@ class ViewController: UIViewController {
     // MARK: - ARKit Configuration Properties
     
     /// A type which manages gesture manipulation of virtual content in the scene.
-    lazy var virtualObjectInteraction = VirtualObjectInteraction(sceneView: sceneView)
+    lazy var virtualObjectInteraction = { () -> VirtualObjectInteraction in
+        let interaction = VirtualObjectInteraction(sceneView: self.sceneView)
+        interaction.viewController = self
+        return interaction
+    }()
     
     /// Coordinates the loading and unloading of reference nodes for virtual objects.
     let virtualObjectLoader = VirtualObjectLoader()
@@ -174,7 +178,6 @@ class ViewController: UIViewController {
         statusViewController.showMessage("重置成功", autoHide: true)
         //
         virtualObjectLoader.removeAllVirtualObjects();
-        virtualObjectLoader.selectionModel.removeFromParentNode();
         self.resetTracking();
     }
     

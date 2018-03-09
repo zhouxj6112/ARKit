@@ -56,10 +56,11 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     if shadowObject != nil {
                         self.placeVirtualObject(shadowObject!) // 跟主模型的中心重合
                     }
-                    // 展示选中效果
+                    // 展示选中抖动效果
                     self.virtualObjectInteraction.resetSelectedObject(object: loadedObject)
-                    // 防止底部选中圆圈
+                    // 放置底部选中圆圈
                     self.placeVirtualObject(self.virtualObjectLoader.selectionModel)
+                    self.virtualObjectLoader.resetSelectionObject(loadedObject);
                     
                     // 保存到浏览历史里面
                     var localShadowUrl:String = ""
