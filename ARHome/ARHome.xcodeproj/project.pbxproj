@@ -874,7 +874,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vipme.arhome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "96c3ecd4-28df-48a8-9ce6-6551be4ebebd";
+				PROVISIONING_PROFILE = "3e06145e-4158-437b-b493-abd02bc54ccc";
 				PROVISIONING_PROFILE_SPECIFIER = "ARHome-dev";
 				SWIFT_OBJC_BRIDGING_HEADER = ARHome/Resources/PrefixHeader.h;
 				SWIFT_VERSION = 4.0;

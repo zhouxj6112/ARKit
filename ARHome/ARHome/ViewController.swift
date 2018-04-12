@@ -46,6 +46,7 @@ class ViewController: UIViewController {
     
     /// Coordinates the loading and unloading of reference nodes for virtual objects.
     let virtualObjectLoader = VirtualObjectLoader()
+    var curChooseModel:VirtualObject?;
     
     /// Marks if the AR experience is available for restart.
     var isRestartAvailable = true
@@ -108,6 +109,7 @@ class ViewController: UIViewController {
         
         // 监听通知
         NotificationCenter.default.addObserver(self, selector: #selector(self.resetAR), name: NSNotification.Name(rawValue: "kNotificationResetAR"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.recoverLasted), name: NSNotification.Name(rawValue: "kNotificationRecoverLasted"), object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -174,11 +176,19 @@ class ViewController: UIViewController {
             //
         }
     }
-    @objc func resetAR() {
+    @objc func resetAR(sender:Notification) {
         statusViewController.showMessage("重置成功", autoHide: true)
         //
         virtualObjectLoader.removeAllVirtualObjects();
         self.resetTracking();
+    }
+    @objc func recoverLasted(sender:Notification) {
+        let oper = sender.userInfo!["oper"] as! String;
+        if oper == "save" {
+            self.saveCurrentAR();
+        } else {
+            self.recoverARFromHistory(1);
+        }
     }
     
     // MARK: - Focus Square
@@ -240,6 +250,103 @@ class ViewController: UIViewController {
     
     func resetModelList(array:NSArray) -> Void {
         modelList = array
+    }
+    
+    func saveCurrentAR() {
+        let array = NSMutableArray.init(capacity: 1);
+        for obj in virtualObjectLoader.loadedObjects {
+            if obj.isShadowObj {
+                continue;
+            }
+            let dic = NSMutableDictionary.init(capacity: 10);
+            dic.setValue(obj.zipFileUrl, forKey: "zipFileUrl");
+            dic.setValue(obj.signID, forKey: "signID");
+            dic.setValue(obj.signName, forKey: "signName");
+            // 标记位置
+            do {
+                // 取底部阴影模型的坐标
+                let shadowObj = obj.shadowObject;
+                if shadowObj != nil {
+                    let posString = String.init(format: "%f|%f|%f", (shadowObj?.simdPosition.x)!, (shadowObj?.simdPosition.y)!, (shadowObj?.simdPosition.z)!);
+                    dic.setValue(posString, forKey: "simdPosition");
+                } else {
+                    let posString = String.init(format: "%f|%f|%f", (obj.simdPosition.x), (obj.simdPosition.y), (obj.simdPosition.z));
+                    dic.setValue(posString, forKey: "simdPosition");
+                }
+                
+                dic.setValue(obj.scale, forKey: "scale");
+            }
+            let rotationString = String.init(format: "%f|%f|%f|%f", (obj.simdRotation.x), (obj.simdRotation.y), (obj.simdRotation.z), obj.simdRotation.w);
+            dic.setValue(rotationString, forKey: "simdRotation");
+            //
+            let oriString = String.init(format: "%f|%f|%f|%f", obj.simdWorldOrientation.angle, obj.simdWorldOrientation.axis.x, obj.simdWorldOrientation.axis.y, obj.simdWorldOrientation.axis.z);
+            dic.setValue(oriString, forKey: "simdWorldOrientation");
+            
+            array.add(dic);
+        }
+        let filePath = NSHomeDirectory() + "/Documents/" + "his.txt"
+        var arraySrc = NSMutableArray.init(contentsOfFile: filePath);
+        if arraySrc == nil {
+            arraySrc = NSMutableArray.init();
+        }
+        let newDic = NSMutableDictionary.init(capacity: 1);
+        newDic.setValue((arraySrc?.count)!+1, forKey: "index");
+        newDic.setValue(array, forKey: "array");
+        newDic.setValue(NSDate.init(), forKey: "createTime");
+        arraySrc?.add(newDic);
+        //
+        let bRet = arraySrc?.write(toFile: filePath, atomically: true);
+        if !bRet! {
+            debugPrint("追加保存失败");
+        }
+    }
+    func recoverARFromHistory(_ atIndex:NSNumber)  {
+        let filePath = NSHomeDirectory() + "/Documents/" + "his.txt"
+        if FileManager.default.fileExists(atPath: filePath) {
+            let array = NSArray.init(contentsOfFile: filePath);
+            debugPrint("文件：\(String(describing: array))");
+            var objList:NSArray = NSArray.init();
+            for obj in array! {
+                let dic = obj as! NSDictionary;
+                debugPrint(dic);
+                let index:NSNumber = dic["index"] as! NSNumber;
+                if (index.intValue == atIndex.intValue) {
+                    objList = dic["array"] as! NSArray;
+                    break;
+                }
+            }
+            for obj in objList {
+                let dic = obj as! NSDictionary;
+                //
+                let zipFileUrl = dic["zipFileUrl"] as! String;
+                if zipFileUrl.count == 0 {
+                    continue;
+                }
+                let zipFileUrlEnc = zipFileUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+                let objectFileUrl = URL.init(string: zipFileUrlEnc!);
+                let didSelectObjectID = dic["signID"] as! String;
+                let posString = dic["simdPosition"] as! String;
+                let posArr = posString.split(separator: "|");
+                let simdPosition = float3(Float(posArr[0])!, Float(posArr[1])!, Float(posArr[2])!);
+                virtualObjectLoader.loadVirtualObject(objectFileUrl!, loadedHandler: { [unowned self] loadedObject, shadowObject in
+                    DispatchQueue.main.async {
+                        self.hideObjectLoadingUI()
+                        //
+                        if (loadedObject != nil) {
+                            loadedObject?.signID = didSelectObjectID;
+                            self.placeVirtualObject(loadedObject!)
+                            loadedObject?.simdPosition = simdPosition;
+                            
+                            // 放置阴影模型在底部
+                            if shadowObject != nil {
+                                self.placeVirtualObject(shadowObject!) // 跟主模型的中心重合
+                                shadowObject?.simdPosition = simdPosition;
+                            }
+                        }
+                    }
+                });
+            }
+        }
     }
     
     deinit {
