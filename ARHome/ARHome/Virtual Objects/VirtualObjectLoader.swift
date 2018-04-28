@@ -22,6 +22,9 @@ class VirtualObjectLoader {
 	
     private(set) var isRelease = false
     
+    // 整体缩放比例 (所有模型统一缩放)
+    private(set) var globalScale:Float = 1.000000
+    
     /// 模型选中后底部选中标示
     public lazy var selectionModel:VirtualObject = {
         let modelURL = Bundle.main.url(forResource: "Models.scnassets/selection/selection.scn", withExtension: nil)!
@@ -63,6 +66,7 @@ class VirtualObjectLoader {
             let url = URL.init(string: en!)
             let object = VirtualObject.init(url: url!)
             let obj = object! as VirtualObject
+            obj.simdScale = float3(self.globalScale, self.globalScale, self.globalScale);
             debugPrint("本地模型: \(obj)")
             self.loadedObjects.append(obj)
             let zipFileUrl = urlString.removingPercentEncoding  // 将中文编码转换回去,存储原始数据
@@ -77,6 +81,7 @@ class VirtualObjectLoader {
                 let sUrl = URL.init(string: en!)
                 let sObject = VirtualObject.init(url: sUrl!)
                 let sObj = sObject! as VirtualObject
+                sObj.simdScale = float3(self.globalScale, self.globalScale, self.globalScale);
                 debugPrint("阴影模型: \(sObj)")
                 self.loadedObjects.append(sObj)
                 sObj.zipFileUrl = zipFileUrl! // 保持跟主模型文件一致
@@ -136,6 +141,20 @@ class VirtualObjectLoader {
     
     func release() {
         isRelease = true
+    }
+    
+    /**
+     * 统一缩放函数 (尺寸跟位置，一起缩放)
+     */
+    public func resetGlobalScale(_ scale:Float) {
+        self.globalScale = scale;
+        
+        for index in loadedObjects.indices.reversed() {
+            let node = loadedObjects[index]
+            node.simdScale = float3(scale, scale, scale);
+            let pos = node.simdPosition;
+            node.simdPosition = float3(pos.x*scale, pos.y*scale, pos.z*scale);
+        }
     }
     
     // 析构函数

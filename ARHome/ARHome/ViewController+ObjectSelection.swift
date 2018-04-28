@@ -188,10 +188,7 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     
     @objc private func zoomModel(_ sender:UISlider) {
         debugPrint("zoomModel:\(sender.value)");
-        let nodes = self.sceneView.scene.rootNode.childNodes;
-        for node in nodes {
-            node.simdScale = float3(sender.value, sender.value, sender.value);
-        }
+        virtualObjectLoader.resetGlobalScale(sender.value);
     }
     
 }
