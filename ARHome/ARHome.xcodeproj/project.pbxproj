@@ -21,6 +21,7 @@
 		2E9120011FC844C000A05F17 /* Image.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E9120001FC844C000A05F17 /* Image.xcassets */; };
 		2E91B0B41FC024CB0008CA70 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E91B0B31FC024CB0008CA70 /* libz.tbd */; };
 		2E9E4AF62038632200286A0D /* SelectionModelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9E4AF52038632200286A0D /* SelectionModelViewController.swift */; };
+		2EBD32A4209EFAE60023BA6D /* VREditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBD32A1209EFAE60023BA6D /* VREditViewController.m */; };
 		2EBFD642204997B30029D7E3 /* StaticNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBFD641204997B30029D7E3 /* StaticNavigationViewController.m */; };
 		2ED1B555203D1BCD00E29D9D /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2ED1B553203D1BCD00E29D9D /* Model.xcdatamodeld */; };
 		39197BB09DE9B4C9263D0434 /* Pods_ARHome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EED04828D64D738208F7F612 /* Pods_ARHome.framework */; };
@@ -98,6 +99,8 @@
 		2E9120001FC844C000A05F17 /* Image.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Image.xcassets; sourceTree = "<group>"; };
 		2E91B0B31FC024CB0008CA70 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		2E9E4AF52038632200286A0D /* SelectionModelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModelViewController.swift; sourceTree = "<group>"; };
+		2EBD32A1209EFAE60023BA6D /* VREditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VREditViewController.m; sourceTree = "<group>"; };
+		2EBD32A2209EFAE60023BA6D /* VREditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VREditViewController.h; sourceTree = "<group>"; };
 		2EBFD640204997B30029D7E3 /* StaticNavigationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticNavigationViewController.h; sourceTree = "<group>"; };
 		2EBFD641204997B30029D7E3 /* StaticNavigationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StaticNavigationViewController.m; sourceTree = "<group>"; };
 		2ED1B554203D1BCD00E29D9D /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
@@ -202,6 +205,15 @@
 			path = objc;
 			sourceTree = "<group>";
 		};
+		2EBD32A0209EFAE60023BA6D /* VR */ = {
+			isa = PBXGroup;
+			children = (
+				2EBD32A2209EFAE60023BA6D /* VREditViewController.h */,
+				2EBD32A1209EFAE60023BA6D /* VREditViewController.m */,
+			);
+			path = VR;
+			sourceTree = "<group>";
+		};
 		43F8E618C00B387F5696D145 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -252,6 +264,7 @@
 		E69B4E2D1FBC0C3E00A604A0 /* ARHome */ = {
 			isa = PBXGroup;
 			children = (
+				2EBD32A0209EFAE60023BA6D /* VR */,
 				2E6B0F352042A9C9002B0FC6 /* objc */,
 				E6C88A1E1FBC4F56003E4B8C /* Additional View Controllers */,
 				E6C88A251FBC4F56003E4B8C /* Focus Square */,
@@ -687,6 +700,7 @@
 				2E6B0F382042AA01002B0FC6 /* BatchDownloadViewController.m in Sources */,
 				E6C88A441FBC4F57003E4B8C /* ViewController+ObjectSelection.swift in Sources */,
 				E6C88A381FBC4F57003E4B8C /* StatusViewController.swift in Sources */,
+				2EBD32A4209EFAE60023BA6D /* VREditViewController.m in Sources */,
 				E6C88A3C1FBC4F57003E4B8C /* Utilities.swift in Sources */,
 				2E7A2CEB1FC10BD000DA4920 /* ReplayKitUtil.m in Sources */,
 				E6C88A361FBC4F57003E4B8C /* VirtualObject.swift in Sources */,

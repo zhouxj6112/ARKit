@@ -68,12 +68,13 @@ static int DOWNLOAD_SYNC_NUM = 3;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(closeIt:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"开始" style:UIBarButtonItemStyleDone target:self action:@selector(startDownload:)];
     
-    _sTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 100, self.view.frame.size.height) style:UITableViewStylePlain];
+    CGFloat width = self.view.frame.size.width/5;
+    _sTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, width, self.view.frame.size.height) style:UITableViewStylePlain];
     _sTableView.dataSource = self;
     _sTableView.delegate = self;
     [self.view addSubview:_sTableView];
     
-    UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(100, 0, self.view.frame.size.width-100, self.view.frame.size.height) style:UITableViewStylePlain];
+    UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(width, 0, self.view.frame.size.width-width, self.view.frame.size.height) style:UITableViewStylePlain];
     tableView.dataSource = self;
     tableView.delegate = self;
     [self.view addSubview:tableView];

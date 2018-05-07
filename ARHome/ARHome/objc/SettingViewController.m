@@ -9,6 +9,7 @@
 #import "SettingViewController.h"
 #import "PrefixHeader.h"
 #import "BatchDownloadViewController.h"
+#import "VREditViewController.h"
 
 @implementation SettingViewController
 
@@ -49,6 +50,13 @@
     [enterButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
     [enterButton addTarget:self action:@selector(enterBatchDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:enterButton];
+    
+    UIButton* editButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    editButton.frame = CGRectMake(60, 360, 150, 44);
+    [editButton setTitle:@"进入VR编辑" forState:UIControlStateNormal];
+    [editButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [editButton addTarget:self action:@selector(editButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:editButton];
 }
 
 - (void)clearAll:(id)sender {
@@ -119,6 +127,11 @@
 - (void)recoverLasted:(id)sender {
     [self dismissViewControllerAnimated:YES completion:NULL];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationRecoverLasted" object:self userInfo:@{@"oper":@"recover"}];
+}
+
+- (void)editButton:(id)sender {
+    VREditViewController* vc = [[VREditViewController alloc] initWithNibName:nil bundle:nil];
+    [self presentViewController:vc animated:YES completion:NULL];
 }
 
 @end

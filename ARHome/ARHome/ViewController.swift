@@ -282,6 +282,7 @@ class ViewController: UIViewController {
             let oriString = String.init(format: "%f|%f|%f|%f", obj.simdWorldOrientation.angle, obj.simdWorldOrientation.axis.x, obj.simdWorldOrientation.axis.y, obj.simdWorldOrientation.axis.z);
             dic.setValue(oriString, forKey: "simdWorldOrientation");
             
+            dic.setValue(NSNumber.init(value: array.count), forKey: "index"); // 标记位置
             array.add(dic);
         }
         let filePath = NSHomeDirectory() + "/Documents/" + "his.txt"

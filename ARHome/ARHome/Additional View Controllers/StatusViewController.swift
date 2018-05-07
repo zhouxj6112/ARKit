@@ -173,6 +173,8 @@ extension ARCamera.TrackingState {
             return "TRACKING LIMITED\nLow detail"
         case .limited(.initializing):
             return "Initializing"
+        case .limited(.relocalizing):
+            return "Relocalizing"
         }
     }
 
