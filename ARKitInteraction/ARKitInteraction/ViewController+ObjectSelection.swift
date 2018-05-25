@@ -32,7 +32,16 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         virtualObject.setDirection();
         
         updateQueue.async {
-            self.sceneView.scene.rootNode.addChildNode(virtualObject)
+            if self.sceneView.scene.rootNode.childNodes.count > 3 {
+                let preObj = self.sceneView.scene.rootNode.childNodes[3];
+                let max = preObj.boundingBox.max;
+                let min = preObj.boundingBox.min;
+                virtualObject.simdPosition = simd_float3(0, (max.y-min.y), 0);
+                preObj.addChildNode(virtualObject);
+                self.virtualObjectInteraction.selectedObject = preObj as? VirtualObject;
+            } else {
+                self.sceneView.scene.rootNode.addChildNode(virtualObject)
+            }
         }
     }
     

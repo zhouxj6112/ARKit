@@ -55,7 +55,7 @@ class VirtualObjectSelectionViewController: UITableViewController {
     /// The rows of the currently selected `VirtualObject`s.
     private var selectedVirtualObjectRows = IndexSet()
     
-    weak var delegate: VirtualObjectSelectionViewControllerDelegate?
+    weak var selectionDelegate: VirtualObjectSelectionViewControllerDelegate?
     
     override func loadView() {
         super.loadView()
@@ -64,6 +64,13 @@ class VirtualObjectSelectionViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let urls = VirtualObjectLoader.availableObjectUrls;
+        for url in urls {
+            let dic = NSDictionary.init();
+            dic.setValue(url, forKey: "fileUrl");
+            modelList.adding(dic);
+        }
 
         tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .light))
     }
@@ -93,10 +100,10 @@ class VirtualObjectSelectionViewController: UITableViewController {
         
         // Check if the current row is already selected, then deselect it.
         if isIn {
-            delegate?.virtualObjectSelectionViewController(self, didDeselectObjectUrl: url!, didDeselectObjectID: modelId)
+            selectionDelegate?.virtualObjectSelectionViewController(self, didDeselectObjectUrl: url!, didDeselectObjectID: modelId)
             data["isIn"] = false
         } else {
-            delegate?.virtualObjectSelectionViewController(self, didSelectObjectUrl: url!, didSelectObjectID: modelId)
+            selectionDelegate?.virtualObjectSelectionViewController(self, didSelectObjectUrl: url!, didSelectObjectID: modelId)
             data["isIn"] = true
         }
 //        debugPrint("data: \(data)")

@@ -11,10 +11,10 @@
 #import <AFNetworking/AFNetworking.h>
 #import <AssetsLibrary/ALAssetsLibrary.h>
 #import <Photos/Photos.h>
-#import "YKUploaderEngine.h"
 #import "NSTask.h"
 
-@interface ReplayKitUtil () <RPScreenRecorderDelegate, RPPreviewViewControllerDelegate, YKUploaderEngineDelegate>
+@interface ReplayKitUtil () <RPScreenRecorderDelegate,
+                             RPPreviewViewControllerDelegate>
 @property (nonatomic, assign) BOOL isRecording;
 @property (nonatomic, assign) UIViewController* parentViewController;
 @end
@@ -233,49 +233,10 @@ static NSMutableArray* uploadTasks;
 }
 
 - (void)uploadFile:(NSString *)vPath {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:vPath forKey:@"file_name"]; //文件路径
-    [params setObject:@"ios上传随拍测试" forKey:@"title"]; // 标题
-    [params setObject:@"原创 测试" forKey:@"tags"]; // 标签
-    // 视频公开类型（all：公开（默认） friend：仅好友 password：加密）
-    [params setObject:@"all" forKey:@"public_type"];
-    
-    YKUploaderEngine* engine = [YKUploaderEngine shareInstance];
-    engine.refreashToken = @"";
-    engine.clientId = @"";
-    engine.clientSecret = @"";
-    engine.accessToken = @"";
-    engine.delegate = self;
-    engine.uploadParams = params;
-    [engine upload];
+
 }
 
-#pragma mark -
-#pragma mark YKUploaderEngineDelegate
 
-- (void)uploaderEngineDidCreate:(NSString *)videoid
-{
-    NSLog(@"create videoid:%@", videoid);
-}
-
-- (void)uploaderEngineDidUpdateToken:(NSDictionary *)tokens
-{
-    NSLog(@"update tokens:%@", tokens);
-}
-
-- (void)uploaderEngineDidProgress:(NSInteger)progress
-{
-    NSLog(@"upload progress:%ld", (long)progress);
-}
-
-- (void)uploaderEngineDidSuccesss:(NSString *)videoid
-{
-    NSLog(@"commit videoid:%@", videoid);
-}
-
-- (void)uploaderEngineDidError:(NSDictionary *)errors {
-    NSLog(@"uploaderEngineDidError:%@", errors);
-}
 
 + (void)excuteCmd:(NSString *)filePath {
     if ([filePath hasPrefix:@"file://"]) {

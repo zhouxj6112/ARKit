@@ -46,7 +46,21 @@ class VirtualObjectLoader {
      on a background queue once `object` has been loaded.
     */
     func loadVirtualObject(_ objectFileUrl: URL, loadedHandler: @escaping (VirtualObject?, VirtualObject?) -> Void) {
-        // 方案
+        if (objectFileUrl.isFileURL) {
+            isLoading = true;
+            let obj = VirtualObject.init(url: objectFileUrl)
+            // Load the content asynchronously.
+            DispatchQueue.global(qos: .userInitiated).async {
+                obj?.reset()
+                obj?.load()
+                obj?.isShadowObj = false
+                self.isLoading = false
+                ///
+                loadedHandler(obj, nil)
+            }
+            return;
+        }
+        // 加载网络模型
         isLoading = true
         let urlString = objectFileUrl.absoluteString // zip文件下载url(已经处理过中文的了)
         NetworkingHelper.download(url: urlString, parameters: nil) { (fileUrl:JSON?, error:NSError?) in
@@ -162,4 +176,18 @@ class VirtualObjectLoader {
         debugPrint("VirtualObjectLoader释放")
     }
     
+    /// Loads all the model objects within `Models.scnassets`.
+    static let availableObjectUrls: [URL] = {
+        let modelsURL = Bundle.main.url(forResource: "LocalTest.scnassets", withExtension: nil)!
+        let fileEnumerator = FileManager().enumerator(at: modelsURL, includingPropertiesForKeys: [])!
+        //
+        return fileEnumerator.compactMap { element in
+            let url = element as! URL
+            //
+            guard url.pathExtension=="scn"||url.pathExtension=="obj"||url.pathExtension=="dae"||url.pathExtension=="DAE" else {
+                return nil
+            }
+            return url;
+        }
+    }( );
 }

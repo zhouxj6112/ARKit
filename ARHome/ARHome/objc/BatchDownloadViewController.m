@@ -84,7 +84,7 @@ static int DOWNLOAD_SYNC_NUM = 3;
     _sessionManager = [AFHTTPSessionManager manager];
     _sessionManager.requestSerializer.timeoutInterval = 24*60*60;
     _sessionManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", nil];
-    [_sessionManager GET:@"http://52.187.182.32/admin/api/getAllSellers?" parameters:nil progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [_sessionManager GET:@"http://104.215.146.190/admin/api/getAllSellers?" parameters:nil progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"%@", responseObject);
         NSArray* listData = (NSArray *)((NSDictionary *)responseObject[@"data"][@"items"]);
         self.sListData = listData;
@@ -93,7 +93,7 @@ static int DOWNLOAD_SYNC_NUM = 3;
             NSNumber* preId = [[NSUserDefaults standardUserDefaults] objectForKey:@"user_default_seller_index"];
             if (preId && preId.intValue >= 0) {
                 [self.sTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:preId.intValue inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
-                [self.sTableView.delegate tableView:_sTableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:preId.intValue inSection:0]];
+                [self.sTableView.delegate tableView:self->_sTableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:preId.intValue inSection:0]];
             }
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -220,14 +220,14 @@ static int DOWNLOAD_SYNC_NUM = 3;
             // 更新table界面
             [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationRefresh" object:nil];
         }
-        NSLog(@"还剩%lu个下载任务", (unsigned long)_sessionManager.downloadTasks.count);
-        [_downloadArray removeObject:task];
+        NSLog(@"还剩%lu个下载任务", (unsigned long)self->_sessionManager.downloadTasks.count);
+        [self->_downloadArray removeObject:task];
         //
-        if (_downloadArray.count == 0) {
+        if (self->_downloadArray.count == 0) {
             self.navigationItem.rightBarButtonItem.title = @"开始";
         } else {
             // 注意,找到剩下队列中第一个需要resume的对象
-            for (NSURLSessionTask* sTask in _downloadArray) {
+            for (NSURLSessionTask* sTask in self->_downloadArray) {
                 if (sTask.state == NSURLSessionTaskStateSuspended) {
                     [sTask resume];
                     break;
@@ -361,7 +361,7 @@ static int DOWNLOAD_SYNC_NUM = 3;
 }
 
 - (void)changeSeller:(NSString *)sellerId {
-    [_sessionManager GET:@"http://52.187.182.32/admin/api/getModelsList?" parameters:@{@"sellerId":sellerId} progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [_sessionManager GET:@"http://104.215.146.190/admin/api/getModelsList?" parameters:@{@"sellerId":sellerId} progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"%@", responseObject);
         NSArray* listData = (NSArray *)((NSDictionary *)responseObject[@"data"]);
         

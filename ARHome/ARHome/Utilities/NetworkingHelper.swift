@@ -16,15 +16,17 @@ import SwiftyJSON
 //final let req_modellist_url:String  = "https://api.sanweiyun.com/users/3/posts?"
 //let req_sellerlist_url:String = "http://10.199.196.241:8080/api/getAllSellers?"
 //let req_modellist_url:String = "http://10.199.196.241:8080/api/getModelsList?"
-let req_sellerlist_url:String = "http://52.187.182.32/admin/api/getAllSellers?"
-let req_modellist_url:String = "http://52.187.182.32/admin/api/getModelsList?"
-let req_examplelist_url:String = "http://52.187.182.32/admin/api/examples?"
-let post_example_url:String = "http://52.187.182.32/admin/api/shareExample?"
-let all_brands_url:String = "http://52.187.182.32/admin/api/allBrands?"
-let all_category_url:String = "http://52.187.182.32/admin/api/allCategories?"
-let all_modelInBrand_url:String = "http://52.187.182.32/admin/api/queryModelsListInBrand?"
-let all_modelInType_url:String = "http://52.187.182.32/admin/api/queryModelsListInCategory?"
-let all_modelinfo_url:String = "http://52.187.182.32/admin/api/modelInfo?"
+let url_domain = "http://104.215.146.190";
+let api_url_domain = url_domain + "/admin";
+let req_sellerlist_url:String = api_url_domain + "/api/getAllSellers?"
+let req_modellist_url:String = api_url_domain + "/api/getModelsList?"
+let req_examplelist_url:String = api_url_domain + "/api/examples?"
+let post_example_url:String = api_url_domain + "/api/shareExample?"
+let all_brands_url:String = api_url_domain + "/api/allBrands?"
+let all_category_url:String = api_url_domain + "/api/allCategories?"
+let all_modelInBrand_url:String = api_url_domain + "/api/queryModelsListInBrand?"
+let all_modelInType_url:String = api_url_domain + "/api/queryModelsListInCategory?"
+let all_modelinfo_url:String = api_url_domain + "/api/modelInfo?"
 
 class NetworkingHelper {
     
