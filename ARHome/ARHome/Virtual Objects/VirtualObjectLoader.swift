@@ -150,7 +150,9 @@ class VirtualObjectLoader {
     public func resetSelectionObject(_ object:VirtualObject?) {
         debugPrint("selectionModel: \(selectionModel)")
         self.selectionModel.isHidden = false
-        self.selectionModel.simdPosition = (object?.shadowObject?.simdPosition)!
+        if ((object?.shadowObject) != nil) {
+            self.selectionModel.simdPosition = (object?.shadowObject?.simdPosition)!
+        }
     }
     
     func release() {
