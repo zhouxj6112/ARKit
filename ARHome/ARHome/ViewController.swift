@@ -187,7 +187,8 @@ class ViewController: UIViewController {
         if oper == "save" {
             self.saveCurrentAR();
         } else {
-            self.recoverARFromHistory(1);
+            let index = sender.userInfo!["index"] as? NSNumber;
+            self.recoverARFromHistory(index)
         }
     }
     
@@ -253,55 +254,88 @@ class ViewController: UIViewController {
     }
     
     func saveCurrentAR() {
-        let array = NSMutableArray.init(capacity: 1);
-        for obj in virtualObjectLoader.loadedObjects {
-            if obj.isShadowObj {
-                continue;
-            }
-            let dic = NSMutableDictionary.init(capacity: 10);
-            dic.setValue(obj.zipFileUrl, forKey: "zipFileUrl");
-            dic.setValue(obj.signID, forKey: "signID");
-            dic.setValue(obj.signName, forKey: "signName");
-            // 标记位置
-            do {
-                // 取底部阴影模型的坐标
-                let shadowObj = obj.shadowObject;
-                if shadowObj != nil {
-                    let posString = String.init(format: "%f|%f|%f", (shadowObj?.simdPosition.x)!, (shadowObj?.simdPosition.y)!, (shadowObj?.simdPosition.z)!);
-                    dic.setValue(posString, forKey: "simdPosition");
-                } else {
-                    let posString = String.init(format: "%f|%f|%f", (obj.simdPosition.x), (obj.simdPosition.y), (obj.simdPosition.z));
-                    dic.setValue(posString, forKey: "simdPosition");
-                }
-                
-                dic.setValue(obj.scale, forKey: "scale");
-            }
-            let rotationString = String.init(format: "%f|%f|%f|%f", (obj.simdRotation.x), (obj.simdRotation.y), (obj.simdRotation.z), obj.simdRotation.w);
-            dic.setValue(rotationString, forKey: "simdRotation");
-            //
-            let oriString = String.init(format: "%f|%f|%f|%f", obj.simdWorldOrientation.angle, obj.simdWorldOrientation.axis.x, obj.simdWorldOrientation.axis.y, obj.simdWorldOrientation.axis.z);
-            dic.setValue(oriString, forKey: "simdWorldOrientation");
+        let alertController = UIAlertController.init(title: "", message: "请输入标题", preferredStyle: .alert)
+        let okAction = UIAlertAction.init(title: "确定", style: .default) { (alertAction:UIAlertAction) in
+            // 开始保存
+            let inputTitle = alertController.textFields![0].text;
             
-            dic.setValue(NSNumber.init(value: array.count), forKey: "index"); // 标记位置
-            array.add(dic);
+            let array = NSMutableArray.init(capacity: 1);
+            for obj in self.virtualObjectLoader.loadedObjects {
+                if obj.isShadowObj {
+                    continue;
+                }
+                let dic = NSMutableDictionary.init(capacity: 10);
+                dic.setValue(obj.zipFileUrl, forKey: "zipFileUrl");
+                dic.setValue(obj.signID, forKey: "signID");
+                dic.setValue(obj.signName, forKey: "signName");
+                // 标记位置
+                do {
+                    // 取底部阴影模型的坐标
+                    let shadowObj = obj.shadowObject;
+                    if shadowObj != nil {
+                        let posString = String.init(format: "%f|%f|%f", (shadowObj?.simdPosition.x)!, (shadowObj?.simdPosition.y)!, (shadowObj?.simdPosition.z)!);
+                        dic.setValue(posString, forKey: "simdPosition");
+                    } else {
+                        let posString = String.init(format: "%f|%f|%f", (obj.simdPosition.x), (obj.simdPosition.y), (obj.simdPosition.z));
+                        dic.setValue(posString, forKey: "simdPosition");
+                    }
+                }
+                //
+                let scaleString = String.init(format: "%f|%f|%f", obj.scale.x, obj.scale.y, obj.scale.z)
+                dic.setValue(scaleString, forKey: "scale");
+                //
+                let rotationString = String.init(format: "%f|%f|%f|%f", (obj.simdRotation.x), (obj.simdRotation.y), (obj.simdRotation.z), obj.simdRotation.w);
+                dic.setValue(rotationString, forKey: "simdRotation");
+                //
+                let oriString = String.init(format: "%f", obj.simdWorldOrientation.angle);
+                dic.setValue(oriString, forKey: "simdWorldOrientation");
+                //
+                dic.setValue(NSNumber.init(value: array.count), forKey: "index"); // 标记位置
+                array.add(dic);
+            }
+            let filePath = NSHomeDirectory() + "/Documents/" + "his.txt"
+            // 读取历史文件
+            var arraySrc = NSMutableArray.init(contentsOfFile: filePath);
+            if arraySrc == nil {
+                arraySrc = NSMutableArray.init();
+            }
+            let newDic = NSMutableDictionary.init(capacity: 1);
+            newDic.setValue((arraySrc?.count)!+1, forKey: "index");
+            newDic.setValue(inputTitle, forKey: "title")
+            newDic.setValue(array, forKey: "array");
+            newDic.setValue(NSDate.init(), forKey: "createTime");
+            arraySrc?.add(newDic);
+            //
+            let bRet = arraySrc?.write(toFile: filePath, atomically: true);
+            if !bRet! {
+                debugPrint("追加保存失败");
+            } else {
+                debugPrint("追加保存成功");
+            }
         }
-        let filePath = NSHomeDirectory() + "/Documents/" + "his.txt"
-        var arraySrc = NSMutableArray.init(contentsOfFile: filePath);
-        if arraySrc == nil {
-            arraySrc = NSMutableArray.init();
+        alertController.addAction(okAction)
+        alertController.addTextField { (textField:UITextField) in
+            textField.placeholder = "标题"
         }
-        let newDic = NSMutableDictionary.init(capacity: 1);
-        newDic.setValue((arraySrc?.count)!+1, forKey: "index");
-        newDic.setValue(array, forKey: "array");
-        newDic.setValue(NSDate.init(), forKey: "createTime");
-        arraySrc?.add(newDic);
-        //
-        let bRet = arraySrc?.write(toFile: filePath, atomically: true);
-        if !bRet! {
-            debugPrint("追加保存失败");
-        }
+        self.present(alertController, animated: true, completion: nil)
     }
-    func recoverARFromHistory(_ atIndex:NSNumber)  {
+    
+    func recoverARFromHistory(_ atIndex:NSNumber?)  {
+        if atIndex == nil {
+            let vc = ChooseHistoryViewController();
+            vc.preferredContentSize = CGSize.init(width: self.view.frame.size.width, height: self.view.frame.size.height-180)
+            vc.modalPresentationStyle = .popover
+            let popover = vc.popoverPresentationController
+            popover?.sourceView = self.statusViewController.view
+            popover?.sourceRect = CGRect.init(x: 10, y: 10, width: 120, height: 300)
+            popover?.permittedArrowDirections = .any
+            popover?.delegate = self
+            present(vc, animated: true) {
+                //
+            }
+            return;
+        }
+        
         let filePath = NSHomeDirectory() + "/Documents/" + "his.txt"
         if FileManager.default.fileExists(atPath: filePath) {
             let array = NSArray.init(contentsOfFile: filePath);
@@ -311,7 +345,7 @@ class ViewController: UIViewController {
                 let dic = obj as! NSDictionary;
                 debugPrint(dic);
                 let index:NSNumber = dic["index"] as! NSNumber;
-                if (index.intValue == atIndex.intValue) {
+                if (index.intValue == atIndex?.intValue) {
                     objList = dic["array"] as! NSArray;
                     break;
                 }

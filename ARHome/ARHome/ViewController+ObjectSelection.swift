@@ -69,7 +69,6 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     }
                     self.saveToHistory(didSelectObjectID, remoteFileUrl: (loadedObject?.zipFileUrl)!, localObjectUrl: (loadedObject?.referenceURL.absoluteString)!, localShadowUrl: localShadowUrl)
                     
-                    self.displayZoomController();
                     self.curChooseModel = loadedObject;
                 } else {
                     self.statusViewController.showMessage("加载模型失败,请联系程序猿", autoHide: true)
@@ -174,21 +173,6 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                 }
             }
         }
-    }
-    
-    private func displayZoomController() {
-        let slider = UISlider.init(frame: CGRect.init(x: self.view.frame.size.width-180, y: self.view.frame.size.height/2-30, width: 240, height: 60));
-        slider.transform =  CGAffineTransform(rotationAngle: -.pi/2);
-        slider.minimumValue = 0.1;
-        slider.maximumValue = 1.0;
-        slider.value = 1.0; // 默认值1.0
-        slider.addTarget(self, action: #selector(self.zoomModel(_:)), for: .valueChanged);
-        self.view.addSubview(slider);
-    }
-    
-    @objc private func zoomModel(_ sender:UISlider) {
-        debugPrint("zoomModel:\(sender.value)");
-        virtualObjectLoader.resetGlobalScale(sender.value);
     }
     
 }

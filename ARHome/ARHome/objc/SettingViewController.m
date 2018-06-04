@@ -39,7 +39,7 @@
     
     UIButton* recoverButton = [UIButton buttonWithType:UIButtonTypeCustom];
     recoverButton.frame = CGRectMake(60, 240, 120, 44);
-    [recoverButton setTitle:@"恢复上次场景" forState:UIControlStateNormal];
+    [recoverButton setTitle:@"恢复历史场景" forState:UIControlStateNormal];
     [recoverButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
     [recoverButton addTarget:self action:@selector(recoverLasted:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:recoverButton];

@@ -16,5 +16,6 @@
 #import "ReplayKitUtil.h"
 #import "SettingViewController.h"
 //#import "BatchDownloadViewController.h"
+#import "ChooseHistoryViewController.h"
 
 #endif /* PrefixHeader_pch */

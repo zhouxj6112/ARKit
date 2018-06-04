@@ -114,6 +114,10 @@ class SelectionModelViewController: UIViewController {
             let modelUrl = one["fileUrl"] as! String
             let encodedUrl = modelUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
             let url = URL.init(string: encodedUrl!)
+            if url == nil {
+                debugPrint("URL为空了");
+                return;
+            }
             let modelId = one["modelId"] as! String
             self.selectionDelegate?.virtualObjectSelectionViewController(self, didSelectObjectUrl: url!, didSelectObjectID:modelId)
         }

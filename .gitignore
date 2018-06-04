@@ -62,4 +62,5 @@ fastlane/test_output
 
 iOSInjectionProject/
 
-ipa/
+ipa/ARHome.app/
+ipa/ARHome/

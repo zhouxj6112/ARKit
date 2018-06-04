@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		17D7DD127A29D10F9DD04F38 /* Pods_ARHomeUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F298E48DA0535F31E81F3485 /* Pods_ARHomeUITests.framework */; };
 		2E21E8611FFF9CB800DA991B /* scntool in Resources */ = {isa = PBXBuildFile; fileRef = 2E21E8601FFF9CB700DA991B /* scntool */; };
+		2E69AD2820BAAD5F000D8253 /* ChooseHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E69AD2720BAAD5F000D8253 /* ChooseHistoryViewController.m */; };
 		2E6B0F382042AA01002B0FC6 /* BatchDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B0F372042AA01002B0FC6 /* BatchDownloadViewController.m */; };
 		2E6B0F3B2042AA1E002B0FC6 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B0F3A2042AA1E002B0FC6 /* SettingViewController.m */; };
 		2E7A2CEB1FC10BD000DA4920 /* ReplayKitUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7A2CEA1FC10BD000DA4920 /* ReplayKitUtil.m */; };
@@ -77,6 +78,8 @@
 		1CFB1689DC82DA80D2120BF7 /* Pods-ARHomeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARHomeTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARHomeTests/Pods-ARHomeTests.release.xcconfig"; sourceTree = "<group>"; };
 		2E21E85F1FFF995E00DA991B /* NSTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTask.h; sourceTree = "<group>"; };
 		2E21E8601FFF9CB700DA991B /* scntool */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = scntool; sourceTree = "<group>"; };
+		2E69AD2620BAAD5F000D8253 /* ChooseHistoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChooseHistoryViewController.h; sourceTree = "<group>"; };
+		2E69AD2720BAAD5F000D8253 /* ChooseHistoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChooseHistoryViewController.m; sourceTree = "<group>"; };
 		2E6B0F362042AA01002B0FC6 /* BatchDownloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BatchDownloadViewController.h; sourceTree = "<group>"; };
 		2E6B0F372042AA01002B0FC6 /* BatchDownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BatchDownloadViewController.m; sourceTree = "<group>"; };
 		2E6B0F392042AA1D002B0FC6 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
@@ -178,6 +181,8 @@
 				2E6B0F372042AA01002B0FC6 /* BatchDownloadViewController.m */,
 				2EBFD640204997B30029D7E3 /* StaticNavigationViewController.h */,
 				2EBFD641204997B30029D7E3 /* StaticNavigationViewController.m */,
+				2E69AD2620BAAD5F000D8253 /* ChooseHistoryViewController.h */,
+				2E69AD2720BAAD5F000D8253 /* ChooseHistoryViewController.m */,
 			);
 			path = objc;
 			sourceTree = "<group>";
@@ -432,7 +437,7 @@
 				TargetAttributes = {
 					E69B4E2A1FBC0C3E00A604A0 = {
 						CreatedOnToolsVersion = 9.0;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					E69B4E401FBC0C3F00A604A0 = {
 						CreatedOnToolsVersion = 9.0;
@@ -691,6 +696,7 @@
 				E6C88A431FBC4F57003E4B8C /* VirtualObjectInteraction.swift in Sources */,
 				2E6B0F3B2042AA1E002B0FC6 /* SettingViewController.m in Sources */,
 				E6C88A341FBC4F57003E4B8C /* ViewController+ARSCNViewDelegate.swift in Sources */,
+				2E69AD2820BAAD5F000D8253 /* ChooseHistoryViewController.m in Sources */,
 				E6C88A391FBC4F57003E4B8C /* VirtualObjectSelection.swift in Sources */,
 				E69B4E331FBC0C3E00A604A0 /* ViewController.swift in Sources */,
 				E6C88A351FBC4F57003E4B8C /* ViewController+Actions.swift in Sources */,
@@ -864,8 +870,9 @@
 			baseConfigurationReference = 143E01E226CFC4A15F16818B /* Pods-ARHome.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8USF88UFL4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ARHome/Resources/PrefixHeader.h;
@@ -874,8 +881,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vipme.arhome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3e06145e-4158-437b-b493-abd02bc54ccc";
-				PROVISIONING_PROFILE_SPECIFIER = "ARHome-dev";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = ARHome/Resources/PrefixHeader.h;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -887,8 +894,9 @@
 			baseConfigurationReference = B54A5BFF528A376D9874BBBC /* Pods-ARHome.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8USF88UFL4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ARHome/Resources/PrefixHeader.h;
@@ -897,8 +905,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vipme.arhome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "96c3ecd4-28df-48a8-9ce6-6551be4ebebd";
-				PROVISIONING_PROFILE_SPECIFIER = "ARHome-dev";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = ARHome/Resources/PrefixHeader.h;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
