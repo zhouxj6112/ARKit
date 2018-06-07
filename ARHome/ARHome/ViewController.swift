@@ -293,6 +293,10 @@ class ViewController: UIViewController {
                 dic.setValue(NSNumber.init(value: array.count), forKey: "index"); // 标记位置
                 array.add(dic);
             }
+            if array.count == 0 {
+                self.displayErrorMessage(title: "温馨提示", message: "当前场景为空，不需要保存");
+                return;
+            }
             let filePath = NSHomeDirectory() + "/Documents/" + "his.txt"
             // 读取历史文件
             var arraySrc = NSMutableArray.init(contentsOfFile: filePath);
@@ -340,16 +344,8 @@ class ViewController: UIViewController {
         if FileManager.default.fileExists(atPath: filePath) {
             let array = NSArray.init(contentsOfFile: filePath);
             debugPrint("文件：\(String(describing: array))");
-            var objList:NSArray = NSArray.init();
-            for obj in array! {
-                let dic = obj as! NSDictionary;
-                debugPrint(dic);
-                let index:NSNumber = dic["index"] as! NSNumber;
-                if (index.intValue == atIndex?.intValue) {
-                    objList = dic["array"] as! NSArray;
-                    break;
-                }
-            }
+            let objDic = array?.object(at: (atIndex?.intValue)!) as! NSDictionary;
+            let objList:NSArray = objDic["array"] as! NSArray;
             for obj in objList {
                 let dic = obj as! NSDictionary;
                 //

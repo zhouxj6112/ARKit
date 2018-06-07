@@ -9,7 +9,7 @@
 #import "ChooseHistoryViewController.h"
 
 @interface ChooseHistoryViewController () <UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic, retain) NSArray* listData;
+@property (nonatomic, retain) NSMutableArray* listData;
 @end
 
 @implementation ChooseHistoryViewController
@@ -25,7 +25,14 @@
     // 读取文件
     NSString* filePath = [NSString stringWithFormat:@"%@/Documents/his.txt", NSHomeDirectory()];
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-        self.listData = [NSArray arrayWithContentsOfFile:filePath];
+        NSArray* array = [NSArray arrayWithContentsOfFile:filePath];
+        NSArray* list = [[array reverseObjectEnumerator] allObjects];
+        if (self.listData == nil) {
+            self.listData = [NSMutableArray arrayWithCapacity:1];
+        }
+        if (list.count > 0) {
+            [self.listData addObjectsFromArray:list];
+        }
         [tableView reloadData];
     }
 }
@@ -56,12 +63,29 @@
     static NSString* iden = @"";
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:iden];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:iden];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:iden];
     }
     NSDictionary* dic = self.listData[indexPath.row];
     cell.textLabel.text = dic[@"title"];
+    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", dic[@"createTime"]];
     return cell;
+}
+
+-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return @"删除";
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath  {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.listData removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self performSelector:@selector(delaySave:) withObject:nil afterDelay:0.5f];
+    }
 }
 
 #pragma mark -
@@ -70,6 +94,16 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self dismissViewControllerAnimated:YES completion:NULL];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationRecoverLasted" object:self userInfo:@{@"oper":@"recover",@"index":@(indexPath.row)}];
+}
+
+- (void)delaySave:(id)sender {
+    NSString* filePath = [NSString stringWithFormat:@"%@/Documents/his.txt", NSHomeDirectory()];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        BOOL bRet = [self.listData writeToFile:filePath atomically:YES];
+        if (!bRet) {
+            NSLog(@"保存文件失败");
+        }
+    }
 }
 
 @end
