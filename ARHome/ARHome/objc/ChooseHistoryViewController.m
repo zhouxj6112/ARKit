@@ -20,6 +20,7 @@
     UITableView* tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
     tableView.dataSource = self;
     tableView.delegate = self;
+    tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:tableView];
     
     // 读取文件
@@ -32,9 +33,19 @@
         }
         if (list.count > 0) {
             [self.listData addObjectsFromArray:list];
+            //
+            [tableView reloadData];
+        } else {
+            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+            label.textAlignment = NSTextAlignmentCenter;
+            label.text = @"无历史记录";
+            tableView.backgroundView = label;
         }
-        [tableView reloadData];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning {

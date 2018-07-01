@@ -185,7 +185,7 @@ class ViewController: UIViewController {
     @objc func recoverLasted(sender:Notification) {
         let oper = sender.userInfo!["oper"] as! String;
         if oper == "save" {
-            self.saveCurrentAR();
+            self.saveCurrentARForHistory();
         } else {
             let index = sender.userInfo!["index"] as? NSNumber;
             self.recoverARFromHistory(index)
@@ -253,7 +253,7 @@ class ViewController: UIViewController {
         modelList = array
     }
     
-    func saveCurrentAR() {
+    func saveCurrentARForHistory() {
         let alertController = UIAlertController.init(title: "", message: "请输入标题", preferredStyle: .alert)
         let okAction = UIAlertAction.init(title: "确定", style: .default) { (alertAction:UIAlertAction) in
             // 开始保存
@@ -344,7 +344,7 @@ class ViewController: UIViewController {
         if FileManager.default.fileExists(atPath: filePath) {
             let array = NSArray.init(contentsOfFile: filePath);
             debugPrint("文件：\(String(describing: array))");
-            let objDic = array?.object(at: (atIndex?.intValue)!) as! NSDictionary;
+            let objDic = array?.object(at: ((array?.count)! - (atIndex?.intValue)!)) as! NSDictionary; // 倒序的
             let objList:NSArray = objDic["array"] as! NSArray;
             for obj in objList {
                 let dic = obj as! NSDictionary;
@@ -359,6 +359,7 @@ class ViewController: UIViewController {
                 let posString = dic["simdPosition"] as! String;
                 let posArr = posString.split(separator: "|");
                 let simdPosition = float3(Float(posArr[0])!, Float(posArr[1])!, Float(posArr[2])!);
+                let simdWorldOrientation = dic["simdWorldOrientation"] as! String;
                 virtualObjectLoader.loadVirtualObject(objectFileUrl!, loadedHandler: { [unowned self] loadedObject, shadowObject in
                     DispatchQueue.main.async {
                         self.hideObjectLoadingUI()
@@ -367,6 +368,8 @@ class ViewController: UIViewController {
                             loadedObject?.signID = didSelectObjectID;
                             self.placeVirtualObject(loadedObject!)
                             loadedObject?.simdPosition = simdPosition;
+                            let ori = simd_quatf(ix: 0, iy: 0, iz: 0, r: Float(simdWorldOrientation)!);
+                            loadedObject?.simdWorldOrientation = ori;
                             
                             // 放置阴影模型在底部
                             if shadowObject != nil {

@@ -21,7 +21,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
      The object that has been most recently intereacted with.
      The `selectedObject` can be moved at any time with the tap gesture.
      */
-    private var selectedObject: VirtualObject?
+    public var selectedObject: VirtualObject?
     private var preSelectedObject: VirtualObject?
     //
     public var viewController: ViewController?
@@ -56,25 +56,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         sceneView.addGestureRecognizer(tapGesture)
     }
     
-    public func resetSelectedObject(object: VirtualObject?) {
-        if object != nil {
-            if self.selectedObject != nil {
-                self.selectedObject?.stopShakeInSelection()
-                self.selectedObject?.simdPosition.y -= 0.1
-                // 调用手机振动
-                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            }
-            object?.simdPosition.y += 0.1
-            self.selectedObject = object
-            self.selectedObject?.shakeInSelection()
-        } else {
-            //
-            self.selectedObject = nil
-        }
-    }
-    
     // MARK: - Gesture Actions
-    
     @objc
     func didPan(_ gesture: ThresholdPanGesture) {
         switch gesture.state {
@@ -83,7 +65,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
             if let object = objectInteracting(with: gesture, in: sceneView) {
                 if object == selectedObject { // 只有被选中的模型才能进行移动 (先要点击选中,再滑动)
                     trackedObject = object
-                    object.stopShakeInSelection()
+                    object.stopShakeInSelection(isRecoveryPos: false)
                 }
             }
             
@@ -106,7 +88,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
             // Clear the current position tracking.
             currentTrackingPosition = nil
             if (trackedObject != nil) {
-                trackedObject?.shakeInSelection()
+                trackedObject?.startShakeInSelection()
             }
             trackedObject = nil
         }
@@ -129,10 +111,11 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         
         // 查找主模型对应的阴影模型,跟随主模型一起移动
         if object.shadowObject != nil {
-            let shadow = object.shadowObject
-            shadow?.simdPosition = float3(object.simdPosition.x, object.simdPosition.y - 0.1, object.simdPosition.z)
+            let shadowObj = object.shadowObject
+            shadowObj?.simdPosition = float3(object.simdPosition.x, (shadowObj?.simdPosition.y)!, object.simdPosition.z)
         }
-        self.viewController?.virtualObjectLoader.selectionModel.simdPosition = float3(object.simdPosition.x, object.simdPosition.y - 0.1, object.simdPosition.z)
+        // 底部选中的阴影模型,也跟随一起移动
+        self.viewController?.virtualObjectLoader.selectionModel.simdPosition = float3(object.simdPosition.x, (self.viewController?.virtualObjectLoader.selectionModel.simdPosition.y)!, object.simdPosition.z)
     }
 
     /// - Tag: didRotate 旋转模型 (多指操作)
@@ -165,34 +148,29 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         if let tappedObject = sceneView.virtualObject(at: touchLocation) {
             // Select a new object.
             if tappedObject == selectedObject {
-                selectedObject?.stopShakeInSelection()
+                selectedObject?.stopShakeInSelection(isRecoveryPos: true)
                 self.viewController?.virtualObjectLoader.removeSelectionObject()
                 // 已经选中的要置为非选中
-                selectedObject?.simdPosition.y -= 0.1
                 selectedObject = nil
                 // 调用手机振动
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
             } else {
                 // 选中一个模型 (其它模型就要为非选中状态)
-                if tappedObject.isShadowObj == true { // 排除阴影模型
+                if tappedObject.isShadowObj == true || tappedObject.zipFileUrl.count == 0 { // 排除阴影模型和选中圆圈模型
                     return;
                 }
                 if selectedObject != nil { // 将前一个选中的恢复
-                    selectedObject?.stopShakeInSelection()
+                    selectedObject?.stopShakeInSelection(isRecoveryPos: true)
                     self.viewController?.virtualObjectLoader.removeSelectionObject()
                     // 已经选中的要置为非选中
-                    selectedObject?.simdPosition.y -= 0.1
                     selectedObject = nil
                     // 调用手机振动
                     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                 }
                 selectedObject = tappedObject
+                
                 // 选中状态
-                if (tappedObject.simdPosition.y == tappedObject.shadowObject?.simdPosition.y) {
-                    selectedObject?.simdPosition.y += 0.1
-                    selectedObject?.shakeInSelection()
-                    self.viewController?.virtualObjectLoader.resetSelectionObject(selectedObject)
-                }
+                self.viewController?.virtualObjectLoader.resetSelectionObject(selectedObject)
             }
         }
     }

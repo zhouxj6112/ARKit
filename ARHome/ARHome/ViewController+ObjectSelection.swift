@@ -56,10 +56,12 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     if shadowObject != nil {
                         self.placeVirtualObject(shadowObject!) // 跟主模型的中心重合
                     }
-                    // 展示选中抖动效果
-                    self.virtualObjectInteraction.resetSelectedObject(object: loadedObject)
-                    // 放置底部选中圆圈
+                    
+                    // 加载放置在底部选中圆圈模型(本地)
                     self.placeVirtualObject(self.virtualObjectLoader.selectionModel)
+                    
+                    // 展示选中抖动效果
+                    self.virtualObjectInteraction.selectedObject = loadedObject
                     self.virtualObjectLoader.resetSelectionObject(loadedObject);
                     
                     // 保存到浏览历史里面
@@ -173,6 +175,17 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                 }
             }
         }
+    }
+    
+    func showDeleteButton() {
+        let deleteButton = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: 0))
+        deleteButton.addTarget(self, action: #selector(deleteModel), for: .touchUpInside)
+        self.view.addSubview(deleteButton)
+    }
+    
+    @objc func deleteModel() {
+        self.curChooseModel?.removeFromParentNode();
+        self.virtualObjectLoader.removeVirtualObject(at: 0);
     }
     
 }

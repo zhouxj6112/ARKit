@@ -111,35 +111,48 @@ class VirtualObject: SCNReferenceNode {
     }
     
 
-    private var beforShakePosition: SCNVector3?
+    // 模型被加载后的原始位置
+    public var beforShakePosition: simd_float3?
     
-    public func shakeInSelection() {
+    /// 开动抖动动画
+    public func startShakeInSelection() {
         debugPrint("simdPos:\(self.simdPosition); pos:\(self.position)")
-        let pos = self.position
-        self.beforShakePosition = pos; // 先记录动画前的位置,等动画完成后要恢复原位
+        var pos:simd_float3;
+        if self.beforShakePosition == nil {
+            pos = self.simdPosition;
+            self.beforShakePosition = pos; // 先记录动画前的位置,等动画完成后要恢复原位
+        } else {
+            self.beforShakePosition = simd_float3(self.simdPosition.x, (self.beforShakePosition?.y)!, self.simdPosition.z)
+            pos = self.beforShakePosition!;
+        }
+        pos.y += 0.1 // 升高0.1后开始repeat
         let topPos = SCNVector3.init(pos.x, pos.y+0.05, pos.z)
         let botPos = SCNVector3.init(pos.x, pos.y-0.05, pos.z)
         self.repeatShake(topPos, botPos: botPos)
     }
+    
     private func repeatShake(_ topPos:SCNVector3, botPos:SCNVector3) {
+        self.removeAction(forKey: "shake")
         var toPos = topPos
         if abs(self.simdPosition.y - topPos.y) <= 0.05 {
             toPos = botPos
         }
         toPos.x = self.position.x
         toPos.z = self.position.z
-        let action = SCNAction.move(to: toPos, duration: 1.0)
+        let action = SCNAction.move(to: toPos, duration: 1.5)
+        action.timingMode = .easeInEaseOut
         self.runAction(action, forKey:"shake", completionHandler: {
             self.repeatShake(topPos, botPos: botPos)
         })
     }
     
     /// 停止抖动,并且位置要复位
-    public func stopShakeInSelection() {
-        //
+    public func stopShakeInSelection(isRecoveryPos:Bool) {
         self.removeAction(forKey: "shake")
         debugPrint("simdPos:\(self.simdPosition); pos:\(self.position)")
-        self.position = self.beforShakePosition!;
+        if isRecoveryPos {
+            self.simdPosition = self.beforShakePosition!;
+        }
     }
     
     /// - Tag: AdjustOntoPlaneAnchor

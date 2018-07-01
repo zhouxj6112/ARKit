@@ -115,7 +115,8 @@ class VirtualObjectLoader {
                 shadowObj.reset()
                 shadowObj.load()
                 shadowObj.isShadowObj = true
-                ///
+                
+                /// 回调通知外部
                 loadedHandler(obj, shadowObj)
             }
         }
@@ -149,9 +150,22 @@ class VirtualObjectLoader {
     
     public func resetSelectionObject(_ object:VirtualObject?) {
         debugPrint("selectionModel: \(selectionModel)")
+        
+        // 模型抖动动画效果
+        object?.startShakeInSelection()
+        
         self.selectionModel.isHidden = false
         if ((object?.shadowObject) != nil) {
             self.selectionModel.simdPosition = (object?.shadowObject?.simdPosition)!
+////            // 等比缩放选中框 (按照阴影模型大小等大)
+////            let shadowObj = object?.shadowObject;
+////            let fScale = (shadowObj?.boundingBox.max.x)! / self.selectionModel.boundingBox.max.x * 1.2;
+////            self.selectionModel.simdScale = float3(fScale, fScale, 1);
+        } else {
+            self.selectionModel.simdPosition = (object?.beforShakePosition)!;
+////            // 等比缩放选中框 (按照模型自身大小等大)
+////            let fScale = (object?.boundingBox.max.x)! / self.selectionModel.boundingBox.max.x * 1.2;
+////            self.selectionModel.simdScale = float3(fScale, fScale, 1);
         }
     }
     
