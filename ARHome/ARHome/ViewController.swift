@@ -41,12 +41,12 @@ class ViewController: UIViewController {
     lazy var virtualObjectInteraction = { () -> VirtualObjectInteraction in
         let interaction = VirtualObjectInteraction(sceneView: self.sceneView)
         interaction.viewController = self
+        interaction.objectManager = virtualObjectLoader
         return interaction
     }()
     
     /// Coordinates the loading and unloading of reference nodes for virtual objects.
     let virtualObjectLoader = VirtualObjectLoader()
-    var curChooseModel:VirtualObject?;
     
     /// Marks if the AR experience is available for restart.
     var isRestartAvailable = true
@@ -344,7 +344,8 @@ class ViewController: UIViewController {
         if FileManager.default.fileExists(atPath: filePath) {
             let array = NSArray.init(contentsOfFile: filePath);
             debugPrint("文件：\(String(describing: array))");
-            let objDic = array?.object(at: ((array?.count)! - (atIndex?.intValue)!)) as! NSDictionary; // 倒序的
+            let index = (array?.count)! - 1 - (atIndex?.intValue)!; // 要倒序
+            let objDic = array?.object(at: index) as! NSDictionary; // 倒序的
             let objList:NSArray = objDic["array"] as! NSArray;
             for obj in objList {
                 let dic = obj as! NSDictionary;

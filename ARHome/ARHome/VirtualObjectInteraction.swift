@@ -21,10 +21,12 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
      The object that has been most recently intereacted with.
      The `selectedObject` can be moved at any time with the tap gesture.
      */
-    public var selectedObject: VirtualObject?
+    private var selectedObject: VirtualObject?
     private var preSelectedObject: VirtualObject?
-    //
+    
+    // 外部传参进来,作为判断条件的
     public var viewController: ViewController?
+    public var objectManager: VirtualObjectLoader?
     
     /// The object that is tracked for use by the pan and rotation gestures.
     private var trackedObject: VirtualObject? {
@@ -37,7 +39,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
     /// The tracked screen position used to update the `trackedObject`'s position in `updateObjectToCurrentTrackingPosition()`.
     private var currentTrackingPosition: CGPoint?
 
-    init(sceneView: VirtualObjectARView) {
+    public init(sceneView: VirtualObjectARView) {
         self.sceneView = sceneView
         super.init()
         
@@ -59,6 +61,8 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
     // MARK: - Gesture Actions
     @objc
     func didPan(_ gesture: ThresholdPanGesture) {
+        selectedObject = objectManager?.selectedObject;
+        
         switch gesture.state {
         case .began:
             // Check for interaction with a new object.
@@ -143,17 +147,20 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
     
     @objc
     func didTap(_ gesture: UITapGestureRecognizer) {
+        selectedObject = objectManager?.selectedObject;
+        
         let touchLocation = gesture.location(in: sceneView)
         
         if let tappedObject = sceneView.virtualObject(at: touchLocation) {
             // Select a new object.
             if tappedObject == selectedObject {
                 selectedObject?.stopShakeInSelection(isRecoveryPos: true)
-                self.viewController?.virtualObjectLoader.removeSelectionObject()
+                objectManager?.removeSelectionObject()
                 // 已经选中的要置为非选中
                 selectedObject = nil
                 // 调用手机振动
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+                self.viewController?.hideObjectLoadingUI()
             } else {
                 // 选中一个模型 (其它模型就要为非选中状态)
                 if tappedObject.isShadowObj == true || tappedObject.zipFileUrl.count == 0 { // 排除阴影模型和选中圆圈模型
@@ -161,7 +168,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
                 }
                 if selectedObject != nil { // 将前一个选中的恢复
                     selectedObject?.stopShakeInSelection(isRecoveryPos: true)
-                    self.viewController?.virtualObjectLoader.removeSelectionObject()
+                    objectManager?.removeSelectionObject()
                     // 已经选中的要置为非选中
                     selectedObject = nil
                     // 调用手机振动
@@ -170,7 +177,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
                 selectedObject = tappedObject
                 
                 // 选中状态
-                self.viewController?.virtualObjectLoader.resetSelectionObject(selectedObject)
+                objectManager?.resetSelectionObject(selectedObject)
             }
         }
     }
@@ -182,7 +189,6 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
     }
 
     /// A helper method to return the first object that is found under the provided `gesture`s touch locations.
-    /// - Tag: TouchTesting
     private func objectInteracting(with gesture: UIGestureRecognizer, in view: ARSCNView) -> VirtualObject? {
         for index in 0..<gesture.numberOfTouches {
             let touchLocation = gesture.location(ofTouch: index, in: view)

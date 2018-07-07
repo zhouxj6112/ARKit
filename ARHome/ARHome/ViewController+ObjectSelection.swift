@@ -61,8 +61,8 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     self.placeVirtualObject(self.virtualObjectLoader.selectionModel)
                     
                     // 展示选中抖动效果
-                    self.virtualObjectInteraction.selectedObject = loadedObject
                     self.virtualObjectLoader.resetSelectionObject(loadedObject);
+                    self.showDeleteButton()
                     
                     // 保存到浏览历史里面
                     var localShadowUrl:String = ""
@@ -71,7 +71,6 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                     }
                     self.saveToHistory(didSelectObjectID, remoteFileUrl: (loadedObject?.zipFileUrl)!, localObjectUrl: (loadedObject?.referenceURL.absoluteString)!, localShadowUrl: localShadowUrl)
                     
-                    self.curChooseModel = loadedObject;
                 } else {
                     self.statusViewController.showMessage("加载模型失败,请联系程序猿", autoHide: true)
                 }
@@ -81,26 +80,7 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     }
     
     func virtualObjectSelectionViewController(_: UIViewController, didDeselectObjectUrl object: URL, didDeselectObjectID: String) {
-//        guard let objectIndex = virtualObjectLoader.loadedObjects.index(of: object) else {
-//            fatalError("Programmer error: Failed to lookup virtual object in scene.")
-//        }
-//        virtualObjectLoader.removeVirtualObject(at: objectIndex)
-        let fileUrl = object.absoluteString.removingPercentEncoding
-        var index = 0
-        for obj in virtualObjectLoader.loadedObjects {
-            if (obj.zipFileUrl.elementsEqual(fileUrl!)) {
-                virtualObjectLoader.removeVirtualObject(at: index)
-            }
-            index += 1
-        }
-        // 还要删除阴影模型
-        index = 0
-        for obj in virtualObjectLoader.loadedObjects {
-            if (obj.zipFileUrl.elementsEqual(fileUrl!)) {
-                virtualObjectLoader.removeVirtualObject(at: index)
-            }
-            index += 1
-        }
+        
     }
 
     // MARK: Object Loading UI
@@ -178,14 +158,8 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
     }
     
     func showDeleteButton() {
-        let deleteButton = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: 0))
-        deleteButton.addTarget(self, action: #selector(deleteModel), for: .touchUpInside)
-        self.view.addSubview(deleteButton)
-    }
-    
-    @objc func deleteModel() {
-        self.curChooseModel?.removeFromParentNode();
-        self.virtualObjectLoader.removeVirtualObject(at: 0);
+        addObjectButton.setImage(#imageLiteral(resourceName:"remove"), for:[])
+        addObjectButton.setImage(#imageLiteral(resourceName:"remove"), for: [.highlighted])
     }
     
 }

@@ -21,6 +21,15 @@ extension ViewController: UIGestureRecognizerDelegate {
         // Ensure adding objects is an available action and we are not loading another object (to avoid concurrent modifications of the scene).
         guard !addObjectButton.isHidden && !virtualObjectLoader.isLoading else { return }
         
+        // 当有物体被选中,添加按钮就变成删除,点击就删除选中物体
+        if virtualObjectLoader.selectedObject != nil {
+            virtualObjectLoader.removeSelectedObject()
+            updateQueue.async {
+                self.virtualObjectLoader.selectedObject?.removeFromParentNode()
+            }
+            self.hideObjectLoadingUI()
+            return;
+        }
         statusViewController.cancelScheduledMessage(for: .contentPlacement)
         performSegue(withIdentifier: SegueIdentifier.showObjects.rawValue, sender: addObjectButton)
     }

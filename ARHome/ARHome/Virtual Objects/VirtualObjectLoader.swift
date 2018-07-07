@@ -15,6 +15,9 @@ import SwiftyJSON
 */
 class VirtualObjectLoader {
     
+    // 单例模式
+    static let `default` = VirtualObjectLoader()
+    
     /// 已经加载过的模型数组
 	private(set) var loadedObjects = [VirtualObject]()
     
@@ -25,7 +28,10 @@ class VirtualObjectLoader {
     // 整体缩放比例 (所有模型统一缩放)
     private(set) var globalScale:Float = 1.000000
     
-    /// 模型选中后底部选中标示
+    // 当前选中模型
+    public var selectedObject:VirtualObject?;
+    
+    /// 模型选中后底部选中标示 (跟随选中模型的,并且当前永远只有一个)
     public lazy var selectionModel:VirtualObject = {
         let modelURL = Bundle.main.url(forResource: "Models.scnassets/selection/selection.scn", withExtension: nil)!
         let obj = VirtualObject(url: modelURL)!
@@ -136,20 +142,36 @@ class VirtualObjectLoader {
         }
     }
     
-    func removeVirtualObject(at index: Int) {
+    private func removeVirtualObject(at index: Int) {
         guard loadedObjects.indices.contains(index) else { return }
-        
-        loadedObjects[index].removeFromParentNode()
+        //
         loadedObjects.remove(at: index)
+    }
+    
+    public func removeSelectedObject() {
+        if self.selectedObject == nil {
+            return
+        }
+        for index in loadedObjects.indices.reversed() {
+            let obj = loadedObjects[index]
+            if obj == self.selectedObject {
+                removeVirtualObject(at: index)
+                break
+            }
+        }
+        //
+        removeSelectionObject()
     }
     
     /// 移除选中效果的底部圆圈
     public func removeSelectionObject() {
+        selectedObject = nil
         self.selectionModel.isHidden = true
     }
     
     public func resetSelectionObject(_ object:VirtualObject?) {
         debugPrint("selectionModel: \(selectionModel)")
+        self.selectedObject = object
         
         // 模型抖动动画效果
         object?.startShakeInSelection()
